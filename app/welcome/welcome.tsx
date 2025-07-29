@@ -4,6 +4,7 @@ import AppText, {
 import logoDark from "./logo-dark.svg";
 import logoLight from "./logo-light.svg";
 import AppButton from "~/components/general/AppButton/AppButton";
+import Icon from "~/components/icon";
 
 export function Welcome() {
   return (
@@ -38,6 +39,12 @@ export function Welcome() {
               This is a para test
             </p>
             <AppButton>This is my button</AppButton>
+            <AppButton>
+              <Icon name="ImportIcon" />
+              <AppText color="white" weight="semibold">
+                This is my button
+              </AppText>
+            </AppButton>
             <ul>
               {resources.map(({ href, text, icon }) => (
                 <li key={href}>
