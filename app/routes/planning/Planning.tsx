@@ -1,9 +1,14 @@
 import React from "react";
+import Info from "./section/Info";
 
 type Props = {};
 
 function Planning({}: Props) {
-  return <div>Planning</div>;
+  return (
+    <>
+      <Info />
+    </>
+  );
 }
 
 export default Planning;

@@ -42,7 +42,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           className="w-full"
           style={{ height: "250px" }}
         />
-        <main className="ml-[94px]">{children}</main>
+        <main className="ml-[94px] pt-8 pl-6 pr-5">{children}</main>
         <ScrollRestoration />
         <Scripts />
       </body>
