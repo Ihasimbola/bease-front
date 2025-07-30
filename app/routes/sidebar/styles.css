@@ -1,0 +1,27 @@
+.nav {
+  background-color: var(--color-black);
+  width: 94px;
+}
+
+.nav svg {
+  width: 24px;
+}
+
+.nav div:first-child svg {
+  width: 36px;
+}
+
+
+.active {
+  background-color: var(--color-red);
+}
+
+.profile::before {
+  content: "";
+  display: block;
+  height: 1px;
+  width: 80%;
+  background-color: var(--color-gray);
+  margin: 0 auto;
+  transform: translateY(-10px);
+}

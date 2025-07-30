@@ -23,7 +23,8 @@ export const icons = {
 };
 interface Props {
   name: keyof typeof icons;
+  className?: string;
 }
-export default function Icon({ name }: Props) {
+export default function Icon({ name, className }: Props) {
   return <>{icons[name]}</>;
 }
