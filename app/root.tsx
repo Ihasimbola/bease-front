@@ -11,6 +11,7 @@ import Banner from "~/assets/images/Banner.png";
 import type { Route } from "./+types/root";
 import "./app.css";
 import Sidebar from "./routes/sidebar/Sidebar";
+import Pub from "./components/layout/pub/Pub";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -42,7 +43,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
           className="w-full"
           style={{ height: "250px" }}
         />
-        <main className="ml-[94px] pt-8 pl-6 pr-5">{children}</main>
+        <main className="ml-[94px] mb-6 pt-8 pl-6 pr-5 bg-grayblue">
+          {children}
+          <Pub />
+        </main>
         <ScrollRestoration />
         <Scripts />
       </body>

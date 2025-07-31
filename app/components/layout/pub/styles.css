@@ -1,0 +1,6 @@
+.bg-pub-img {
+  background-image: url("/app/assets/images/banner_pub.png");
+  background-size: auto;
+  background-position: center;
+  background-repeat: no-repeat;
+}
