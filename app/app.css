@@ -28,7 +28,7 @@ body {
 .banner {
   background-image: url("/app/assets/images/Banner.png");
   background-size: cover;
-  background-position: bottom 30% center;
+  background-position: right 50% bottom 30%;
   background-repeat: no-repeat;
   height: 300px;
   width: 100%;
