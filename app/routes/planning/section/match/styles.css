@@ -17,3 +17,9 @@ tbody tr:nth-child(even) {
     text-align: left;
   }
 }
+
+.match-info {
+  display: grid;
+  gap: 5px;
+  grid-template-columns: 24px 1fr;
+}

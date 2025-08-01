@@ -1,4 +1,6 @@
 import BeaseIcon from "./BeaseIcon";
+import BeaseMobileIcon from "./BeaseMobileIcon";
+import CloseIcon from "./CloseIcon";
 import ClubIcon from "./ClubIcon";
 import DashboardIcon from "./DashboardIcon";
 import ExportIcon from "./Export";
@@ -13,6 +15,13 @@ import MembreIcon from "./MembreIcon";
 import PlanningIcon from "./PlanningIcon";
 import ProfileIcon from "./ProfileIcon";
 import YoutubeIcon from "./YoutubeIcon";
+import DivisionIcon from "./DivisionIcon";
+import RefereeIcon from "./RefereeIcon";
+import ChronoIcon from "./ChronoIcon";
+import BuvetteIcon from "./BuvetteIcon";
+import MarqueurIcon from "./MarqueurIcon";
+import TeamIcon from "./TeamIcon";
+import MessageIcon from "./MessageIcon";
 
 export const icons = {
   BeaseIcon: <BeaseIcon />,
@@ -30,6 +39,15 @@ export const icons = {
   FacebookIcon: <FacebookIcon />,
   InstagramIcon: <InstagramIcon />,
   YoutubeIcon: <YoutubeIcon />,
+  BeaseMobileIcon: <BeaseMobileIcon />,
+  CloseIcon: <CloseIcon />,
+  DivisionIcon: <DivisionIcon />,
+  RefereeIcon: <RefereeIcon />,
+  MarqueurIcon: <MarqueurIcon />,
+  ChronoIcon: <ChronoIcon />,
+  BuvetteIcon: <BuvetteIcon />,
+  TeamIcon: <TeamIcon />,
+  MessageIcon: <MessageIcon />
 };
 interface Props {
   name: keyof typeof icons;

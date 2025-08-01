@@ -1,41 +1,56 @@
+import type { icons } from "~/components/icon";
+
 export const matchTableHeader = [
   {
     label: "Horaire",
-    dataKey: "horaire"
+    dataKey: "horaire",
+    iconName: "ChronoIcon"
   },
   {
     label: "Division",
-    dataKey: "division"
+    dataKey: "division",
+    iconName: "DivisionIcon"
   },
   {
     label: "Equipe A",
-    dataKey: "equipeA"
+    dataKey: "equipeA",
+    iconName: "TeamIcon"
   },
   {
     label: "Equipe B",
-    dataKey: "equipeB"
+    dataKey: "equipeB",
+    iconName: "TeamIcon"
   },
   {
     label: "Arbitre",
-    dataKey: "arbitre"
+    dataKey: "arbitre",
+    iconName: "RefereeIcon"
   },
   {
     label: "Marqueur",
-    dataKey: "marqueur"
+    dataKey: "marqueur",
+    iconName: "MarqueurIcon"
   },
   {
     label: "Chronometreur",
-    dataKey: "chronometreur"
+    dataKey: "chronometreur",
+    iconName: "ChronoIcon"
   },
   {
     label: "Buvette",
-    dataKey: "buvette"
+    dataKey: "buvette",
+    iconName: "BuvetteIcon"
   },
   {
     label: "Message",
-    dataKey: "message"
+    dataKey: "message",
+    iconName: "MessageIcon"
   }
-];
+] satisfies {
+  label: string;
+  dataKey: string;
+  iconName: keyof typeof icons;
+}[]
 
 export const matchData = [
   {

@@ -9,8 +9,8 @@ type Props = {}
 const Pub = (props: Props) => {
   return (
     <section>
-      <div className="flex gap-9 mt-8">
-        <div className="flex-1 w-fit h-[300px] pl-16 bg-pub-img justify-start items-center flex">
+      <div className="flex flex-col gap-9 mt-8 lg:flex-row">
+        <div className="bg-pub-img justify-center items-center flex h-[300px] rounded-[20px] lg:flex-1 xl:justify-start xl:pl-16">
           {/* <img src={banner_pub} alt="banner_pub" className="absolute" /> */}
           <div className="flex flex-col gap-8 ">
             <Icon name="LogoBease" />
@@ -18,7 +18,7 @@ const Pub = (props: Props) => {
           </div>
         </div>
 
-        <div className="flex-1 flex justify-start gap-9 items-center pl-16 w-fit h-[300px] bg-pub-img">
+        <div className="bg-pub-img justify-center items-center flex flex-col gap-5 h-[300px] rounded-[20px] lg:flex-1 lg:flex-row xl:justify-start xl:pl-16">
           {/* <img src={banner_pub} alt="banner_pub" className="absolute" /> */}
           <Icon name="KunheimIcon" />
           <div className="flex flex-col gap-2">

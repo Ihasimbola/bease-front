@@ -3,8 +3,8 @@ import { matchTableHeader, matchData } from './matchData'
 import AppText from '~/components/general/AppText/AppText'
 import "./styles.css"
 
-interface Props {
-  headerData: { label: string; dataKey: string }[];
+export interface Props {
+  headerData: typeof matchTableHeader;
   bodyData: typeof matchData[0]["data"];
   tableTitle: string;
 }

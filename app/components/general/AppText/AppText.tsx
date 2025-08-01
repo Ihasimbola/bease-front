@@ -7,8 +7,8 @@ export const textVariantsProps = cva("", {
     color: {
       black: "text-black",
       white: "text-white",
-      red: "text-red-600",
-      gray: "text-gray-600",
+      red: "text-red",
+      gray: "text-gray",
       gray1: "text-gray-100",
       gray2: "text-gray-200",
       grayblue: "text-grayblue-600",
@@ -23,6 +23,7 @@ export const textVariantsProps = cva("", {
     },
     weight: {
       thin: "font-thin",
+      light: "font-light",
       normal: "font-normal",
       medium: "font-medium",
       semibold: "font-semibold",
