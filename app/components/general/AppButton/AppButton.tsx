@@ -24,5 +24,10 @@ export default function AppButton({
   variant,
   ...props
 }: ButtonProps) {
-  return <button className={cn(buttonVariantProps({ variant }))} {...props} />;
+  return (
+    <button
+      className={cn([buttonVariantProps({ variant }), className])}
+      {...props}
+    />
+  );
 }

@@ -1,0 +1,12 @@
+.auth-container {
+  background-image: url("/app/assets/images/Banner.png");
+  background-size: cover;
+  background-position: right 21% bottom;
+  background-repeat: no-repeat;
+}
+
+@media screen and (min-width: 1024px) {
+  .auth-container {
+    background-position: center;
+  }
+}
