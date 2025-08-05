@@ -1,3 +1,4 @@
+import { LucideKeySquare, LucideUser2 } from "lucide-react";
 import "./styles.css";
 import { Link } from "react-router";
 import AppButton from "~/components/general/AppButton/AppButton";
@@ -23,11 +24,14 @@ function Login({}: Props) {
               Email
             </AppText>
           </label>
-          <Input
-            className="text-black bg-white mt-1 rounded-[20px] h-[40px]"
-            id="email"
-            type="email"
-          />
+          <div>
+            <LucideUser2 className="absolute mt-1.5 ml-2" />
+            <Input
+              className="text-black bg-white mt-1 pl-10 rounded-[20px] h-[40px]"
+              id="email"
+              type="email"
+            />
+          </div>
         </div>
 
         <div className="w-full">
@@ -36,11 +40,15 @@ function Login({}: Props) {
               Password
             </AppText>
           </label>
-          <Input
-            className="text-black bg-white mt-1 rounded-[20px] h-[40px]"
-            id="password"
-            type="password"
-          />
+          <div>
+            <LucideKeySquare className="absolute mt-1.5 ml-2" />
+
+            <Input
+              className="text-black bg-white mt-1 pl-10 rounded-[20px] h-[40px]"
+              id="password"
+              type="password"
+            />
+          </div>
         </div>
       </div>
       <Link to={"#"} className="self-end mt-3">
