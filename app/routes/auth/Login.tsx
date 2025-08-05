@@ -5,12 +5,16 @@ import AppButton from "~/components/general/AppButton/AppButton";
 import AppText from "~/components/general/AppText/AppText";
 import Icon from "~/components/icon";
 import { Input } from "~/components/ui/input";
+import { cn } from "~/lib/utils";
 
 type Props = {};
 
+export const formContainerClassName =
+  "form-container flex flex-col w-[95%] lg:w-[65%] max-w-7xl items-center self-center justify-self-center px-4 py-5 lg:px-5 lg:py-10 rounded";
+
 function Login({}: Props) {
   return (
-    <form className="form-container flex flex-col items-center self-center justify-self-center px-5 py-10  rounded">
+    <form className={cn([formContainerClassName])}>
       <div className="mb-20">
         <Icon name="LogoBease" />
       </div>
@@ -51,11 +55,18 @@ function Login({}: Props) {
           </div>
         </div>
       </div>
-      <Link to={"#"} className="self-end mt-3">
-        <AppText color="white" weight="light" size="sm">
-          Mot de passe oublie?
-        </AppText>
-      </Link>
+      <div className="self-end mt-3 flex flex-col gap-4 xl:flex-row justify-between w-full">
+        <Link to={"#"}>
+          <AppText color="white" weight="light" size="sm">
+            Mot de passe oublie?
+          </AppText>
+        </Link>
+        <Link to="/auth/register">
+          <AppText color="white" weight="light" size="sm">
+            Inscription
+          </AppText>
+        </Link>
+      </div>
       <AppButton className="w-full mt-8">Login</AppButton>
     </form>
   );

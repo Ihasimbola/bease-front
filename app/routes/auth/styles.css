@@ -1,4 +1,9 @@
 .form-container {
   background-color: #d9d9d92c;
-  width: 65%;
+  /* width: 65%;
+  max-width: 1200px; */
+
+  svg {
+    stroke: var(--color-gray);
+  }
 }
