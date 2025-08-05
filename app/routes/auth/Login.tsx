@@ -23,7 +23,11 @@ function Login({}: Props) {
               Email
             </AppText>
           </label>
-          <Input className="text-black bg-white mt-2" id="email" type="email" />
+          <Input
+            className="text-black bg-white mt-1 rounded-[20px] h-[40px]"
+            id="email"
+            type="email"
+          />
         </div>
 
         <div className="w-full">
@@ -33,7 +37,7 @@ function Login({}: Props) {
             </AppText>
           </label>
           <Input
-            className="text-black bg-white mt-2"
+            className="text-black bg-white mt-1 rounded-[20px] h-[40px]"
             id="password"
             type="password"
           />
