@@ -1,20 +1,36 @@
 import { LucideKeySquare, LucideUser2 } from "lucide-react";
 import "./styles.css";
-import { Link } from "react-router";
+import { Form, Link, redirect, useFetcher } from "react-router";
 import AppButton from "~/components/general/AppButton/AppButton";
 import AppText from "~/components/general/AppText/AppText";
 import Icon from "~/components/icon";
 import { Input } from "~/components/ui/input";
 import { cn } from "~/lib/utils";
+import type { Route } from "./+types/Login";
 
 type Props = {};
 
 export const formContainerClassName =
   "form-container flex flex-col w-[95%] lg:w-[65%] max-w-7xl items-center self-center justify-self-center px-4 py-5 lg:px-5 lg:py-10 rounded";
 
-function Login({}: Props) {
+export async function clientAction({ request }: Route.ActionArgs) {
+  let formData = await request.formData();
+  const user = formData.get("email");
+  const email = formData.get("password");
+  localStorage.setItem("token", "Bearer eygh235");
+  localStorage.setItem(
+    "user",
+    JSON.stringify({ sub: "232158456", username: "ihasina" })
+  );
+
+  return redirect("/");
+}
+
+function Login({ actionData }: Route.ComponentProps) {
+  const fetcher = useFetcher();
+
   return (
-    <form className={cn([formContainerClassName])}>
+    <fetcher.Form className={cn([formContainerClassName])} method="post">
       <div className="mb-20">
         <Icon name="LogoBease" />
       </div>
@@ -34,6 +50,7 @@ function Login({}: Props) {
               className="text-black bg-white mt-1 pl-10 rounded-[20px] h-[40px]"
               id="email"
               type="email"
+              name="email"
             />
           </div>
         </div>
@@ -51,6 +68,7 @@ function Login({}: Props) {
               className="text-black bg-white mt-1 pl-10 rounded-[20px] h-[40px]"
               id="password"
               type="password"
+              name="password"
             />
           </div>
         </div>
@@ -67,8 +85,10 @@ function Login({}: Props) {
           </AppText>
         </Link>
       </div>
-      <AppButton className="w-full mt-8">Login</AppButton>
-    </form>
+      <AppButton className="w-full mt-8">
+        {fetcher.state !== "idle" ? "..." : "Login"}
+      </AppButton>
+    </fetcher.Form>
   );
 }
 
