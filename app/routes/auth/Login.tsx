@@ -1,33 +1,45 @@
 import { LucideKeySquare, LucideUser2 } from "lucide-react";
 import "./styles.css";
-import { Form, Link, redirect, useFetcher } from "react-router";
+import { data, Form, Link, redirect, useFetcher } from "react-router";
 import AppButton from "~/components/general/AppButton/AppButton";
 import AppText from "~/components/general/AppText/AppText";
 import Icon from "~/components/icon";
 import { Input } from "~/components/ui/input";
 import { cn } from "~/lib/utils";
+import { UserService } from "~/services/userService";
 import type { Route } from "./+types/Login";
-
-type Props = {};
+import { toast } from "sonner";
+import { useEffect } from "react";
 
 export const formContainerClassName =
   "form-container flex flex-col w-[95%] lg:w-[65%] max-w-7xl items-center self-center justify-self-center px-4 py-5 lg:px-5 lg:py-10 rounded";
 
 export async function clientAction({ request }: Route.ActionArgs) {
-  let formData = await request.formData();
-  const user = formData.get("email");
-  const email = formData.get("password");
-  localStorage.setItem("token", "Bearer eygh235");
-  localStorage.setItem(
-    "user",
-    JSON.stringify({ sub: "232158456", username: "ihasina" })
-  );
+  try {
+    let formData = await request.formData();
+    const email = formData.get("email")?.toString()!;
+    const password = formData.get("password")?.toString()!;
 
-  return redirect("/");
+    const res = await UserService.login({ email, password });
+    console.log(res);
+    localStorage.setItem("token", "Bearer " + res.token);
+    localStorage.setItem("refreshToken", "Bearer " + res.refreshToken);
+    localStorage.setItem("user", JSON.stringify(res.adminDoc));
+    return redirect("/");
+  } catch (error) {
+    return data({ message: "Verifie bien votre email et mot de passe" });
+  }
 }
 
 function Login({ actionData }: Route.ComponentProps) {
   const fetcher = useFetcher();
+  const errors = fetcher.data;
+
+  useEffect(() => {
+    if (fetcher.data?.message) {
+      toast.error(fetcher.data.message);
+    }
+  }, [fetcher.data]);
 
   return (
     <fetcher.Form className={cn([formContainerClassName])} method="post">
@@ -52,6 +64,11 @@ function Login({ actionData }: Route.ComponentProps) {
               type="email"
               name="email"
             />
+            {errors?.email && (
+              <AppText color="red" size="xs">
+                {errors.email[0]}
+              </AppText>
+            )}
           </div>
         </div>
 
@@ -70,6 +87,11 @@ function Login({ actionData }: Route.ComponentProps) {
               type="password"
               name="password"
             />
+            {errors?.password && (
+              <AppText color="red" size="xs">
+                {errors.password[0]}
+              </AppText>
+            )}
           </div>
         </div>
       </div>

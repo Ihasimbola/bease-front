@@ -2,9 +2,10 @@ import AppText from "~/components/general/AppText/AppText";
 import type { icons } from "~/components/icon";
 import Icon from "~/components/icon";
 import "./styles.css";
-import { Link, NavLink } from "react-router";
+import { Link, NavLink, redirect } from "react-router";
 import { useState } from "react";
 import { cn } from "~/libs/twMerge";
+import { useAuth } from "~/libs/auth";
 
 type SidebarItem = {
   label: string;
@@ -49,7 +50,7 @@ const profilItems = [
   {
     label: "Deconnexion",
     icon: "LogoutIcon",
-    link: "logour",
+    link: "logout",
   },
 ] satisfies SidebarItem[];
 
@@ -57,6 +58,7 @@ interface Props {}
 
 const Sidebar = () => {
   const [openMenu, setOpenMenu] = useState(false);
+  const { logout } = useAuth();
 
   return (
     <>
@@ -114,8 +116,14 @@ const Sidebar = () => {
               <NavLink
                 to={item.link}
                 className="py-3.5 flex flex-col items-center gap-2 cursor-pointer"
-                onClick={() => setOpenMenu(false)}
-                >
+                onClick={() => {
+                  setOpenMenu(false);
+                  if (item.link === "logout") {
+                    logout();
+                    redirect("/auth/login");
+                  }
+                }}
+              >
                 <Icon name={item.icon} />
                 <AppText color="white" weight="normal" size="xs">
                   {item.label}

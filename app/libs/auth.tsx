@@ -52,6 +52,7 @@ export default function AuthProvider({
     // clear token, etc.
     setIsAuthenticated(false);
     setUserRole(undefined);
+    localStorage.clear();
   };
 
   return (

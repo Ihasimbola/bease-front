@@ -9,8 +9,6 @@ export const ProtectedRoute = ({ children }: Props) => {
   const { isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
 
-  console.log(isAuthenticated);
-
   if (isLoading) {
     // Still verifying token—show a spinner or message
     return <div>Loading authentication status…</div>;
