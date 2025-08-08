@@ -1,23 +1,93 @@
 import {
+  LoaderCircle,
   LucideKeySquare,
   LucideMail,
   LucidePhone,
   LucideUser2,
 } from "lucide-react";
 import "./styles.css";
-import { Link } from "react-router";
+import { data, Link, redirect, useFetcher } from "react-router";
 import AppButton from "~/components/general/AppButton/AppButton";
 import AppText from "~/components/general/AppText/AppText";
 import Icon from "~/components/icon";
 import { Input } from "~/components/ui/input";
 import { formContainerClassName } from "./Login";
 import { cn } from "~/lib/utils";
+import type { Route } from "./+types/Signup";
+import { RegisterSchema } from "./zodSchema";
+import { useEffect, useState } from "react";
+import * as z from "zod";
+import { UserService } from "~/services/userService";
+import { toast } from "sonner";
 
 type Props = {};
 
-function Signup({}: Props) {
+export async function clientAction({ request }: Route.ActionArgs) {
+  const formData = await request.formData();
+  const user = {} as any;
+  for (let [key, value] of formData.entries()) {
+    user[key] = value;
+  }
+
+  const result = RegisterSchema.safeParse(user);
+  if (result.error) {
+    return data({ errors: z.flattenError(result.error).fieldErrors });
+  }
+
+  try {
+    const res = await UserService.register({
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
+      phone: user.phone || "",
+      password: user.password,
+    });
+    localStorage.setItem("token", "Bearer " + res.token);
+    localStorage.setItem("refreshToken", "Bearer " + res.refreshToken);
+    localStorage.setItem("user", JSON.stringify(res.data));
+    return redirect("/");
+  } catch (error) {
+    return data({ requestError: error });
+  }
+}
+
+function Signup({ actionData }: Route.ComponentProps) {
+  // state for checking password correspondance
+  const [pass, setPass] = useState<{
+    password: string;
+    confirmPassword: string;
+  }>({
+    password: "",
+    confirmPassword: "",
+  });
+  const [isEqual, setIsEqual] = useState<null | boolean>(null);
+
+  // check if password and confirm password are equal
+  useEffect(() => {
+    const checkPassword = () => {
+      if (pass.password && pass.confirmPassword) {
+        setIsEqual(pass.password === pass.confirmPassword);
+      } else if (!pass.password && !pass.confirmPassword) {
+        setIsEqual(null);
+      }
+    };
+    checkPassword();
+  }, [pass.password, pass.confirmPassword]);
+
+  const fetcher = useFetcher();
+  const errors = fetcher.data?.errors;
+  const requestError = fetcher.data?.requestError;
+  console.log(requestError);
+
+  useEffect(() => {
+    console.log("called");
+    if (requestError?.response?.status === 400) {
+      toast.error(requestError?.response?.data?.message);
+    }
+  }, [fetcher.data?.requestError]);
+
   return (
-    <form className={cn([formContainerClassName])}>
+    <fetcher.Form className={cn([formContainerClassName])} method="POST">
       <div className="mb-10">
         <Icon name="LogoBease" />
       </div>
@@ -38,7 +108,13 @@ function Signup({}: Props) {
                 className="text-black bg-white mt-1 pl-10 rounded-[20px] h-[40px]"
                 id="firstname"
                 type="text"
+                name="firstname"
               />
+              {errors?.firstname && (
+                <AppText color="red" size="xs">
+                  {errors.firstname[0]}
+                </AppText>
+              )}
             </div>
           </div>
 
@@ -54,7 +130,13 @@ function Signup({}: Props) {
                 className="text-black bg-white mt-1 pl-10 rounded-[20px] h-[40px]"
                 id="lastname"
                 type="text"
+                name="lastname"
               />
+              {errors?.lastname && (
+                <AppText color="red" size="xs">
+                  {errors.lastname[0]}
+                </AppText>
+              )}
             </div>
           </div>
         </div>
@@ -71,8 +153,14 @@ function Signup({}: Props) {
               <Input
                 className="text-black bg-white mt-1 pl-10 rounded-[20px] h-[40px]"
                 id="email"
-                type="email"
+                type="text"
+                name="email"
               />
+              {errors?.email && (
+                <AppText color="red" size="xs">
+                  {errors.email[0]}
+                </AppText>
+              )}
             </div>
           </div>
 
@@ -88,6 +176,7 @@ function Signup({}: Props) {
                 className="text-black bg-white mt-1 pl-10 rounded-[20px] h-[40px]"
                 id="phone"
                 type="text"
+                name="phone"
               />
             </div>
           </div>
@@ -107,7 +196,20 @@ function Signup({}: Props) {
                 className="text-black bg-white mt-1 pl-10 rounded-[20px] h-[40px]"
                 id="password"
                 type="password"
+                name="password"
+                onChange={(e) =>
+                  setPass({
+                    ...pass,
+                    password: e.target.value,
+                    confirmPassword: pass.confirmPassword,
+                  })
+                }
               />
+              {errors?.password && (
+                <AppText color="red" size="xs">
+                  {errors.password[0]}
+                </AppText>
+              )}
             </div>
           </div>
 
@@ -124,7 +226,25 @@ function Signup({}: Props) {
                 className="text-black bg-white mt-1 pl-10 rounded-[20px] h-[40px]"
                 id="confirm-password"
                 type="password"
+                name="confirmPassword"
+                onChange={(e) =>
+                  setPass({
+                    ...pass,
+                    confirmPassword: e.target.value,
+                    password: pass.password,
+                  })
+                }
               />
+              {errors?.confirmPassword && (
+                <AppText color="red" size="xs">
+                  {errors?.confirmPassword[0]}
+                </AppText>
+              )}
+              {isEqual === false && (
+                <AppText color="red" size="xs">
+                  Les mots de passe ne sont pas identiques
+                </AppText>
+              )}
             </div>
           </div>
         </div>
@@ -136,8 +256,24 @@ function Signup({}: Props) {
           </AppText>
         </Link>
       </div>
-      <AppButton className="w-full mt-8">S' inscrire</AppButton>
-    </form>
+      <AppButton
+        className={cn([
+          "w-full mt-8",
+          isEqual === false && "filter grayscale cursor-not-allowed",
+        ])}
+        disabled={isEqual === false}
+      >
+        {fetcher.state === "idle" ? (
+          "S'inscrire"
+        ) : (
+          <LoaderCircle
+            className="loader-circle"
+            id="loader-circle"
+            stroke="stroke-white"
+          />
+        )}
+      </AppButton>
+    </fetcher.Form>
   );
 }
 

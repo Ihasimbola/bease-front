@@ -7,3 +7,22 @@
     stroke: var(--color-gray);
   }
 }
+
+.loader-circle {
+  animation: rotation 1s linear infinite;
+  stroke: var(--color-white);
+}
+
+#loader-circle {
+  stroke: var(--color-white);
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

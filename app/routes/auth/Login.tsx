@@ -1,6 +1,6 @@
-import { LucideKeySquare, LucideUser2 } from "lucide-react";
+import { LoaderCircle, LucideKeySquare, LucideUser2 } from "lucide-react";
 import "./styles.css";
-import { data, Form, Link, redirect, useFetcher } from "react-router";
+import { data, Link, redirect, useFetcher } from "react-router";
 import AppButton from "~/components/general/AppButton/AppButton";
 import AppText from "~/components/general/AppText/AppText";
 import Icon from "~/components/icon";
@@ -21,7 +21,6 @@ export async function clientAction({ request }: Route.ActionArgs) {
     const password = formData.get("password")?.toString()!;
 
     const res = await UserService.login({ email, password });
-    console.log(res);
     localStorage.setItem("token", "Bearer " + res.token);
     localStorage.setItem("refreshToken", "Bearer " + res.refreshToken);
     localStorage.setItem("user", JSON.stringify(res.adminDoc));
@@ -108,7 +107,15 @@ function Login({ actionData }: Route.ComponentProps) {
         </Link>
       </div>
       <AppButton className="w-full mt-8">
-        {fetcher.state !== "idle" ? "..." : "Login"}
+        {fetcher.state !== "idle" ? (
+          <LoaderCircle
+            className="loader-circle"
+            id="loader-circle"
+            stroke="stroke-white"
+          />
+        ) : (
+          "Login"
+        )}
       </AppButton>
     </fetcher.Form>
   );
