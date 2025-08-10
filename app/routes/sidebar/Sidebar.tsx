@@ -50,7 +50,7 @@ const profilItems = [
   {
     label: "Deconnexion",
     icon: "LogoutIcon",
-    link: "logout",
+    link: "/auth/login",
   },
 ] satisfies SidebarItem[];
 
@@ -120,7 +120,6 @@ const Sidebar = () => {
                   setOpenMenu(false);
                   if (item.link === "logout") {
                     logout();
-                    redirect("/auth/login");
                   }
                 }}
               >

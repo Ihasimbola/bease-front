@@ -38,7 +38,6 @@ export default function AuthProvider({
     } else {
       setIsAuthenticated(false);
     }
-
     setIsLoading(false);
   }, [location.pathname]);
 
@@ -56,7 +55,7 @@ export default function AuthProvider({
   };
 
   return (
-    <AuthContext
+    <AuthContext.Provider
       value={{
         isAuthenticated,
         isLoading,
@@ -66,7 +65,7 @@ export default function AuthProvider({
       }}
     >
       {children}
-    </AuthContext>
+    </AuthContext.Provider>
   );
 }
 

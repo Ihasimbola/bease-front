@@ -2,10 +2,10 @@ import { Navigate, Outlet, useLocation } from "react-router";
 import { useAuth } from "~/libs/auth";
 
 interface Props {
-  children: React.ReactNode;
+  children: React.ReactElement;
 }
 
-export const ProtectedRoute = ({ children }: Props) => {
+export const ProtectedRoute = () => {
   const { isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
 
@@ -16,12 +16,10 @@ export const ProtectedRoute = ({ children }: Props) => {
 
   // If logged in, render child routes; otherwise redirect to /login
   return isAuthenticated ? (
-    <Outlet />
+    <>
+      <Outlet />
+    </>
   ) : (
-    <Navigate
-      to="/auth/login"
-      replace
-      state={{ from: location }} // remember original page
-    />
+    <Navigate to="/auth/login" replace />
   );
 };
