@@ -1,0 +1,18 @@
+.club {
+  img {
+    max-width: 348px;
+    max-height: 343px;
+  }
+  .category-list {
+    li:hover {
+      background-color: var(--color-gray1);
+    }
+
+    & li:nth-child(odd) {
+      background-color: var(--color-gray2);
+      &:hover {
+        background-color: var(--color-gray1);
+      }
+    }
+  }
+}

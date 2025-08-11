@@ -22,6 +22,7 @@ import BuvetteIcon from "./BuvetteIcon";
 import MarqueurIcon from "./MarqueurIcon";
 import TeamIcon from "./TeamIcon";
 import MessageIcon from "./MessageIcon";
+import Basketball from "./Basketball";
 
 export const icons = {
   BeaseIcon: <BeaseIcon />,
@@ -47,7 +48,8 @@ export const icons = {
   ChronoIcon: <ChronoIcon />,
   BuvetteIcon: <BuvetteIcon />,
   TeamIcon: <TeamIcon />,
-  MessageIcon: <MessageIcon />
+  MessageIcon: <MessageIcon />,
+  Basketball: <Basketball />,
 };
 interface Props {
   name: keyof typeof icons;

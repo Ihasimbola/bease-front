@@ -118,7 +118,7 @@ const Sidebar = () => {
                 className="py-3.5 flex flex-col items-center gap-2 cursor-pointer"
                 onClick={() => {
                   setOpenMenu(false);
-                  if (item.link === "logout") {
+                  if (item.label === "Deconnexion") {
                     logout();
                   }
                 }}
