@@ -23,6 +23,8 @@ import MarqueurIcon from "./MarqueurIcon";
 import TeamIcon from "./TeamIcon";
 import MessageIcon from "./MessageIcon";
 import Basketball from "./Basketball";
+import UploadImgIcon from "./UploadImgIcon";
+import { TrashIcon } from "lucide-react";
 
 export const icons = {
   BeaseIcon: <BeaseIcon />,
@@ -50,6 +52,8 @@ export const icons = {
   TeamIcon: <TeamIcon />,
   MessageIcon: <MessageIcon />,
   Basketball: <Basketball />,
+  UploadImgIcon: <UploadImgIcon />,
+  TrashIcon: <TrashIcon />,
 };
 interface Props {
   name: keyof typeof icons;

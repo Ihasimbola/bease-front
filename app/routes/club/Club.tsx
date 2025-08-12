@@ -4,10 +4,13 @@ import AppText from "~/components/general/AppText/AppText";
 import clubLogo from "~/assets/images/club_logo.png";
 import { clubData } from "./data";
 import "./styles.css";
+import { useNavigate } from "react-router";
 
 type Props = {};
 
 function Club({}: Props) {
+  const navigate = useNavigate();
+
   return (
     <section className="club">
       <div className="flex flex-col gap-2 xl:flex-row xl:justify-between">
@@ -21,14 +24,16 @@ function Club({}: Props) {
         </div>
         <div className="mt-6 flex gap-4">
           <AppButton>Créer mon Club</AppButton>
-          <AppButton>Editer mon Club</AppButton>
+          <AppButton onClick={() => navigate("/club/edit/1234568")}>
+            Editer mon Club
+          </AppButton>
         </div>
       </div>
 
       <div className="xl:flex gap-10">
         <div className="mt-6 bg-white p-4 rounded-[20px] ">
           <AppText weight="semibold">FCSL EGUISHEIM</AppText>
-          <img src={clubLogo} alt="logo_club" />
+          <img src={clubLogo} alt="logo_club" className="justify-self-center" />
         </div>
         <div className="mt-6 bg-white p-4 rounded-[20px] flex-1">
           <AppText as="h3" weight="semibold">

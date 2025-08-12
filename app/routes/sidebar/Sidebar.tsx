@@ -72,7 +72,7 @@ const Sidebar = () => {
       </div>
       <nav
         className={cn([
-          "nav flex flex-col h-full w-full lg:w-[94px] fixed top-0 left-0 translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out",
+          "nav flex flex-col h-full w-full lg:w-[94px] fixed z-[1000] top-0 left-0 translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out",
           openMenu && "translate-x-0",
         ])}
       >
