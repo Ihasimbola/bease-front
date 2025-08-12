@@ -7,12 +7,15 @@ import { clubData } from "./data";
 import "./styles.css";
 import { PlusIcon, SaveAllIcon, SaveIcon, Trash2Icon } from "lucide-react";
 import AppButton from "~/components/general/AppButton/AppButton";
+import Dialog from "~/components/common/dialog/Dialog";
 
 type Props = {};
 
 function EditClub({}: Props) {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [emblem, setEmblem] = React.useState<any>();
+  const [isOpenCategoryDialog, setIsOpen] = React.useState(false);
+  const [isOpenSubclubDialog, setIsOpenSubclubDialog] = React.useState(false);
 
   const handleClickUploadEmblem = () => {
     if (fileInputRef.current) {
@@ -27,6 +30,58 @@ function EditClub({}: Props) {
 
   return (
     <section className="club edit">
+      <Dialog
+        className="flex flex-col"
+        close={isOpenCategoryDialog}
+        setIsOpen={setIsOpen}
+      >
+        <AppText color="black" weight="bold" as="h1">
+          Creation de categorie
+        </AppText>
+        <div className="mt-6">
+          <label htmlFor="category">
+            <AppText color="black">Nom de la categorie</AppText>
+          </label>
+          <Input type="text" id="category" placeholder="U17" className="mt-2" />
+        </div>
+        <div className="flex gap-6 mt-4">
+          <AppButton>
+            <PlusIcon />
+            Ajouter
+          </AppButton>
+          <AppButton onClick={() => setIsOpen(false)}>Annuler</AppButton>
+        </div>
+      </Dialog>
+
+      <Dialog
+        className="flex flex-col"
+        close={isOpenSubclubDialog}
+        setIsOpen={setIsOpenSubclubDialog}
+      >
+        <AppText color="black" weight="bold" as="h1">
+          Creation de sous-club
+        </AppText>
+        <div className="mt-6">
+          <label htmlFor="category">
+            <AppText color="black">Nom du sous-club</AppText>
+          </label>
+          <Input
+            type="text"
+            id="category"
+            placeholder="Kunheim-1"
+            className="mt-2"
+          />
+        </div>
+        <div className="flex gap-6 mt-4">
+          <AppButton>
+            <PlusIcon />
+            Ajouter
+          </AppButton>
+          <AppButton onClick={() => setIsOpenSubclubDialog(false)}>
+            Annuler
+          </AppButton>
+        </div>
+      </Dialog>
       <div className="flex flex-col gap-2 xl:flex-row xl:justify-between">
         <div>
           <AppText weight="bold" size="2xl" as="h1">
@@ -85,7 +140,7 @@ function EditClub({}: Props) {
               </li>
             ))}
           </ul>
-          <AppButton className=" mt-4">
+          <AppButton className=" mt-4" onClick={() => setIsOpen(true)}>
             <PlusIcon color="white" />
             Ajouter une catégorie
           </AppButton>
@@ -113,7 +168,10 @@ function EditClub({}: Props) {
               </li>
             ))}
           </ul>
-          <AppButton className=" mt-4">
+          <AppButton
+            className=" mt-4"
+            onClick={() => setIsOpenSubclubDialog(true)}
+          >
             <PlusIcon color="white" />
             Ajouter un sous-club
           </AppButton>
