@@ -28,7 +28,6 @@ function ImportExcelDialog(props: Props) {
   const handleSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = URL.createObjectURL(e.target.files![0]);
 
-    console.log(e.target.files);
     setFile({
       name: e.target.files![0].name,
       size: e.target.files![0].size.toString(),

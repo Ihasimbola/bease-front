@@ -6,11 +6,13 @@ import { Input } from "~/components/ui/input";
 import Table from "./Table";
 import ImportExcelDialog from "./ImportExcelDialog";
 import { set } from "zod";
+import AddMemberDialog from "./AddMemberDialog";
 
 type Props = {};
 
 function Membre({}: Props) {
   const [importExcelDialog, setImportExcelDialog] = React.useState(false);
+  const [addMembreDialog, setAddMembreDialog] = React.useState(false);
 
   return (
     <section>
@@ -30,7 +32,7 @@ function Membre({}: Props) {
               Importer un ficher excel
             </AppText>
           </AppButton>
-          <AppButton>
+          <AppButton onClick={() => setAddMembreDialog(true)}>
             <PlusIcon size={16} />
             <AppText color="white" size="xs">
               Ajouter un membre
@@ -53,6 +55,10 @@ function Membre({}: Props) {
       <ImportExcelDialog
         isOpen={importExcelDialog}
         setIsOpen={setImportExcelDialog}
+      />
+      <AddMemberDialog
+        isOpen={addMembreDialog}
+        setIsOpen={setAddMembreDialog}
       />
     </section>
   );
