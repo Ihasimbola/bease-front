@@ -25,6 +25,7 @@ import MessageIcon from "./MessageIcon";
 import Basketball from "./Basketball";
 import UploadImgIcon from "./UploadImgIcon";
 import { TrashIcon } from "lucide-react";
+import ExcelIcon from "./ExcelIcon";
 
 export const icons = {
   BeaseIcon: <BeaseIcon />,
@@ -54,6 +55,7 @@ export const icons = {
   Basketball: <Basketball />,
   UploadImgIcon: <UploadImgIcon />,
   TrashIcon: <TrashIcon />,
+  ExcelIcon: <ExcelIcon />,
 };
 interface Props {
   name: keyof typeof icons;

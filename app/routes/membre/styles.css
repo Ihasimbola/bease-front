@@ -1,0 +1,11 @@
+.file-container {
+  svg {
+    width: 84px;
+    height: auto;
+  }
+
+  .close-icon {
+    width: 18px;
+    height: auto;
+  }
+}

@@ -4,10 +4,14 @@ import AppButton from "~/components/general/AppButton/AppButton";
 import AppText from "~/components/general/AppText/AppText";
 import { Input } from "~/components/ui/input";
 import Table from "./Table";
+import ImportExcelDialog from "./ImportExcelDialog";
+import { set } from "zod";
 
 type Props = {};
 
 function Membre({}: Props) {
+  const [importExcelDialog, setImportExcelDialog] = React.useState(false);
+
   return (
     <section>
       <div className="lg:flex justify-between items-end">
@@ -20,7 +24,7 @@ function Membre({}: Props) {
           </AppText>
         </div>
         <div className="flex gap-4">
-          <AppButton>
+          <AppButton onClick={() => setImportExcelDialog(true)}>
             <Upload size={16} />
             <AppText color="white" size="xs">
               Importer un ficher excel
@@ -46,6 +50,10 @@ function Membre({}: Props) {
         </div>
       </div>
       <Table className="mt-8" />
+      <ImportExcelDialog
+        isOpen={importExcelDialog}
+        setIsOpen={setImportExcelDialog}
+      />
     </section>
   );
 }
