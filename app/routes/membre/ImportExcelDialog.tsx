@@ -35,13 +35,13 @@ function ImportExcelDialog(props: Props) {
   };
 
   return (
-    <Dialog setIsOpen={setIsOpen} close={isOpen}>
+    <Dialog setIsOpen={setIsOpen} close={isOpen} className="mx-3 lg:mx-0">
       <div>
         <AppText as="h1" weight="bold">
           Importer votre fichier excel
         </AppText>
         <div className="flex gap-3 items-center p-3 bg-amber-100 mt-3 rounded">
-          <TriangleAlert color="orange" />
+          <TriangleAlert color="orange" size={48} />
           <AppText size="xs">
             {`Assurez-vous bien que l' adresse email \n est bien présent pour chaque
             licencié pour l' envoi de confirmation.`}

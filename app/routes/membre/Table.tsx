@@ -49,7 +49,11 @@ const Table = (props: Props) => {
                 )}
               </li>
             ))}
-            <Trash2 size={16} color="red" className="cursor-pointer" />
+            <Trash2
+              size={16}
+              color="red"
+              className="cursor-pointer justify-self-end"
+            />
           </ul>
         ))}
       </div>

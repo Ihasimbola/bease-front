@@ -45,9 +45,9 @@ function Membre({}: Props) {
         <Input
           type="text"
           placeholder="Rechercher un membre..."
-          className="text-xs rounded-[20px] pl-8 max-w-[450px]"
+          className="text-xs rounded-[20px] pl-8 max-w-[450px] bg-white"
         />
-        <div className="absolute top-2 left-2">
+        <div className="absolute top-2.5 left-2">
           <SearchIcon color="gray" size={16} />
         </div>
       </div>
