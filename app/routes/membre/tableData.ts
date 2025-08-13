@@ -14,7 +14,7 @@ export const tableHeader = [
     key: "birthdate"
   },
   {
-    label: "categorie",
+    label: "Catégorie",
     key: "categorie"
   },
   {
