@@ -44,7 +44,7 @@ const EditMemberDialog = (props: Props) => {
   return (
     <Dialog setIsOpen={setIsOpen} close={isOpen}>
       <AppText as="h1" weight="bold">
-        Assigner a une catégorie
+        Assigner à une catégorie
       </AppText>
       <div className="mt-4">
         <Select>
