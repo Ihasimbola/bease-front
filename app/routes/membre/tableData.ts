@@ -22,7 +22,7 @@ export const tableHeader = [
     key: "genre"
   },
   {
-    label: "status du compte",
+    label: "Status du compte",
     key: "isConfirmed"
   }
 ]

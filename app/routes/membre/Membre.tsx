@@ -7,12 +7,19 @@ import Table from "./Table";
 import ImportExcelDialog from "./ImportExcelDialog";
 import { set } from "zod";
 import AddMemberDialog from "./AddMemberDialog";
+import DeleteConfirmationDialog from "./ConfirmationDialog";
 
 type Props = {};
 
 function Membre({}: Props) {
   const [importExcelDialog, setImportExcelDialog] = React.useState(false);
   const [addMembreDialog, setAddMembreDialog] = React.useState(false);
+  const [deleteConfirmationDialog, setDeleteConfirmationDialog] =
+    React.useState(false);
+
+  const hanleOnDelete = () => {
+    setDeleteConfirmationDialog(true);
+  };
 
   return (
     <section>
@@ -51,7 +58,7 @@ function Membre({}: Props) {
           <SearchIcon color="gray" size={16} />
         </div>
       </div>
-      <Table className="mt-8" />
+      <Table className="mt-8" onClickTrash={hanleOnDelete} />
       <ImportExcelDialog
         isOpen={importExcelDialog}
         setIsOpen={setImportExcelDialog}
@@ -59,6 +66,10 @@ function Membre({}: Props) {
       <AddMemberDialog
         isOpen={addMembreDialog}
         setIsOpen={setAddMembreDialog}
+      />
+      <DeleteConfirmationDialog
+        isOpen={deleteConfirmationDialog}
+        setIsOpen={setDeleteConfirmationDialog}
       />
     </section>
   );

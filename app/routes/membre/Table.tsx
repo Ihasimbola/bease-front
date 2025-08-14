@@ -7,10 +7,11 @@ import { Trash2 } from "lucide-react";
 
 interface Props {
   className?: string;
+  onClickTrash?: () => void;
 }
 
 const Table = (props: Props) => {
-  const { className } = props;
+  const { className, onClickTrash } = props;
 
   return (
     <div className={cn(["overflow-x-auto max-w-screen", className])}>
@@ -53,6 +54,7 @@ const Table = (props: Props) => {
               size={16}
               color="red"
               className="cursor-pointer justify-self-end"
+              onClick={onClickTrash}
             />
           </ul>
         ))}
