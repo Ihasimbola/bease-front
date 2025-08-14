@@ -3,15 +3,16 @@ import AppText from "~/components/general/AppText/AppText";
 import Badge from "~/components/common/badge/Badge";
 import { cn } from "~/lib/utils";
 import "./styles.css";
-import { Trash2 } from "lucide-react";
+import { Pen, Trash2 } from "lucide-react";
 
 interface Props {
   className?: string;
   onClickTrash?: () => void;
+  onClickEdit?: () => void;
 }
 
 const Table = (props: Props) => {
-  const { className, onClickTrash } = props;
+  const { className, onClickTrash, onClickEdit } = props;
 
   return (
     <div className={cn(["overflow-x-auto max-w-screen", className])}>
@@ -50,12 +51,19 @@ const Table = (props: Props) => {
                 )}
               </li>
             ))}
-            <Trash2
-              size={16}
-              color="red"
-              className="cursor-pointer justify-self-end"
-              onClick={onClickTrash}
-            />
+            <div className="flex gap-3 items-center">
+              <Pen
+                size={16}
+                className="cursor-pointer justify-self-end"
+                onClick={onClickEdit}
+              />
+              <Trash2
+                size={16}
+                color="red"
+                className="cursor-pointer justify-self-end"
+                onClick={onClickTrash}
+              />
+            </div>
           </ul>
         ))}
       </div>
