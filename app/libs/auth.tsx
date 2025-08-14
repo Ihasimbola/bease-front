@@ -33,6 +33,15 @@ export default function AuthProvider({
     const token = localStorage.getItem("token");
     const user = localStorage.getItem("user");
 
+    // TODO: verify token
+    // const verifyToken = async() => {
+    //   try {
+
+    //   } catch(error) {
+
+    //   }
+    // }
+
     if (token) {
       setIsAuthenticated(true);
     } else {

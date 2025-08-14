@@ -23,7 +23,9 @@ function Club({}: Props) {
           </AppText>
         </div>
         <div className="mt-6 flex gap-4">
-          <AppButton>Créer mon Club</AppButton>
+          <AppButton onClick={() => navigate("/club/create")}>
+            Créer mon Club
+          </AppButton>
           <AppButton onClick={() => navigate("/club/edit/1234568")}>
             Editer mon Club
           </AppButton>

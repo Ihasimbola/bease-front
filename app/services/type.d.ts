@@ -5,3 +5,10 @@ export interface CreateAdmin {
   email: string;
   password: string;
 }
+
+export interface CreateClub {
+  name: string;
+  profileAdmin: string;
+  subCategoryNames: string[];
+  emblem: string;
+}

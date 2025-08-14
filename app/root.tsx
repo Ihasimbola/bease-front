@@ -6,13 +6,9 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
-import Banner from "~/assets/images/Banner.png";
 
 import type { Route } from "./+types/root";
 import "./app.css";
-import Sidebar from "./routes/sidebar/Sidebar";
-import Pub from "./components/layout/pub/Pub";
-import Icon from "./components/icon";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },

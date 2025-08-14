@@ -8,6 +8,17 @@ axiosInstance.interceptors.request.use(function(config) {
   config.headers.Authorization = localStorage.getItem("token");
 
   return config;
+}, function(error) {
+  console.log(error)
+})
+
+axiosInstance.interceptors.response.use(function(response) {
+  return response;
+}, function(error) {
+  if(error.status === 401) {
+    localStorage.clear();
+    window.location.href = "/auth/login";
+  }
 })
 
 export class Http {
