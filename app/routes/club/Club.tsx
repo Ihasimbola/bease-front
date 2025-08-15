@@ -116,7 +116,7 @@ function Club({ loaderData }: Route.ComponentProps) {
               Vos sous-clubs
             </AppText>
             <ul className="flex flex-col gap-1 mt-2 ml-2 category-list">
-              {club.subCategoryNames.map((subTeam: string, idx: number) => (
+              {club.subteamNames.map((subTeam: string, idx: number) => (
                 <li key={`category-${idx}`} className="p-2 cursor-pointer">
                   <AppText color="gray" size="xs">
                     {subTeam}

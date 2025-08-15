@@ -8,7 +8,8 @@ export default [
       route('club/create', "./routes/club/CreateClub.tsx"),
       route('club/edit/:id', "./routes/club/EditClub.tsx", [
         route('create-category', "./routes/club/CreateCategory.tsx"),
-        route('create-subteam', "./routes/club/CreateSubteam.tsx")
+        route('create-subteam', "./routes/club/CreateSubteam.tsx"),
+        route('destroy-subteam', "./routes/club/RemoveSubteam.tsx"),
       ]),
       route('membre', "./routes/membre/Membre.tsx"),
     ]),

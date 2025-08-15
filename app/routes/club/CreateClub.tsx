@@ -18,12 +18,12 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
   let data = {} as any;
   for (let [key, value] of form.entries()) {
     if (key === "emblem") continue;
-    if (key === "subCategoryNames") {
-      if (Array.isArray(data["subCategoryNames"])) {
-        data["subCategoryNames"] = [...data["subCategoryNames"], value];
+    if (key === "subteamNames") {
+      if (Array.isArray(data["subteamNames"])) {
+        data["subteamNames"] = [...data["subteamNames"], value];
         continue;
       } else {
-        data["subCategoryNames"] = [value];
+        data["subteamNames"] = [value];
       }
     } else {
       data[key] = value;
@@ -104,7 +104,7 @@ function CreateClub() {
                 type="text"
                 placeholder="Kunheim-1"
                 key={`sub-${idx}`}
-                name="subCategoryNames"
+                name="subteamNames"
                 className="max-w-[400px]"
               />
             ))}

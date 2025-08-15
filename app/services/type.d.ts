@@ -9,6 +9,6 @@ export interface CreateAdmin {
 export interface CreateClub {
   name: string;
   profileAdmin: string;
-  subCategoryNames: string[];
+  subteamNames: string[];
   emblem: string;
 }

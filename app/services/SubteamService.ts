@@ -9,4 +9,13 @@ export class SubteamService extends Http {
       throw error;
     }
   }
+
+  static async deleteSubteam(clubId: string, subteam: string) {
+    try {
+      const res = await this.delete(`club/subteam/${clubId}?subteam=${subteam}`);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

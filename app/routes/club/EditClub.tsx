@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AppText from "~/components/general/AppText/AppText";
 import Icon from "~/components/icon";
 import { Input } from "~/components/ui/input";
@@ -12,7 +12,8 @@ import { ClubService } from "~/services/ClubService";
 import { CategoryService } from "~/services/CategoryService";
 import type { Route } from "./+types/EditClub";
 import placeholderImage from "~/assets/images/placeholder_image.png";
-import { Form, Outlet, useNavigate } from "react-router";
+import { Form, Outlet, useNavigate, useSearchParams } from "react-router";
+import ConfirmationDialog from "~/components/common/ConfirmationDialog";
 
 const ApiBaseUrl = import.meta.env.VITE_API_URL;
 
@@ -31,8 +32,11 @@ function EditClub({ loaderData }: Route.ComponentProps) {
   console.log(club);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [emblem, setEmblem] = React.useState<any>();
-  const [isOpenCategoryDialog, setIsOpen] = React.useState(false);
-  const [isOpenSubclubDialog, setIsOpenSubclubDialog] = React.useState(false);
+  const [isOpenConfirmationDialog, setIsOpenConfirmationDialog] =
+    React.useState(false);
+  const [isDeleteConfirmed, setIsDeleteConfirmed] = React.useState(false);
+  const [subteamToDelete, setIsSubteamToDelete] = useState<{ name: string }>();
+  const [searchParam, setSearchParam] = useSearchParams("");
 
   const navigate = useNavigate();
 
@@ -46,6 +50,13 @@ function EditClub({ loaderData }: Route.ComponentProps) {
     const file = URL.createObjectURL(e.target.files![0]);
     setEmblem(file);
   };
+
+  useEffect(() => {
+    if (!isDeleteConfirmed) {
+      return;
+    }
+    setSearchParam("?subteam=" + subteamToDelete?.name);
+  }, [isDeleteConfirmed]);
 
   return (
     <section className="club edit">
@@ -137,7 +148,7 @@ function EditClub({ loaderData }: Route.ComponentProps) {
             Vos sous-clubs
           </AppText>
           <ul className="flex flex-col gap-1 mt-2 ml-2 category-list">
-            {club.subCategoryNames.map((subTeam: string, idx: number) => (
+            {club.subteamNames.map((subTeam: string, idx: number) => (
               <li
                 key={`category-${idx}`}
                 className="p-2 cursor-pointer flex justify-between"
@@ -145,7 +156,15 @@ function EditClub({ loaderData }: Route.ComponentProps) {
                 <AppText color="gray" size="xs">
                   {subTeam}
                 </AppText>
-                <div className="">
+                <div
+                  className=""
+                  onClick={() => {
+                    setIsOpenConfirmationDialog(true);
+                    setIsSubteamToDelete({ name: subTeam });
+                    navigate("destroy-subteam?subteam=" + subTeam);
+                  }}
+                  id={subTeam}
+                >
                   <Trash2Icon
                     className="stroke-red hover:brightness-110"
                     size={20}
@@ -163,6 +182,11 @@ function EditClub({ loaderData }: Route.ComponentProps) {
           </AppButton>
         </div>
       </div>
+      {/* <ConfirmationDialog
+        isOpen={isOpenConfirmationDialog}
+        setIsOpen={setIsOpenConfirmationDialog}
+        setIsDeleteConfirmed={setIsDeleteConfirmed}
+      /> */}
       <Outlet />
     </section>
   );
