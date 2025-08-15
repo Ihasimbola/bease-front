@@ -31,7 +31,7 @@ function Membre({}: Props) {
     <section>
       <div className="lg:flex justify-between items-end">
         <div className="mb-4 flex flex-col gap-1">
-          <AppText as="h1" weight="bold">
+          <AppText as="h1" weight="bold" size="2xl">
             Les membres
           </AppText>
           <AppText size="xs" color="gray">

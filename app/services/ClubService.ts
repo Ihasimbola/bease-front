@@ -11,4 +11,13 @@ export class ClubService extends Http {
       throw error;
     }
   }
+
+  static async getClub() {
+    try {
+      const res = await this.get('club');
+      return res.data
+    } catch (error) {
+      throw error;
+    }
+  }
 }
