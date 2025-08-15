@@ -20,4 +20,13 @@ export class ClubService extends Http {
       throw error;
     }
   }
+
+  static async updateClub(clubId: string, data: { name?: string, emblem?: string }) {
+    try {
+      const res = await this.patch(`club/${clubId}`, data);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

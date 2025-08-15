@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import AppText from "~/components/general/AppText/AppText";
 import Icon from "~/components/icon";
 import { Input } from "~/components/ui/input";
@@ -9,7 +9,8 @@ import { ClubService } from "~/services/ClubService";
 import { CategoryService } from "~/services/CategoryService";
 import type { Route } from "./+types/EditClub";
 import placeholderImage from "~/assets/images/placeholder_image.png";
-import { Outlet, useNavigate, useSearchParams } from "react-router";
+import { Form, Outlet, useNavigate } from "react-router";
+import { FileService } from "~/services/fileService";
 
 const ApiBaseUrl = import.meta.env.VITE_API_URL;
 
@@ -23,16 +24,34 @@ export async function clientLoader() {
   }
 }
 
-function EditClub({ loaderData }: Route.ComponentProps) {
+export async function clientAction({ request, params }: Route.ActionArgs) {
+  const formData = await request.formData();
+  const clubId = params.id;
+  const name = formData.get("name");
+  const data = {} as { name?: string; emblem?: string };
+
+  // procession the file emblem
+  const emblemFormData = new FormData();
+  if (formData.get("emblem") !== null) {
+    emblemFormData.append("emblem", formData.get("emblem")!);
+    const res = await FileService.upload("club/emblem", emblemFormData);
+    data.emblem = res.data._id;
+  }
+
+  if (name) {
+    data.name = name.toString();
+  }
+
+  const res = await ClubService.updateClub(clubId, data);
+  return res;
+}
+
+function EditClub({ loaderData, actionData }: Route.ComponentProps) {
   const { club, categories } = loaderData;
-  console.log(categories);
+  const data = actionData;
   const fileInputRef = React.useRef<HTMLInputElement>(null);
-  const [emblem, setEmblem] = React.useState<any>();
-  const [isOpenConfirmationDialog, setIsOpenConfirmationDialog] =
-    React.useState(false);
-  const [isDeleteConfirmed, setIsDeleteConfirmed] = React.useState(false);
-  const [subteamToDelete, setIsSubteamToDelete] = useState<{ name: string }>();
-  const [searchParam, setSearchParam] = useSearchParams("");
+  const [emblem, setEmblem] = useState<any>();
+  const [changeEmblem, setChangeEmblem] = useState(false);
 
   const navigate = useNavigate();
 
@@ -45,14 +64,8 @@ function EditClub({ loaderData }: Route.ComponentProps) {
   const handleSelectImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = URL.createObjectURL(e.target.files![0]);
     setEmblem(file);
+    setChangeEmblem(true);
   };
-
-  useEffect(() => {
-    if (!isDeleteConfirmed) {
-      return;
-    }
-    setSearchParam("?subteam=" + subteamToDelete?.name);
-  }, [isDeleteConfirmed]);
 
   return (
     <section className="club edit">
@@ -68,12 +81,17 @@ function EditClub({ loaderData }: Route.ComponentProps) {
       </div>
 
       <div className="xl:flex gap-10">
-        <div className="mt-6 bg-white p-4 rounded-[20px] logo-container relative">
+        <Form
+          className="mt-6 bg-white p-4 rounded-[20px] logo-container relative"
+          method="PATCH"
+          encType="multipart/form-data"
+        >
           <Input
             type="text"
             defaultValue={club.name}
             name="name"
             readOnly={false}
+            className="mb-5"
           />
           {club.emblem ? (
             <img
@@ -101,13 +119,15 @@ function EditClub({ loaderData }: Route.ComponentProps) {
           </div>
           <input
             type="file"
-            name="emblem"
+            name={changeEmblem ? "emblem" : ""}
             ref={fileInputRef}
             className="hidden"
             onChange={handleSelectImage}
           />
-          <AppButton className="m-auto mt-2">Sauvegarder</AppButton>
-        </div>
+          <AppButton className="m-auto mt-2" type="submit">
+            Sauvegarder
+          </AppButton>
+        </Form>
         <div className="mt-6 bg-white p-4 rounded-[20px] flex-1">
           <AppText as="h3" weight="semibold">
             Vos catégories
@@ -162,8 +182,6 @@ function EditClub({ loaderData }: Route.ComponentProps) {
                 <div
                   className=""
                   onClick={() => {
-                    setIsOpenConfirmationDialog(true);
-                    setIsSubteamToDelete({ name: subTeam });
                     navigate("destroy-subteam?subteam=" + subTeam);
                   }}
                   id={subTeam}
@@ -185,11 +203,6 @@ function EditClub({ loaderData }: Route.ComponentProps) {
           </AppButton>
         </div>
       </div>
-      {/* <ConfirmationDialog
-        isOpen={isOpenConfirmationDialog}
-        setIsOpen={setIsOpenConfirmationDialog}
-        setIsDeleteConfirmed={setIsDeleteConfirmed}
-      /> */}
       <Outlet />
     </section>
   );
