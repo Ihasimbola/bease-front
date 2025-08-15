@@ -47,7 +47,6 @@ export function HydrateFallback() {
 
 function Club({ loaderData }: Route.ComponentProps) {
   const { club, categories } = loaderData;
-  console.log(categories);
   const navigate = useNavigate();
 
   return (
@@ -67,61 +66,67 @@ function Club({ loaderData }: Route.ComponentProps) {
               Créer mon Club
             </AppButton>
           )}
-          <AppButton onClick={() => navigate("/club/edit/1234568")}>
-            Editer mon Club
-          </AppButton>
-        </div>
-      </div>
-
-      <div className="xl:flex gap-10">
-        <div className="mt-6 bg-white p-4 rounded-[20px] ">
-          <AppText weight="semibold">{club.name}</AppText>
-          {club.emblem ? (
-            <img
-              src={`${ApiBaseUrl}files/image/${club.emblem}`}
-              alt="emblem"
-              className="mt-2"
-            />
-          ) : (
-            <img
-              src={placeholderImage}
-              alt="emblem"
-              className="mt-2"
-              width="250px"
-              height="auto"
-            />
+          {club && (
+            <AppButton onClick={() => navigate("/club/edit/" + club._id)}>
+              Editer mon Club
+            </AppButton>
           )}
         </div>
-        <div className="mt-6 bg-white p-4 rounded-[20px] flex-1">
-          <AppText as="h3" weight="semibold">
-            Vos catégories
-          </AppText>
-          <ul className="flex flex-col gap-1 mt-2 ml-2 category-list">
-            {categories.map((category: string, idx: number) => (
-              <li key={`category-${idx}`} className="p-2 cursor-pointer">
-                <AppText color="gray" size="xs">
-                  {category}
-                </AppText>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="mt-6 bg-white p-4 rounded-[20px] flex-1">
-          <AppText as="h3" weight="semibold">
-            Vos sous-clubs
-          </AppText>
-          <ul className="flex flex-col gap-1 mt-2 ml-2 category-list">
-            {club.subCategoryNames.map((subTeam: string, idx: number) => (
-              <li key={`category-${idx}`} className="p-2 cursor-pointer">
-                <AppText color="gray" size="xs">
-                  {subTeam}
-                </AppText>
-              </li>
-            ))}
-          </ul>
-        </div>
       </div>
+
+      {club && (
+        <div className="xl:flex gap-10">
+          <div className="mt-6 bg-white p-4 rounded-[20px] ">
+            <AppText weight="semibold">{club.name}</AppText>
+            {club.emblem ? (
+              <img
+                src={`${ApiBaseUrl}files/image/${club.emblem}`}
+                alt="emblem"
+                className="mt-2"
+                width="250px"
+                height="auto"
+              />
+            ) : (
+              <img
+                src={placeholderImage}
+                alt="emblem"
+                className="mt-2"
+                width="250px"
+                height="auto"
+              />
+            )}
+          </div>
+          <div className="mt-6 bg-white p-4 rounded-[20px] flex-1">
+            <AppText as="h3" weight="semibold">
+              Vos catégories
+            </AppText>
+            <ul className="flex flex-col gap-1 mt-2 ml-2 category-list">
+              {categories.map((category: { name: string }, idx: number) => (
+                <li key={`category-${idx}`} className="p-2 cursor-pointer">
+                  <AppText color="gray" size="xs">
+                    {category.name}
+                  </AppText>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="mt-6 bg-white p-4 rounded-[20px] flex-1">
+            <AppText as="h3" weight="semibold">
+              Vos sous-clubs
+            </AppText>
+            <ul className="flex flex-col gap-1 mt-2 ml-2 category-list">
+              {club.subCategoryNames.map((subTeam: string, idx: number) => (
+                <li key={`category-${idx}`} className="p-2 cursor-pointer">
+                  <AppText color="gray" size="xs">
+                    {subTeam}
+                  </AppText>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

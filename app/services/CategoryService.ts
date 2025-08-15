@@ -9,4 +9,13 @@ export class CategoryService extends Http {
       throw error;
     }
   }
+
+  static async create(data: { name: string }) {
+    try {
+      const res = await this.post("category", data);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

@@ -6,7 +6,10 @@ export default [
       route('planning', "./routes/planning/Planning.tsx"),
       route('club', "./routes/club/Club.tsx"),
       route('club/create', "./routes/club/CreateClub.tsx"),
-      route('club/edit/:id', "./routes/club/EditClub.tsx"),
+      route('club/edit/:id', "./routes/club/EditClub.tsx", [
+        route('create-category', "./routes/club/CreateCategory.tsx"),
+        route('create-subteam', "./routes/club/CreateSubteam.tsx")
+      ]),
       route('membre', "./routes/membre/Membre.tsx"),
     ]),
   

@@ -5,17 +5,36 @@ import { Input } from "~/components/ui/input";
 import clubLogo from "~/assets/images/club_logo.png";
 import { clubData } from "./data";
 import "./styles.css";
-import { PlusIcon, SaveAllIcon, SaveIcon, Trash2Icon } from "lucide-react";
+import { PlusIcon, Trash2Icon } from "lucide-react";
 import AppButton from "~/components/general/AppButton/AppButton";
 import Dialog from "~/components/common/dialog/Dialog";
+import { ClubService } from "~/services/ClubService";
+import { CategoryService } from "~/services/CategoryService";
+import type { Route } from "./+types/EditClub";
+import placeholderImage from "~/assets/images/placeholder_image.png";
+import { Form, Outlet, useNavigate } from "react-router";
 
-type Props = {};
+const ApiBaseUrl = import.meta.env.VITE_API_URL;
 
-function EditClub({}: Props) {
+export async function clientLoader() {
+  try {
+    const club = await ClubService.getClub();
+    const categories = await CategoryService.getCategories();
+    return { club: club.data, categories: categories.data };
+  } catch (error) {
+    throw error;
+  }
+}
+
+function EditClub({ loaderData }: Route.ComponentProps) {
+  const { club, categories } = loaderData;
+  console.log(club);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [emblem, setEmblem] = React.useState<any>();
   const [isOpenCategoryDialog, setIsOpen] = React.useState(false);
   const [isOpenSubclubDialog, setIsOpenSubclubDialog] = React.useState(false);
+
+  const navigate = useNavigate();
 
   const handleClickUploadEmblem = () => {
     if (fileInputRef.current) {
@@ -30,58 +49,6 @@ function EditClub({}: Props) {
 
   return (
     <section className="club edit">
-      <Dialog
-        className="flex flex-col"
-        close={isOpenCategoryDialog}
-        setIsOpen={setIsOpen}
-      >
-        <AppText color="black" weight="bold" as="h1">
-          Creation de categorie
-        </AppText>
-        <div className="mt-6">
-          <label htmlFor="category">
-            <AppText color="black">Nom de la categorie</AppText>
-          </label>
-          <Input type="text" id="category" placeholder="U17" className="mt-2" />
-        </div>
-        <div className="flex gap-6 mt-4">
-          <AppButton>
-            <PlusIcon />
-            Ajouter
-          </AppButton>
-          <AppButton onClick={() => setIsOpen(false)}>Annuler</AppButton>
-        </div>
-      </Dialog>
-
-      <Dialog
-        className="flex flex-col"
-        close={isOpenSubclubDialog}
-        setIsOpen={setIsOpenSubclubDialog}
-      >
-        <AppText color="black" weight="bold" as="h1">
-          Creation de sous-club
-        </AppText>
-        <div className="mt-6">
-          <label htmlFor="category">
-            <AppText color="black">Nom du sous-club</AppText>
-          </label>
-          <Input
-            type="text"
-            id="category"
-            placeholder="Kunheim-1"
-            className="mt-2"
-          />
-        </div>
-        <div className="flex gap-6 mt-4">
-          <AppButton>
-            <PlusIcon />
-            Ajouter
-          </AppButton>
-          <AppButton onClick={() => setIsOpenSubclubDialog(false)}>
-            Annuler
-          </AppButton>
-        </div>
-      </Dialog>
       <div className="flex flex-col gap-2 xl:flex-row xl:justify-between">
         <div>
           <AppText weight="bold" size="2xl" as="h1">
@@ -95,14 +62,30 @@ function EditClub({}: Props) {
 
       <div className="xl:flex gap-10">
         <div className="mt-6 bg-white p-4 rounded-[20px] logo-container relative">
-          <Input type="text" value="FCSL EGUISHEIM" name="name" />
-          <img
-            src={emblem || clubLogo}
-            alt="logo_club"
-            width="350px"
-            height="450px"
-            className="mt-4 mb-4 justify-self-center"
+          <Input
+            type="text"
+            defaultValue={club.name}
+            name="name"
+            readOnly={false}
           />
+          {club.emblem ? (
+            <img
+              src={emblem || `${ApiBaseUrl}files/image/${club.emblem}`}
+              alt="emblem"
+              className="mt-2"
+              width="250px"
+              height="auto"
+            />
+          ) : (
+            <img
+              src={placeholderImage}
+              alt="emblem"
+              className="mt-2"
+              width="250px"
+              height="auto"
+            />
+          )}
+
           <div
             className="absolute bottom-[50px] right-[10px] cursor-pointer"
             onClick={handleClickUploadEmblem}
@@ -123,7 +106,7 @@ function EditClub({}: Props) {
             Vos catégories
           </AppText>
           <ul className="flex flex-col gap-1 mt-2 ml-2 category-list">
-            {clubData.categories.map((category, idx) => (
+            {categories.map((category: { name: string }, idx: number) => (
               <li
                 key={`category-${idx}`}
                 className="p-2 cursor-pointer flex justify-between"
@@ -140,7 +123,10 @@ function EditClub({}: Props) {
               </li>
             ))}
           </ul>
-          <AppButton className=" mt-4" onClick={() => setIsOpen(true)}>
+          <AppButton
+            className=" mt-4"
+            onClick={() => navigate("create-category")}
+          >
             <PlusIcon color="white" />
             Ajouter une catégorie
           </AppButton>
@@ -151,13 +137,13 @@ function EditClub({}: Props) {
             Vos sous-clubs
           </AppText>
           <ul className="flex flex-col gap-1 mt-2 ml-2 category-list">
-            {clubData.subTeam.map((subTeam, idx) => (
+            {club.subCategoryNames.map((subTeam: string, idx: number) => (
               <li
                 key={`category-${idx}`}
                 className="p-2 cursor-pointer flex justify-between"
               >
                 <AppText color="gray" size="xs">
-                  {subTeam.name}
+                  {subTeam}
                 </AppText>
                 <div className="">
                   <Trash2Icon
@@ -170,13 +156,14 @@ function EditClub({}: Props) {
           </ul>
           <AppButton
             className=" mt-4"
-            onClick={() => setIsOpenSubclubDialog(true)}
+            onClick={() => navigate("create-subteam")}
           >
             <PlusIcon color="white" />
             Ajouter un sous-club
           </AppButton>
         </div>
       </div>
+      <Outlet />
     </section>
   );
 }
