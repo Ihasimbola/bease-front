@@ -1,22 +1,19 @@
 import Dialog from "~/components/common/dialog/Dialog";
-import type { Route } from "./+types/RemoveSubteam";
 import AppText from "~/components/general/AppText/AppText";
 import AppButton from "~/components/general/AppButton/AppButton";
 import { useState } from "react";
 import { Form, redirect, useNavigate } from "react-router";
-import { SubteamService } from "~/services/SubteamService";
+import type { Route } from "./+types/RemoveCategory";
+import { CategoryService } from "~/services/CategoryService";
 
-export async function clientAction({
-  request,
-  params,
-}: Route.ClientActionArgs) {
+export async function clientAction({ request, params }: Route.ActionArgs) {
   const url = new URL(request.url);
-  const subteam = url.searchParams.get("subteam")!;
-  const res = await SubteamService.deleteSubteam(params.id, subteam);
+  const category = url.searchParams.get("category")!;
+  const res = await CategoryService.remove(category);
   return redirect("/club/edit/" + params.id);
 }
 
-export default function RemoveSubteam() {
+export default function RemoveCategory() {
   const [isOpen, setIsOpen] = useState(true);
   const navigate = useNavigate();
 

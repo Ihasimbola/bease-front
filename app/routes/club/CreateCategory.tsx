@@ -22,7 +22,7 @@ export async function clientAction({ request, params }: Route.ActionArgs) {
     name: categoryName.toString(),
   });
 
-  return redirect("/club/edit" + params.id);
+  return redirect("/club/edit/" + params.id);
 }
 
 export default function CreateCategory({ params }: Route.ClientLoaderArgs) {

@@ -2,18 +2,14 @@ import React, { useEffect, useState } from "react";
 import AppText from "~/components/general/AppText/AppText";
 import Icon from "~/components/icon";
 import { Input } from "~/components/ui/input";
-import clubLogo from "~/assets/images/club_logo.png";
-import { clubData } from "./data";
 import "./styles.css";
 import { PlusIcon, Trash2Icon } from "lucide-react";
 import AppButton from "~/components/general/AppButton/AppButton";
-import Dialog from "~/components/common/dialog/Dialog";
 import { ClubService } from "~/services/ClubService";
 import { CategoryService } from "~/services/CategoryService";
 import type { Route } from "./+types/EditClub";
 import placeholderImage from "~/assets/images/placeholder_image.png";
-import { Form, Outlet, useNavigate, useSearchParams } from "react-router";
-import ConfirmationDialog from "~/components/common/ConfirmationDialog";
+import { Outlet, useNavigate, useSearchParams } from "react-router";
 
 const ApiBaseUrl = import.meta.env.VITE_API_URL;
 
@@ -29,7 +25,7 @@ export async function clientLoader() {
 
 function EditClub({ loaderData }: Route.ComponentProps) {
   const { club, categories } = loaderData;
-  console.log(club);
+  console.log(categories);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [emblem, setEmblem] = React.useState<any>();
   const [isOpenConfirmationDialog, setIsOpenConfirmationDialog] =
@@ -117,22 +113,29 @@ function EditClub({ loaderData }: Route.ComponentProps) {
             Vos catégories
           </AppText>
           <ul className="flex flex-col gap-1 mt-2 ml-2 category-list">
-            {categories.map((category: { name: string }, idx: number) => (
-              <li
-                key={`category-${idx}`}
-                className="p-2 cursor-pointer flex justify-between"
-              >
-                <AppText color="gray" size="xs">
-                  {category.name}
-                </AppText>
-                <div className="">
-                  <Trash2Icon
-                    className="stroke-red hover:brightness-110"
-                    size={20}
-                  />
-                </div>
-              </li>
-            ))}
+            {categories.map(
+              (category: { name: string; _id: string }, idx: number) => (
+                <li
+                  key={`category-${idx}`}
+                  className="p-2 cursor-pointer flex justify-between"
+                >
+                  <AppText color="gray" size="xs">
+                    {category.name}
+                  </AppText>
+                  <div
+                    className=""
+                    onClick={() => {
+                      navigate("destroy-category?category=" + category._id);
+                    }}
+                  >
+                    <Trash2Icon
+                      className="stroke-red hover:brightness-110"
+                      size={20}
+                    />
+                  </div>
+                </li>
+              )
+            )}
           </ul>
           <AppButton
             className=" mt-4"

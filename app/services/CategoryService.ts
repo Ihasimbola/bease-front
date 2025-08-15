@@ -18,4 +18,13 @@ export class CategoryService extends Http {
       throw error;
     }
   }
+
+  static async remove(id: string) {
+    try {
+      const res = await this.delete(`category/${id}`);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

@@ -10,6 +10,7 @@ export default [
         route('create-category', "./routes/club/CreateCategory.tsx"),
         route('create-subteam', "./routes/club/CreateSubteam.tsx"),
         route('destroy-subteam', "./routes/club/RemoveSubteam.tsx"),
+        route('destroy-category', "./routes/club/RemoveCategory.tsx"),
       ]),
       route('membre', "./routes/membre/Membre.tsx"),
     ]),
