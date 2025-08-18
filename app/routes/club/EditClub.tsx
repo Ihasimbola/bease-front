@@ -47,7 +47,7 @@ export async function clientAction({ request, params }: Route.ActionArgs) {
 }
 
 function EditClub({ loaderData, actionData }: Route.ComponentProps) {
-  const { club, categories } = loaderData;
+  const { club } = loaderData;
   const data = actionData;
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [emblem, setEmblem] = useState<any>();
@@ -124,51 +124,16 @@ function EditClub({ loaderData, actionData }: Route.ComponentProps) {
             className="hidden"
             onChange={handleSelectImage}
           />
-          <AppButton className="m-auto mt-2" type="submit">
-            Sauvegarder
-          </AppButton>
+          {changeEmblem && (
+            <AppButton className="m-auto mt-2" type="submit">
+              Sauvegarder
+            </AppButton>
+          )}
         </Form>
-        <div className="mt-6 bg-white p-4 rounded-[20px] flex-1">
-          <AppText as="h3" weight="semibold">
-            Vos catégories
-          </AppText>
-          <ul className="flex flex-col gap-1 mt-2 ml-2 category-list">
-            {categories.map(
-              (category: { name: string; _id: string }, idx: number) => (
-                <li
-                  key={`category-${idx}`}
-                  className="p-2 cursor-pointer flex justify-between"
-                >
-                  <AppText color="gray" size="xs">
-                    {category.name}
-                  </AppText>
-                  <div
-                    className=""
-                    onClick={() => {
-                      navigate("destroy-category?category=" + category._id);
-                    }}
-                  >
-                    <Trash2Icon
-                      className="stroke-red hover:brightness-110"
-                      size={20}
-                    />
-                  </div>
-                </li>
-              )
-            )}
-          </ul>
-          <AppButton
-            className=" mt-4"
-            onClick={() => navigate("create-category")}
-          >
-            <PlusIcon color="white" />
-            Ajouter une catégorie
-          </AppButton>
-        </div>
 
         <div className="mt-6 bg-white p-4 rounded-[20px] flex-1">
           <AppText as="h3" weight="semibold">
-            Vos sous-clubs
+            Vos Equipes
           </AppText>
           <ul className="flex flex-col gap-1 mt-2 ml-2 category-list">
             {club.subteamNames.map((subTeam: string, idx: number) => (
@@ -199,7 +164,7 @@ function EditClub({ loaderData, actionData }: Route.ComponentProps) {
             onClick={() => navigate("create-subteam")}
           >
             <PlusIcon color="white" />
-            Ajouter un sous-club
+            Ajouter une équipe
           </AppButton>
         </div>
       </div>

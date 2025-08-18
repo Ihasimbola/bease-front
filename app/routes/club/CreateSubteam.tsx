@@ -34,12 +34,12 @@ export default function CreateSubteamDialog() {
   return (
     <Dialog className="flex flex-col" close={isOpen} setIsOpen={setIsOpen}>
       <AppText color="black" weight="bold" as="h1">
-        Creation de sous-club
+        Creation d' Equipe
       </AppText>
       <Form method="POST">
         <div className="mt-6">
           <label htmlFor="category">
-            <AppText color="black">Nom du sous-club</AppText>
+            <AppText color="black">Nom de l' équipe</AppText>
           </label>
           <Input
             type="text"
