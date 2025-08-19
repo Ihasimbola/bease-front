@@ -124,11 +124,14 @@ function EditClub({ loaderData, actionData }: Route.ComponentProps) {
             className="hidden"
             onChange={handleSelectImage}
           />
-          {changeEmblem && (
+          {/* {changeEmblem && (
             <AppButton className="m-auto mt-2" type="submit">
               Sauvegarder
             </AppButton>
-          )}
+          )} */}
+          <AppButton className="m-auto mt-2" type="submit">
+            Sauvegarder
+          </AppButton>
         </Form>
 
         <div className="mt-6 bg-white p-4 rounded-[20px] flex-1">
@@ -136,28 +139,35 @@ function EditClub({ loaderData, actionData }: Route.ComponentProps) {
             Vos Equipes
           </AppText>
           <ul className="flex flex-col gap-1 mt-2 ml-2 category-list">
-            {club.subteamNames.map((subTeam: string, idx: number) => (
-              <li
-                key={`category-${idx}`}
-                className="p-2 cursor-pointer flex justify-between"
-              >
-                <AppText color="gray" size="xs">
-                  {subTeam}
-                </AppText>
-                <div
-                  className=""
-                  onClick={() => {
-                    navigate("destroy-subteam?subteam=" + subTeam);
-                  }}
-                  id={subTeam}
+            {club.categories.map(
+              (
+                subTeam: { name: string; isCustom: boolean; _id: string },
+                idx: number
+              ) => (
+                <li
+                  key={`category-${idx}`}
+                  className="p-2 cursor-pointer flex justify-between"
                 >
-                  <Trash2Icon
-                    className="stroke-red hover:brightness-110"
-                    size={20}
-                  />
-                </div>
-              </li>
-            ))}
+                  <AppText color="gray" size="xs">
+                    {subTeam.name}
+                  </AppText>
+                  {subTeam.isCustom && (
+                    <div
+                      className=""
+                      onClick={() => {
+                        navigate("destroy-subteam?subteam=" + subTeam._id);
+                      }}
+                      id={subTeam.name}
+                    >
+                      <Trash2Icon
+                        className="stroke-red hover:brightness-110"
+                        size={20}
+                      />
+                    </div>
+                  )}
+                </li>
+              )
+            )}
           </ul>
           <AppButton
             className=" mt-4"

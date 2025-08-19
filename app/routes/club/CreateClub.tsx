@@ -1,6 +1,6 @@
 import { PlusIcon } from "lucide-react";
-import React, { useRef, useState } from "react";
-import { Form, redirect, useFetcher } from "react-router";
+import React, { useEffect, useRef, useState } from "react";
+import { Form, redirect, useFetcher, data as fetcherData } from "react-router";
 import AppButton from "~/components/general/AppButton/AppButton";
 import AppText from "~/components/general/AppText/AppText";
 import { Input } from "~/components/ui/input";
@@ -8,11 +8,19 @@ import placeholderImage from "~/assets/images/placeholder_image.png";
 import type { Route } from "./+types/CreateClub";
 import { FileService } from "~/services/fileService";
 import { ClubService } from "~/services/ClubService";
+import { toast } from "sonner";
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
   const form = await request.formData();
   const formData = new FormData();
+  const errors = {} as any;
   formData.append("emblem", form.get("emblem")!);
+
+  if (!(form.get("emblem") as File).name) {
+    errors.message = "Veuillez choisir un logo";
+    return fetcherData({ message: "Veuillez choisir un logo" });
+  }
+
   const res = await FileService.upload("club/emblem", form);
 
   let data = {} as any;
@@ -38,11 +46,18 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
   return redirect("/club");
 }
 
-function CreateClub() {
+function CreateClub({ actionData }: Route.ComponentProps) {
   const fetcher = useFetcher();
+  const errors = fetcher.data;
   const [subTeam, setuSubTeam] = useState<{ name: string }[]>([]);
   const [file, setFile] = useState<any>();
   const emblemRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (errors?.message) {
+      toast.error(errors.message);
+    }
+  }, [fetcher.data]);
 
   const handleAddEmblem = () => {
     if (emblemRef.current) {
@@ -67,7 +82,11 @@ function CreateClub() {
         </div>
       </div>
 
-      <Form className="mt-8" method="POST" encType="multipart/form-data">
+      <fetcher.Form
+        className="mt-8"
+        method="POST"
+        encType="multipart/form-data"
+      >
         <div className="mb-4">
           <label htmlFor="name">
             <AppText weight="semibold">Nom du Club</AppText>
@@ -84,7 +103,7 @@ function CreateClub() {
 
         <div>
           <div className="flex gap-2 items-center mb-2">
-            <AppText weight="semibold">Sous Clubs</AppText>
+            <AppText weight="semibold">Ajouter des équipes</AppText>
             <AppButton
               type="button"
               onClick={() => {
@@ -151,7 +170,7 @@ function CreateClub() {
         <div className="mt-10 flex gap-4 mb-4">
           <AppButton type="submit">Créer mon Club</AppButton>
         </div>
-      </Form>
+      </fetcher.Form>
     </section>
   );
 }

@@ -5,6 +5,7 @@ import Pub from "~/components/layout/pub/Pub";
 import AuthProvider, { useAuth } from "~/libs/auth";
 import Sidebar from "~/routes/sidebar/Sidebar";
 import { ProtectedRoute } from "./ProtectedRoute";
+import { Toaster } from "~/components/ui/sonner";
 
 interface Props {
   children: ReactNode;
@@ -26,6 +27,7 @@ function AppLayouts({ children }: Props) {
           <Pub />
         </main>
       </AuthProvider>
+      <Toaster />
     </>
   );
 }

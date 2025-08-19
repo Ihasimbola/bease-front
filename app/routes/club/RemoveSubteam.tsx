@@ -5,6 +5,7 @@ import AppButton from "~/components/general/AppButton/AppButton";
 import { useState } from "react";
 import { Form, redirect, useNavigate } from "react-router";
 import { SubteamService } from "~/services/SubteamService";
+import { CategoryService } from "~/services/CategoryService";
 
 export async function clientAction({
   request,
@@ -12,7 +13,7 @@ export async function clientAction({
 }: Route.ClientActionArgs) {
   const url = new URL(request.url);
   const subteam = url.searchParams.get("subteam")!;
-  const res = await SubteamService.deleteSubteam(params.id, subteam);
+  const res = await CategoryService.remove(subteam);
   return redirect("/club/edit/" + params.id);
 }
 
