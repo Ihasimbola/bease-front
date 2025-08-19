@@ -9,13 +9,21 @@ interface Props {
   className?: string;
   onClickTrash?: () => void;
   onClickEdit?: () => void;
+  tableHeader: typeof tableHeader;
+  tableData: typeof data;
 }
 
 const Table = (props: Props) => {
-  const { className, onClickTrash, onClickEdit } = props;
+  const { className, onClickTrash, onClickEdit, tableHeader, tableData } =
+    props;
 
   return (
-    <div className={cn(["overflow-x-auto max-w-screen", className])}>
+    <div
+      className={cn([
+        "overflow-x-auto max-w-screen bg-white p-5 rounded-[20px]",
+        className,
+      ])}
+    >
       <div>
         <ul className=" head gap-2 min-w-[670px]">
           {tableHeader.map((head, idx) => (
@@ -27,7 +35,7 @@ const Table = (props: Props) => {
       </div>
 
       <div className="flex flex-col gap-4 mt-2">
-        {data.map((data, idx) => (
+        {tableData.map((tableData, idx) => (
           <ul
             className="items-center list-item gap-2 min-w-[670px] rounded-[20px] bg-white p-4 shadow-sm hover:bg-gray-100"
             key={`licensed-${idx}`}
@@ -37,16 +45,18 @@ const Table = (props: Props) => {
                 {head.key === "isConfirmed" ? (
                   <Badge
                     color={
-                      data[head.key as keyof typeof data] ? "green" : "red"
+                      tableData[head.key as keyof typeof tableData]
+                        ? "green"
+                        : "red"
                     }
                   >
-                    {data[head.key as keyof typeof data]
+                    {tableData[head.key as keyof typeof tableData]
                       ? "Confirmé"
                       : "Non confirmé"}
                   </Badge>
                 ) : (
                   <AppText size="sm">
-                    {data[head.key as keyof typeof data]}
+                    {tableData[head.key as keyof typeof tableData]}
                   </AppText>
                 )}
               </li>

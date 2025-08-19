@@ -12,6 +12,8 @@ import type { Route } from "./+types/Membre";
 import { data, Outlet, useFetcher, useNavigate } from "react-router";
 import { FileService } from "~/services/fileService";
 import { UserService } from "~/services/userService";
+import { tableHeader } from "./tableData";
+import type { TableData } from "./type";
 
 type Props = {};
 
@@ -21,13 +23,26 @@ export async function clientLoader() {
   return membres;
 }
 
-function Membre({ actionData, loaderData }: Route.ComponentProps) {
+function Membre({ loaderData }: Route.ComponentProps) {
   const [importExcelDialog, setImportExcelDialog] = React.useState(false);
   const [addMembreDialog, setAddMembreDialog] = React.useState(false);
   const [deleteConfirmationDialog, setDeleteConfirmationDialog] =
     React.useState(false);
   const [editMembreDialog, setEditMembreDialog] = React.useState(false);
   const navigate = useNavigate();
+  const { data: membres } = loaderData;
+
+  // convert membres to table data
+  const tableData: TableData[] = membres.map((membre: any, idx: number) => {
+    return {
+      firstname: membre.user.firstname,
+      lastname: membre.user.lastname,
+      category: membre.category.name,
+      isConfirmed: membre.isConfirmed,
+      gender: membre.gender,
+      age: membre.age + " ans",
+    };
+  });
 
   const hanleOnDelete = () => {
     setDeleteConfirmationDialog(true);
@@ -82,6 +97,8 @@ function Membre({ actionData, loaderData }: Route.ComponentProps) {
         className="mt-8"
         onClickTrash={hanleOnDelete}
         onClickEdit={handleOnEdit}
+        tableHeader={tableHeader}
+        tableData={tableData}
       />
       <AddMemberDialog
         isOpen={addMembreDialog}
