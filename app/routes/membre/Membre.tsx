@@ -1,23 +1,33 @@
 import { PlusIcon, SearchIcon, Upload } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 import AppButton from "~/components/general/AppButton/AppButton";
 import AppText from "~/components/general/AppText/AppText";
 import { Input } from "~/components/ui/input";
 import Table from "./Table";
 import ImportExcelDialog from "./ImportExcelDialog";
-import { set } from "zod";
 import AddMemberDialog from "./AddMemberDialog";
 import DeleteConfirmationDialog from "./ConfirmationDialog";
 import EditMemberDialog from "./EditMemberDialog";
+import type { Route } from "./+types/Membre";
+import { data, Outlet, useFetcher, useNavigate } from "react-router";
+import { FileService } from "~/services/fileService";
+import { UserService } from "~/services/userService";
 
 type Props = {};
 
-function Membre({}: Props) {
+export async function clientLoader() {
+  const clubId = JSON.parse(localStorage.getItem("user")!).club._id;
+  const membres = await UserService.getLicensedByClub(clubId);
+  return membres;
+}
+
+function Membre({ actionData, loaderData }: Route.ComponentProps) {
   const [importExcelDialog, setImportExcelDialog] = React.useState(false);
   const [addMembreDialog, setAddMembreDialog] = React.useState(false);
   const [deleteConfirmationDialog, setDeleteConfirmationDialog] =
     React.useState(false);
   const [editMembreDialog, setEditMembreDialog] = React.useState(false);
+  const navigate = useNavigate();
 
   const hanleOnDelete = () => {
     setDeleteConfirmationDialog(true);
@@ -39,7 +49,11 @@ function Membre({}: Props) {
           </AppText>
         </div>
         <div className="flex gap-4">
-          <AppButton onClick={() => setImportExcelDialog(true)}>
+          <AppButton
+            onClick={() => {
+              navigate("import-excel");
+            }}
+          >
             <Upload size={16} />
             <AppText color="white" size="xs">
               Importer un ficher excel
@@ -69,10 +83,6 @@ function Membre({}: Props) {
         onClickTrash={hanleOnDelete}
         onClickEdit={handleOnEdit}
       />
-      <ImportExcelDialog
-        isOpen={importExcelDialog}
-        setIsOpen={setImportExcelDialog}
-      />
       <AddMemberDialog
         isOpen={addMembreDialog}
         setIsOpen={setAddMembreDialog}
@@ -85,6 +95,7 @@ function Membre({}: Props) {
         isOpen={editMembreDialog}
         setIsOpen={setEditMembreDialog}
       />
+      <Outlet />
     </section>
   );
 }

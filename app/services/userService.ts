@@ -28,4 +28,13 @@ export class UserService extends Http {
       throw error;
     }
   }
+
+  static async getLicensedByClub(clubId: string) {
+    try {
+      const res = await this.get('users/licensed/' + clubId,);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

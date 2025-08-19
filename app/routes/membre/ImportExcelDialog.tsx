@@ -1,23 +1,68 @@
-import { CrossIcon, TriangleAlert, X } from "lucide-react";
-import React from "react";
+import { CrossIcon, LoaderCircle, TriangleAlert, X } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import Dialog from "~/components/common/dialog/Dialog";
 import AppButton from "~/components/general/AppButton/AppButton";
 import AppText from "~/components/general/AppText/AppText";
 import Icon from "~/components/icon";
 import "./styles.css";
+import { data, useFetcher, useNavigate } from "react-router";
+import type { Route } from "./+types/ImportExcelDialog";
+import { FileService } from "~/services/fileService";
+import { toast } from "sonner";
 
-interface Props {
-  isOpen: boolean;
-  setIsOpen: (value: boolean) => void;
+export async function clientAction({ request }: Route.ActionArgs) {
+  const formData = await request.formData();
+  const excel: any = formData.get("excel");
+
+  if (!excel?.name) {
+    return data({
+      message: "Veuillez choisir un fichier",
+    });
+  }
+
+  try {
+    const res = await FileService.upload("files/excel/licensed", formData);
+    return res;
+  } catch (error: any) {
+    if (error.status === 400) {
+      return data(
+        {
+          error: {
+            message: error.response.data.message,
+          },
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+  }
 }
 
-function ImportExcelDialog(props: Props) {
-  const { isOpen, setIsOpen } = props;
+function ImportExcelDialog() {
+  const [isOpen, setIsOpen] = useState(true);
+
   const excelRef = React.useRef<HTMLInputElement>(null);
   const [file, setFile] = React.useState<{
     name: string;
     size: string;
   }>();
+
+  const fetcher = useFetcher();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (fetcher.data?.error?.message) {
+      toast.error(fetcher.data.error.message);
+      navigate(-1);
+    }
+  }, [fetcher.data]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      navigate(-1);
+    }
+  }, [isOpen]);
 
   const handleBrowseFile = () => {
     if (excelRef.current) {
@@ -47,11 +92,18 @@ function ImportExcelDialog(props: Props) {
             licencié pour l' envoi de confirmation.`}
           </AppText>
         </div>
-        <div className="mt-5 file-container">
+
+        <fetcher.Form
+          className="mt-5 file-container"
+          method="POST"
+          encType="multipart/form-data"
+        >
           <input
             type="file"
+            accept=".xlsx, .xls"
             onChange={handleSelectFile}
             className="hidden"
+            name="excel"
             ref={excelRef}
           />
           {!!file && (
@@ -71,10 +123,28 @@ function ImportExcelDialog(props: Props) {
               </AppText>
             </div>
           )}
-          <AppButton onClick={handleBrowseFile} className="mt-3">
-            Parcourir le ficher
-          </AppButton>
-        </div>
+          {file ? (
+            <AppButton type="submit" className="mt-3 w-full">
+              {fetcher.state !== "idle" ? (
+                <LoaderCircle
+                  className="loader-circle"
+                  id="loader-circle"
+                  stroke="stroke-white"
+                />
+              ) : (
+                "importer"
+              )}
+            </AppButton>
+          ) : (
+            <AppButton
+              type="button"
+              onClick={handleBrowseFile}
+              className="mt-3"
+            >
+              Parcourir le ficher
+            </AppButton>
+          )}
+        </fetcher.Form>
       </div>
     </Dialog>
   );

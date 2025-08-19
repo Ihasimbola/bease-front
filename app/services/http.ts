@@ -1,7 +1,8 @@
 import axios from "axios";
+import { th } from "zod/v4/locales";
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL
+  baseURL: import.meta.env.VITE_API_URL,
 })
 
 axiosInstance.interceptors.request.use(function(config) {
@@ -19,6 +20,7 @@ axiosInstance.interceptors.response.use(function(response) {
     localStorage.clear();
     window.location.href = "/auth/login";
   }
+  return Promise.reject(error);
 })
 
 export class Http {
@@ -34,10 +36,19 @@ export class Http {
   static async post(url: string, data: any) {
     try {
       const res = await axiosInstance.post(url, data);
-      return res;
+      return res.data;
     } catch (error) {
       throw error;
     }
+
+      // const res = axiosInstance.post(url, data)
+      // .then((res) => {
+      //   console.log(res);
+      //   return res
+      // })
+      // .catch(function(error) {
+      //   console.log(error);
+      // });
   }
 
   static async patch(url: string, data: any) {

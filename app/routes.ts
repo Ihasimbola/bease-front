@@ -12,7 +12,9 @@ export default [
         route('destroy-subteam', "./routes/club/RemoveSubteam.tsx"),
         route('destroy-category', "./routes/club/RemoveCategory.tsx"),
       ]),
-      route('membre', "./routes/membre/Membre.tsx"),
+      route('membre', "./routes/membre/Membre.tsx", [
+        route('import-excel', "./routes/membre/ImportExcelDialog.tsx"),
+      ]),
     ]),
   
 

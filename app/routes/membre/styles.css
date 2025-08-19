@@ -16,3 +16,25 @@
   display: grid;
   grid-template-columns: repeat(6, 1fr) 44px;
 }
+
+.loader-circle {
+  animation: rotation 1s linear infinite;
+  stroke: var(--color-white);
+  
+}
+
+#loader-circle {
+  stroke: var(--color-white);
+  width: 24px;
+  height: auto;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
