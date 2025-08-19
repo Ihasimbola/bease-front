@@ -9,6 +9,7 @@ import type { Route } from "./+types/CreateClub";
 import { FileService } from "~/services/fileService";
 import { ClubService } from "~/services/ClubService";
 import { toast } from "sonner";
+import { UserService } from "~/services/userService";
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
   const form = await request.formData();
@@ -38,10 +39,19 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
     }
   }
 
-  data["profileAdmin"] = JSON.parse(localStorage.getItem("user")!)._id;
+  const adminId = JSON.parse(localStorage.getItem("user")!)._id;
+
+  data["profileAdmin"] = adminId;
   data["emblem"] = res.data._id;
 
   const club = await ClubService.createClub(data);
+
+  // update localstorage for this new club
+  // get admin first
+  const admin = await UserService.getAdmin(adminId);
+
+  // set localstorage for new admin profile
+  localStorage.setItem("user", JSON.stringify(admin));
 
   return redirect("/club");
 }

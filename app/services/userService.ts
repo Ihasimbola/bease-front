@@ -19,4 +19,13 @@ export class UserService extends Http {
       throw error;
     }
   }
+
+  static async getAdmin(id: string) {
+    try {
+      const res = await this.get('users/admin/' + id);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
