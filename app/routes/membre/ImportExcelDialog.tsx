@@ -89,7 +89,7 @@ function ImportExcelDialog() {
           <TriangleAlert color="orange" size={48} />
           <AppText size="xs">
             {`Assurez-vous bien que l' adresse email \n est bien présent pour chaque
-            licencié pour l' envoi de confirmation.`}
+            licencié pour l' envoi de confirmation. Les lignes sans email ne seront pas traitées.`}
           </AppText>
         </div>
 

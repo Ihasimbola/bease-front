@@ -24,7 +24,7 @@ const Table = (props: Props) => {
         className,
       ])}
     >
-      <div>
+      <div className="border-b pb-2">
         <ul className=" head gap-2 min-w-[670px]">
           {tableHeader.map((head, idx) => (
             <li key={`header-${idx}`}>

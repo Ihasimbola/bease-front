@@ -93,13 +93,21 @@ function Membre({ loaderData }: Route.ComponentProps) {
           <SearchIcon color="gray" size={16} />
         </div>
       </div>
-      <Table
-        className="mt-8"
-        onClickTrash={hanleOnDelete}
-        onClickEdit={handleOnEdit}
-        tableHeader={tableHeader}
-        tableData={tableData}
-      />
+      {membres.length ? (
+        <Table
+          className="mt-8"
+          onClickTrash={hanleOnDelete}
+          onClickEdit={handleOnEdit}
+          tableHeader={tableHeader}
+          tableData={tableData}
+        />
+      ) : (
+        <div className="mt-8">
+          <AppText size="sm" weight="semibold">
+            Vous n' avez pas encore de membre
+          </AppText>
+        </div>
+      )}
       <AddMemberDialog
         isOpen={addMembreDialog}
         setIsOpen={setAddMembreDialog}
