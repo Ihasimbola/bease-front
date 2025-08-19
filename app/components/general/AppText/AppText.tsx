@@ -54,7 +54,7 @@ export default function AppText({
 
   return (
     <Tag
-      className={cn(textVariantsProps({ size, color, weight }))}
+      className={cn([textVariantsProps({ size, color, weight }), className])}
       {...props}
     />
   );

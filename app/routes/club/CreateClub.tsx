@@ -101,8 +101,8 @@ function CreateClub({ actionData }: Route.ComponentProps) {
           </label>
         </div>
 
-        <div>
-          <div className="flex gap-2 items-center mb-2">
+        <div className="mt-10">
+          {/* <div className="flex gap-2 items-center mb-2">
             <AppText weight="semibold">Ajouter des équipes</AppText>
             <AppButton
               type="button"
@@ -127,8 +127,11 @@ function CreateClub({ actionData }: Route.ComponentProps) {
                 className="max-w-[400px]"
               />
             ))}
-          </div>
-          <div className="flex flex-col gap-2 items-center w-fit">
+          </div> */}
+          <AppText className="self-start" weight="semibold">
+            Votre Logo
+          </AppText>
+          <div className="flex flex-col gap-2 items-center w-fit m-4">
             <input
               type="file"
               className="hidden"
