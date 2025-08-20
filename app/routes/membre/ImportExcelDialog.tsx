@@ -87,10 +87,15 @@ function ImportExcelDialog() {
         </AppText>
         <div className="flex gap-3 items-center p-3 bg-amber-100 mt-3 rounded">
           <TriangleAlert color="orange" size={48} />
-          <AppText size="xs">
-            {`Assurez-vous bien que l' adresse email \n est bien présent pour chaque
-            licencié pour l' envoi de confirmation. Les lignes sans email ne seront pas traitées.`}
-          </AppText>
+          <div>
+            <AppText size="xs">
+              {`Assurez-vous bien que l' adresse email \n est bien présent pour chaque
+            licencié pour l' envoi de confirmation.`}
+            </AppText>
+            <AppText size="xs">
+              Les lignes sans email ne seront pas traitées.
+            </AppText>
+          </div>
         </div>
 
         <fetcher.Form

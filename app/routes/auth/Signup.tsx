@@ -6,7 +6,7 @@ import {
   LucideUser2,
 } from "lucide-react";
 import "./styles.css";
-import { data, Link, redirect, useFetcher } from "react-router";
+import { data, Link, redirect, useFetcher, useNavigate } from "react-router";
 import AppButton from "~/components/general/AppButton/AppButton";
 import AppText from "~/components/general/AppText/AppText";
 import Icon from "~/components/icon";
@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 import * as z from "zod";
 import { UserService } from "~/services/userService";
 import { toast } from "sonner";
+import { useUserStore } from "~/store/userStore";
 
 type Props = {};
 
@@ -45,7 +46,9 @@ export async function clientAction({ request }: Route.ActionArgs) {
     localStorage.setItem("token", "Bearer " + res.token);
     localStorage.setItem("refreshToken", "Bearer " + res.refreshToken);
     localStorage.setItem("user", JSON.stringify(res.data));
-    return redirect("/");
+    return data({
+      user: res.data,
+    });
   } catch (error) {
     return data({ requestError: error });
   }
@@ -61,6 +64,9 @@ function Signup({ actionData }: Route.ComponentProps) {
     confirmPassword: "",
   });
   const [isEqual, setIsEqual] = useState<null | boolean>(null);
+  const fetcher = useFetcher();
+  const navigate = useNavigate();
+  const setUser = useUserStore((state) => state.setUser);
 
   // check if password and confirm password are equal
   useEffect(() => {
@@ -74,13 +80,18 @@ function Signup({ actionData }: Route.ComponentProps) {
     checkPassword();
   }, [pass.password, pass.confirmPassword]);
 
-  const fetcher = useFetcher();
+  // set user store
+  useEffect(() => {
+    if (fetcher.data?.user) {
+      setUser(fetcher.data.user);
+      navigate("/");
+    }
+  }, [fetcher.data]);
+
   const errors = fetcher.data?.errors;
   const requestError = fetcher.data?.requestError;
-  console.log(requestError);
 
   useEffect(() => {
-    console.log("called");
     if (requestError?.response?.status === 400) {
       toast.error(requestError?.response?.data?.message);
     }

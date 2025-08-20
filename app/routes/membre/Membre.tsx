@@ -1,5 +1,5 @@
 import { PlusIcon, SearchIcon, Upload } from "lucide-react";
-import React, { useEffect } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import AppButton from "~/components/general/AppButton/AppButton";
 import AppText from "~/components/general/AppText/AppText";
 import { Input } from "~/components/ui/input";
@@ -11,16 +11,36 @@ import EditMemberDialog from "./EditMemberDialog";
 import type { Route } from "./+types/Membre";
 import { data, Outlet, useFetcher, useNavigate } from "react-router";
 import { FileService } from "~/services/fileService";
-import { UserService } from "~/services/userService";
+import { UserService, type LicensedResponse } from "~/services/userService";
 import { tableHeader } from "./tableData";
 import type { TableData } from "./type";
+import { toast } from "sonner";
+import { useUserStore } from "~/store/userStore";
 
 type Props = {};
 
 export async function clientLoader() {
-  const clubId = JSON.parse(localStorage.getItem("user")!).club._id;
-  const membres = await UserService.getLicensedByClub(clubId);
-  return membres;
+  const clubId = JSON.parse(localStorage.getItem("user")!)?.club;
+  if (!clubId) {
+    return {
+      membres: [],
+      message: "Vous n' avez pas encore créé un club",
+    };
+  }
+  const { data: membres } = await UserService.getLicensedByClub(clubId);
+
+  const data: TableData[] = membres.map((membre: LicensedResponse) => ({
+    firstname: membre.user.firstname,
+    lastname: membre.user.lastname,
+    age: membre.age,
+    category: membre.category.name,
+    isConfirmed: membre.isConfirmed,
+    gender: membre.gender,
+    _id: membre._id,
+  }));
+  return {
+    membres: data,
+  };
 }
 
 function Membre({ loaderData }: Route.ComponentProps) {
@@ -30,19 +50,14 @@ function Membre({ loaderData }: Route.ComponentProps) {
     React.useState(false);
   const [editMembreDialog, setEditMembreDialog] = React.useState(false);
   const navigate = useNavigate();
-  const { data: membres } = loaderData;
+  const { membres, message } = loaderData;
 
-  // convert membres to table data
-  const tableData: TableData[] = membres.map((membre: any, idx: number) => {
-    return {
-      firstname: membre.user.firstname,
-      lastname: membre.user.lastname,
-      category: membre.category.name,
-      isConfirmed: membre.isConfirmed,
-      gender: membre.gender,
-      age: membre.age + " ans",
-    };
-  });
+  useLayoutEffect(() => {
+    if (message) {
+      toast.error(message);
+      navigate("/club");
+    }
+  }, [loaderData]);
 
   const hanleOnDelete = () => {
     setDeleteConfirmationDialog(true);
@@ -99,7 +114,7 @@ function Membre({ loaderData }: Route.ComponentProps) {
           onClickTrash={hanleOnDelete}
           onClickEdit={handleOnEdit}
           tableHeader={tableHeader}
-          tableData={tableData}
+          tableData={membres}
         />
       ) : (
         <div className="mt-8">

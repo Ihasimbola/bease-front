@@ -6,12 +6,15 @@ import AuthProvider, { useAuth } from "~/libs/auth";
 import Sidebar from "~/routes/sidebar/Sidebar";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { Toaster } from "~/components/ui/sonner";
+import { useUserStore } from "~/store/userStore";
 
 interface Props {
   children: ReactNode;
 }
 
 function AppLayouts({ children }: Props) {
+  const userStore = useUserStore((state) => state.admin);
+  // console.log(userStore);
   return (
     <>
       <AuthProvider>

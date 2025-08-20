@@ -1,5 +1,4 @@
-import axios from "axios";
-import { th } from "zod/v4/locales";
+import axios, { type AxiosResponse } from "axios";
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -24,9 +23,9 @@ axiosInstance.interceptors.response.use(function(response) {
 })
 
 export class Http {
-  static async get(url: string) {
+  static async get<T = any>(url: string) {
     try {
-      const res = await axiosInstance.get(url);
+      const res = await axiosInstance.get<AxiosResponse<T>>(url);
       return res;
     } catch (error) {
       throw error;
@@ -36,7 +35,7 @@ export class Http {
   static async post(url: string, data: any) {
     try {
       const res = await axiosInstance.post(url, data);
-      return res.data;
+      return res;
     } catch (error) {
       throw error;
     }

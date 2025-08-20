@@ -1,6 +1,6 @@
 import { LoaderCircle, LucideKeySquare, LucideUser2 } from "lucide-react";
 import "./styles.css";
-import { data, Link, redirect, useFetcher } from "react-router";
+import { data, Link, redirect, useFetcher, useNavigate } from "react-router";
 import AppButton from "~/components/general/AppButton/AppButton";
 import AppText from "~/components/general/AppText/AppText";
 import Icon from "~/components/icon";
@@ -10,6 +10,7 @@ import { UserService } from "~/services/userService";
 import type { Route } from "./+types/Login";
 import { toast } from "sonner";
 import { useEffect } from "react";
+import { useUserStore } from "~/store/userStore";
 
 export const formContainerClassName =
   "form-container flex flex-col w-[95%] lg:w-[65%] max-w-7xl items-center self-center justify-self-center px-4 py-5 lg:px-5 lg:py-10 rounded";
@@ -24,7 +25,10 @@ export async function clientAction({ request }: Route.ActionArgs) {
     localStorage.setItem("token", "Bearer " + res.token);
     localStorage.setItem("refreshToken", "Bearer " + res.refreshToken);
     localStorage.setItem("user", JSON.stringify(res.adminDoc));
-    return redirect("/");
+    return data({
+      user: res.adminDoc,
+    });
+    // return redirect("/");
   } catch (error) {
     return data({ message: "Verifie bien votre email et mot de passe" });
   }
@@ -32,11 +36,19 @@ export async function clientAction({ request }: Route.ActionArgs) {
 
 function Login({ actionData }: Route.ComponentProps) {
   const fetcher = useFetcher();
+  const userStore = useUserStore((state) => state.admin);
+  const setUser = useUserStore((state) => state.setUser);
+  const navigate = useNavigate();
   const errors = fetcher.data;
 
   useEffect(() => {
     if (fetcher.data?.message) {
       toast.error(fetcher.data.message);
+    }
+
+    if (fetcher.data?.user) {
+      setUser(fetcher.data.user);
+      navigate("/");
     }
   }, [fetcher.data]);
 

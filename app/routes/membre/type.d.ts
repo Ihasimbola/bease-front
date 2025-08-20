@@ -2,7 +2,8 @@ export type TableData = {
   firstname: string;
   lastname: string;
   isConfirmed: boolean;
-  categorie: string;
+  category: string;
   gender: string;
-  age: string
+  age: number;
+  _id: string;
 }

@@ -12,3 +12,7 @@ export interface CreateClub {
   subteamNames: string[];
   emblem: string;
 }
+
+export interface HttpResponse<T> {
+  data: T[];
+}

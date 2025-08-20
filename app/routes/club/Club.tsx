@@ -7,6 +7,7 @@ import { ClubService } from "~/services/ClubService";
 import type { Route } from "./+types/Club";
 import { LoaderCircle } from "lucide-react";
 import { CategoryService } from "~/services/CategoryService";
+import { useUserStore } from "~/store/userStore";
 
 const ApiBaseUrl = import.meta.env.VITE_API_URL;
 
@@ -16,6 +17,7 @@ export async function clientLoader() {
   try {
     const club = await ClubService.getClub();
     const categories = await CategoryService.getCategories();
+
     return { club: club.data, categories: categories.data };
   } catch (error) {
     throw error;

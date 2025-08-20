@@ -4,13 +4,14 @@ import Badge from "~/components/common/badge/Badge";
 import { cn } from "~/lib/utils";
 import "./styles.css";
 import { Pen, Trash2 } from "lucide-react";
+import type { TableData } from "./type";
 
 interface Props {
   className?: string;
   onClickTrash?: () => void;
   onClickEdit?: () => void;
   tableHeader: typeof tableHeader;
-  tableData: typeof data;
+  tableData: TableData[] | never[];
 }
 
 const Table = (props: Props) => {
@@ -38,6 +39,7 @@ const Table = (props: Props) => {
         {tableData.map((tableData, idx) => (
           <ul
             className="items-center list-item gap-2 min-w-[670px] rounded-[20px] bg-white p-4 shadow-sm hover:bg-gray-100"
+            id={tableData._id}
             key={`licensed-${idx}`}
           >
             {tableHeader.map((head, idx) => (
