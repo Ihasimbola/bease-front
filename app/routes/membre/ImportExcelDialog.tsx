@@ -5,7 +5,7 @@ import AppButton from "~/components/general/AppButton/AppButton";
 import AppText from "~/components/general/AppText/AppText";
 import Icon from "~/components/icon";
 import "./styles.css";
-import { data, useFetcher, useNavigate } from "react-router";
+import { data, redirect, useFetcher, useNavigate } from "react-router";
 import type { Route } from "./+types/ImportExcelDialog";
 import { FileService } from "~/services/fileService";
 import { toast } from "sonner";
@@ -22,7 +22,7 @@ export async function clientAction({ request }: Route.ActionArgs) {
 
   try {
     const res = await FileService.upload("files/excel/licensed", formData);
-    return res;
+    return data(res);
   } catch (error: any) {
     if (error.status === 400) {
       return data(
@@ -62,6 +62,11 @@ function ImportExcelDialog() {
       toast.error(fetcher.data.error.message);
       navigate(-1);
     }
+    // if(fetcher.data?.data) {
+    //   navigate(-1);
+    // }
+
+    // navigate(-1);
   }, [fetcher.data]);
 
   useEffect(() => {
