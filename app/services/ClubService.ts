@@ -1,5 +1,5 @@
 import { Http } from "./http";
-import type { CreateClub } from "./type";
+import type { ClubResponse, CreateClub } from "./type";
 
 
 export class ClubService extends Http {
@@ -15,7 +15,7 @@ export class ClubService extends Http {
   static async getClub(id?: string) {
     try {
       if(id) {
-        const res = await this.get('club/' + id);
+        const res = (await this.get<ClubResponse>('club/' + id));
         return res.data;
       }
       const res = await this.get('club');

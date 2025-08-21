@@ -44,7 +44,6 @@ export async function clientLoader() {
 }
 
 function Membre({ loaderData }: Route.ComponentProps) {
-  const [importExcelDialog, setImportExcelDialog] = React.useState(false);
   const [addMembreDialog, setAddMembreDialog] = React.useState(false);
   const [deleteConfirmationDialog, setDeleteConfirmationDialog] =
     React.useState(false);
@@ -89,7 +88,7 @@ function Membre({ loaderData }: Route.ComponentProps) {
               Importer un ficher excel
             </AppText>
           </AppButton>
-          <AppButton onClick={() => setAddMembreDialog(true)}>
+          <AppButton onClick={() => navigate("add-member")}>
             <PlusIcon size={16} />
             <AppText color="white" size="xs">
               Ajouter un membre
@@ -123,10 +122,6 @@ function Membre({ loaderData }: Route.ComponentProps) {
           </AppText>
         </div>
       )}
-      <AddMemberDialog
-        isOpen={addMembreDialog}
-        setIsOpen={setAddMembreDialog}
-      />
       <DeleteConfirmationDialog
         isOpen={deleteConfirmationDialog}
         setIsOpen={setDeleteConfirmationDialog}

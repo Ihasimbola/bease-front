@@ -1,9 +1,19 @@
 import { Http } from "./http";
+import type { CategoryResponse } from "./type";
 
 export class CategoryService extends Http {
   static async getCategories() {
     try {
       const res = await this.get('category');
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async getCategory(id: string) {
+    try {
+      const res = await this.get<CategoryResponse>(`category/${id}`);
       return res.data;
     } catch (error) {
       throw error;

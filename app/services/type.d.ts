@@ -25,3 +25,17 @@ export interface CreateClub {
 export interface HttpResponse<T> {
   data: T[];
 }
+
+export interface CategoryResponse {
+  name: string;
+  isCustom: boolean;
+  admin: CreateAdmin;
+  _id: string;
+}
+
+export interface ClubResponse {
+  name: string;
+  profileAdmin: string;
+  emblem: string;
+  categories: string[];
+}

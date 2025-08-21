@@ -87,26 +87,30 @@ export async function clientAction({ request }: Route.ActionArgs) {
       return data({ errors: error });
     }
 
-    const res = await UserService.registerLicensed({
-      age: Number(user.age),
-      firstname: user.firstname,
-      lastname: user.lastname,
-      email: licensedEmail,
-      gender: user.gender,
-      password: user.password,
-      phone: user.phone,
-      isConfirmed: true,
-      category: licensedcategory || "",
-      club: club,
-    });
+    try {
+      const res = await UserService.registerLicensed({
+        age: Number(user.age),
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: licensedEmail,
+        gender: user.gender,
+        password: user.password,
+        phone: user.phone,
+        isConfirmed: true,
+        category: licensedcategory || "",
+        club: club,
+      });
 
-    localStorage.setItem("token", "Bearer " + res.token);
-    localStorage.setItem("refreshToken", "Bearer " + res.refreshToken);
-    localStorage.setItem("user", JSON.stringify(res.data));
+      localStorage.setItem("token", "Bearer " + res.token);
+      localStorage.setItem("refreshToken", "Bearer " + res.refreshToken);
+      localStorage.setItem("user", JSON.stringify(res.data));
 
-    return data({
-      user: res.data,
-    });
+      return data({
+        user: res.data,
+      });
+    } catch (error) {
+      return data({ requestError: error });
+    }
   }
 
   const user = {} as any;
