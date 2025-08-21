@@ -6,6 +6,15 @@ export interface CreateAdmin {
   password: string;
 }
 
+export interface CreateLicensed extends CreateAdmin {
+  gender: "M" | 'F';
+  age: number;
+  phone: string;
+  isConfirmed: boolean;
+  category: string;
+  club: string;
+}
+
 export interface CreateClub {
   name: string;
   profileAdmin: string;

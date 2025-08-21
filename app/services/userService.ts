@@ -1,6 +1,6 @@
 import type { AxiosResponse } from "axios";
 import { Http } from "./http";
-import type { CreateAdmin, HttpResponse } from "./type";
+import type { CreateAdmin, CreateLicensed, HttpResponse } from "./type";
 
 export type LicensedResponse = {
   _id: string;
@@ -35,6 +35,15 @@ export class UserService extends Http {
   static async register(data: CreateAdmin) {
     try {
       const res = await this.post('users/admin', data);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async registerLicensed(data: CreateLicensed) {
+    try {
+      const res = await this.post('users/add-licensed', data);
       return res.data;
     } catch (error) {
       throw error;

@@ -12,3 +12,8 @@ export const RegisterSchema = z.object({
   password: z.string({ message: "Mot de passe requis" }).trim().min(8, { message: "Au moins 8 caractères" }),
   confirmPassword: z.string().trim().min(8, { message: "Veuiller confirmer le mot de passe" })
 })
+
+export const AdminSchema  = z.object({
+  gender: z.string().trim().min(1, {  message: "Genre requis" }),
+  age: z.number().min(1, { message: "Age requis" }),
+})
