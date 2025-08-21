@@ -15,6 +15,7 @@ export default [
       route('membre', "./routes/membre/Membre.tsx", [
         route('import-excel', "./routes/membre/ImportExcelDialog.tsx"),
         route('add-member', "./routes/membre/AddMemberDialog.tsx"),
+        route('delete-member/:id', './routes/membre/ConfirmationDialog.tsx')
       ]),
     ]),
   

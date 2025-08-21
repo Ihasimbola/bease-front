@@ -50,6 +50,15 @@ export class UserService extends Http {
     }
   }
 
+  static async deleteLicensed(id: string | number) {
+    try {
+      const res = await this.delete('users/licensed/' + id);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   static async getAdmin(id: string) {
     try {
       const res = await this.get('users/admin/' + id);
@@ -67,4 +76,5 @@ export class UserService extends Http {
       throw error;
     }
   }
+
 }

@@ -8,7 +8,7 @@ import type { TableData } from "./type";
 
 interface Props {
   className?: string;
-  onClickTrash?: () => void;
+  onClickTrash?: (id: string | number) => void;
   onClickEdit?: () => void;
   tableHeader: typeof tableHeader;
   tableData: TableData[] | never[];
@@ -73,7 +73,12 @@ const Table = (props: Props) => {
                 size={16}
                 color="red"
                 className="cursor-pointer justify-self-end"
-                onClick={onClickTrash}
+                onClick={() => {
+                  if (onClickTrash) {
+                    onClickTrash(tableData._id);
+                  }
+                  return;
+                }}
               />
             </div>
           </ul>

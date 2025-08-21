@@ -58,8 +58,8 @@ function Membre({ loaderData }: Route.ComponentProps) {
     }
   }, [loaderData]);
 
-  const hanleOnDelete = () => {
-    setDeleteConfirmationDialog(true);
+  const handleOnDelete = (id: string | number) => {
+    navigate("delete-member" + `/${id}`);
   };
 
   const handleOnEdit = () => {
@@ -110,7 +110,7 @@ function Membre({ loaderData }: Route.ComponentProps) {
       {membres.length ? (
         <Table
           className="mt-8"
-          onClickTrash={hanleOnDelete}
+          onClickTrash={handleOnDelete}
           onClickEdit={handleOnEdit}
           tableHeader={tableHeader}
           tableData={membres}
@@ -122,10 +122,7 @@ function Membre({ loaderData }: Route.ComponentProps) {
           </AppText>
         </div>
       )}
-      <DeleteConfirmationDialog
-        isOpen={deleteConfirmationDialog}
-        setIsOpen={setDeleteConfirmationDialog}
-      />
+
       <EditMemberDialog
         isOpen={editMembreDialog}
         setIsOpen={setEditMembreDialog}
