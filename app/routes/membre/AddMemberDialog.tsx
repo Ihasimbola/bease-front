@@ -1,6 +1,6 @@
-import { Send } from "lucide-react";
+import { LoaderCircle, Send } from "lucide-react";
 import React, { useEffect } from "react";
-import { useFetcher, useNavigate } from "react-router";
+import { redirect, useFetcher, useNavigate } from "react-router";
 import Dialog from "~/components/common/dialog/Dialog";
 import AppButton from "~/components/general/AppButton/AppButton";
 import AppText from "~/components/general/AppText/AppText";
@@ -47,9 +47,8 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
     club,
     data.category
   );
-  console.log(res);
 
-  // return res;
+  return redirect("/membre");
 }
 
 export async function clientLoader() {
@@ -116,7 +115,7 @@ function AddMemberDialog({ loaderData }: Route.ComponentProps) {
                 {categories?.map((category, idx) => (
                   <SelectItem
                     key={`category-${idx}`}
-                    value={category._id}
+                    value={category?._id}
                     className=""
                   >
                     {category.name}
@@ -128,8 +127,18 @@ function AddMemberDialog({ loaderData }: Route.ComponentProps) {
         </div>
         <div className="flex gap-3 mt-4">
           <AppButton>
-            <Send size={16} />
-            Envoyer la demande
+            {fetcher.state !== "idle" ? (
+              <LoaderCircle
+                className="loader-circle"
+                id="loader-circle"
+                stroke="stroke-white"
+              />
+            ) : (
+              <>
+                <Send size={16} />
+                Envoyer la demande
+              </>
+            )}
           </AppButton>
           <AppButton variant="outlined" onClick={() => navigate(-1)}>
             Annuler

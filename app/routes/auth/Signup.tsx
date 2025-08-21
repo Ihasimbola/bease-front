@@ -46,6 +46,7 @@ export async function clientAction({ request }: Route.ActionArgs) {
   const licensedcategory = new URLSearchParams(url).get("category");
   const club = new URLSearchParams(url).get("club");
 
+  // if the user is from the mail invitation
   if (licensedEmail && club) {
     const user = {} as any;
     for (const [key, value] of formData.entries()) {
@@ -105,9 +106,10 @@ export async function clientAction({ request }: Route.ActionArgs) {
       localStorage.setItem("refreshToken", "Bearer " + res.refreshToken);
       localStorage.setItem("user", JSON.stringify(res.data));
 
-      return data({
-        user: res.data,
-      });
+      return redirect("/");
+      // return data({
+      //   user: res.data,
+      // });
     } catch (error) {
       return data({ requestError: error });
     }

@@ -1,5 +1,5 @@
 import { PlusIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form, redirect, useNavigate } from "react-router";
 import Dialog from "~/components/common/dialog/Dialog";
 import AppButton from "~/components/general/AppButton/AppButton";
@@ -30,6 +30,10 @@ export async function clientAction({
 export default function CreateSubteamDialog() {
   const [isOpen, setIsOpen] = useState(true);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isOpen) navigate(-1);
+  }, [isOpen]);
 
   return (
     <Dialog className="flex flex-col" close={isOpen} setIsOpen={setIsOpen}>
