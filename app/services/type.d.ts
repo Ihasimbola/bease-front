@@ -34,7 +34,7 @@ export interface CategoryResponse {
 }
 
 export interface ClubResponse {
-  name: string;
+    name: string;
   profileAdmin: string;
   emblem: string;
   categories: string[];

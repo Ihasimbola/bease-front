@@ -15,7 +15,7 @@ export class ClubService extends Http {
   static async getClub(id?: string) {
     try {
       if(id) {
-        const res = (await this.get<ClubResponse>('club/' + id));
+        const res = (await this.get('club/' + id));
         return res.data;
       }
       const res = await this.get('club');

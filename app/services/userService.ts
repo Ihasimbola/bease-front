@@ -59,6 +59,15 @@ export class UserService extends Http {
     }
   }
 
+  static async updateLicensed(id: string, data: any) {
+    try {
+      const res = await this.patch('users/licensed/' + id, data);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   static async getAdmin(id: string) {
     try {
       const res = await this.get('users/admin/' + id);

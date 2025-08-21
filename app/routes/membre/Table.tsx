@@ -9,7 +9,7 @@ import type { TableData } from "./type";
 interface Props {
   className?: string;
   onClickTrash?: (id: string | number) => void;
-  onClickEdit?: () => void;
+  onClickEdit?: (id: string | number, category: string) => void;
   tableHeader: typeof tableHeader;
   tableData: TableData[] | never[];
 }
@@ -67,7 +67,11 @@ const Table = (props: Props) => {
               <Pen
                 size={16}
                 className="cursor-pointer justify-self-end"
-                onClick={onClickEdit}
+                onClick={() => {
+                  if (onClickEdit) {
+                    onClickEdit(tableData._id, tableData.category);
+                  }
+                }}
               />
               <Trash2
                 size={16}

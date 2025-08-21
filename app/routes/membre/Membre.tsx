@@ -62,8 +62,8 @@ function Membre({ loaderData }: Route.ComponentProps) {
     navigate("delete-member" + `/${id}`);
   };
 
-  const handleOnEdit = () => {
-    setEditMembreDialog(true);
+  const handleOnEdit = (id: string | number, category: string) => {
+    navigate("edit-member" + `/${id}?category=${category}`);
   };
 
   return (
@@ -122,11 +122,6 @@ function Membre({ loaderData }: Route.ComponentProps) {
           </AppText>
         </div>
       )}
-
-      <EditMemberDialog
-        isOpen={editMembreDialog}
-        setIsOpen={setEditMembreDialog}
-      />
       <Outlet />
     </section>
   );
