@@ -1,20 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import type { Route } from "./+types/Confirm";
-import {
-  data,
-  NavLink,
-  useFetcher,
-  useNavigate,
-  useSubmit,
-} from "react-router";
+import { data, NavLink, useFetcher } from "react-router";
 import AppText from "~/components/general/AppText/AppText";
 import { UserService } from "~/services/userService";
-import { toast } from "sonner";
 import { Toaster } from "~/components/ui/sonner";
 import { CheckCircle, CircleX, Loader2 } from "lucide-react";
 import AppButton from "~/components/general/AppButton/AppButton";
-
-type Props = {};
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
   const url = new URL(request.url);
@@ -78,7 +69,7 @@ function Confirm({ actionData }: Route.ComponentProps) {
   );
 }
 
-function messageContent(isError: boolean, message: string) {
+function messageContent(isError: boolean, message: string): React.ReactNode {
   const content = isError ? (
     <div className="flex flex-col items-center gap-2">
       <CircleX size={54} color="red" />
