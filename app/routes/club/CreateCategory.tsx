@@ -10,7 +10,6 @@ import { useState } from "react";
 import { CategoryService } from "~/services/CategoryService";
 
 export async function clientAction({ request, params }: Route.ActionArgs) {
-  console.log(params.id);
   const formData = await request.formData();
   const categoryName = formData.get("name");
 
@@ -28,7 +27,6 @@ export async function clientAction({ request, params }: Route.ActionArgs) {
 export default function CreateCategory({ params }: Route.ClientLoaderArgs) {
   const [isOpen, setIsOpen] = useState(true);
   const navigate = useNavigate();
-  console.log(params.id);
 
   return (
     <Dialog className="flex flex-col" close={isOpen} setIsOpen={setIsOpen}>

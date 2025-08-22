@@ -44,7 +44,6 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
   }
 
   if (!data.email) {
-    console.log("no email");
     return redirect("/membre");
   }
 
