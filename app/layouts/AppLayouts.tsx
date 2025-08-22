@@ -1,5 +1,5 @@
 import React, { type ReactNode } from "react";
-import { Navigate, Outlet, useLocation } from "react-router";
+import { Navigate, Outlet, useLocation, useOutletContext } from "react-router";
 import Icon from "~/components/icon";
 import Pub from "~/components/layout/pub/Pub";
 import AuthProvider, { useAuth } from "~/libs/auth";
@@ -14,7 +14,7 @@ interface Props {
 
 function AppLayouts({ children }: Props) {
   const userStore = useUserStore((state) => state.admin);
-  // console.log(userStore);
+
   return (
     <>
       <AuthProvider>

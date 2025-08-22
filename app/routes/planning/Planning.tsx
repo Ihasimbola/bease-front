@@ -10,17 +10,17 @@ function Planning({}: Props) {
     <>
       <Info />
       <section className="hidden lg:flex w-full flex-col gap-6 mt-6">
-      {
-        matchData.map((match, idx) => Match({
-          headerData: matchTableHeader,
-          bodyData: match.data,
-          tableTitle: new Date(match.date).toLocaleString("fr-FR", {
-            day: "2-digit",
-            month: "long",
-            year: "numeric"
+        {matchData.map((match, idx) =>
+          Match({
+            headerData: matchTableHeader,
+            bodyData: match.data,
+            tableTitle: new Date(match.date).toLocaleString("fr-FR", {
+              day: "2-digit",
+              month: "long",
+              year: "numeric",
+            }),
           })
-        }))
-      }
+        )}
       </section>
       <section className="mt-6 lg:hidden">
         <MatchAccordion data={matchData} />

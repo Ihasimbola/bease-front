@@ -1,4 +1,10 @@
-import { Navigate, Outlet, useLocation } from "react-router";
+import {
+  Navigate,
+  Outlet,
+  useLocation,
+  useOutlet,
+  useOutletContext,
+} from "react-router";
 import { useAuth } from "~/libs/auth";
 
 interface Props {

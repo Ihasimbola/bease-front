@@ -2,10 +2,15 @@ import AppText from "~/components/general/AppText/AppText";
 import type { icons } from "~/components/icon";
 import Icon from "~/components/icon";
 import "./styles.css";
-import { Link, NavLink, redirect } from "react-router";
-import { useState } from "react";
+import { Link, NavLink, redirect, useOutletContext } from "react-router";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { cn } from "~/libs/twMerge";
 import { useAuth } from "~/libs/auth";
+import { RoleService } from "~/services/RoleService";
+import type { Route } from "../../+types/root";
+import { UserService } from "~/services/userService";
+import { Http } from "~/services/http";
+import useSWR from "swr";
 
 type SidebarItem = {
   label: string;
@@ -56,9 +61,24 @@ const profilItems = [
 
 interface Props {}
 
-const Sidebar = () => {
+const Sidebar = ({}: Props) => {
   const [openMenu, setOpenMenu] = useState(false);
   const { logout } = useAuth();
+  const role = useOutletContext();
+  const [itemsSidebar, setItemsSidebar] = useState(appItems);
+
+  useLayoutEffect(() => {
+    const filteredItems = appItems.filter((item) => {
+      if (
+        role === "LICENSED" &&
+        (item.label === "Membres" || item.label === "Club")
+      ) {
+        return false;
+      }
+      return true;
+    });
+    setItemsSidebar(filteredItems);
+  }, []);
 
   return (
     <>
@@ -86,7 +106,7 @@ const Sidebar = () => {
           <Icon name="CloseIcon" />
         </div>
         <ul className="py-4 cursor-pointer">
-          {appItems.map((item, idx) => (
+          {itemsSidebar.map((item, idx) => (
             <li key={`sidebaritem-${idx}`}>
               <NavLink
                 to={item.link}

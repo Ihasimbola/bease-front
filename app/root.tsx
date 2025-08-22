@@ -9,6 +9,33 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import { useEffect, useState } from "react";
+import { RoleService } from "./services/RoleService";
+
+type RoleContextType = {
+  _id: string;
+  attribute: string;
+};
+
+export async function clientLoader() {
+  try {
+    const roles: any[] = await RoleService.getRoles();
+    const connecetedUserRole = JSON.parse(localStorage.getItem("user")!).user
+      .role;
+
+    const role = roles.find((role) => role._id === connecetedUserRole);
+
+    return {
+      data: role,
+      error: null,
+    };
+  } catch (error) {
+    return {
+      data: null,
+      error,
+    };
+  }
+}
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -41,8 +68,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function App() {
-  return <Outlet />;
+export default function App({ loaderData }: Route.ComponentProps) {
+  const [role, setRole] = useState(loaderData?.data?.attribute);
+  useEffect(() => {
+    setRole(loaderData?.data?.attribute);
+  }, [loaderData?.data?.attribute]);
+  return <Outlet context={role} />;
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
