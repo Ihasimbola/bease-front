@@ -68,6 +68,15 @@ export class UserService extends Http {
     }
   }
 
+  static async resetPassword(email: string, newPassword: string) {
+    try {
+      const res = await this.patch('users/reset-password', { email, password: newPassword });
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   static async confirmLicensed(key: string) {
     try {
       const response = await this.post('mailing/confirm?key=' + key, {});

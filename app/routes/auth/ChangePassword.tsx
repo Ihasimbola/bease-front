@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { useUserStore } from "~/store/userStore";
 import { ChangePasswordSchema } from "./zodSchema";
 import * as z from "zod";
+import { UserService } from "~/services/userService";
 
 export const formContainerClassName =
   "form-container flex flex-col w-[95%] lg:w-[768px] max-w-7xl items-center self-center justify-self-center px-4 py-5 lg:px-5 lg:py-10 rounded";
@@ -43,6 +44,10 @@ export async function clientAction({ request }: Route.ActionArgs) {
     if (Object.keys(error).length > 0) {
       return data({ errors: error });
     }
+
+    // if there is no error
+    const res = await UserService.resetPassword(email, password);
+    return redirect("/auth/login");
   } catch (error) {
     return data({ message: "Verifie bien votre email et mot de passe" });
   }
