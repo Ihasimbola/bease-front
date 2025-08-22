@@ -68,6 +68,19 @@ export class UserService extends Http {
     }
   }
 
+  static async confirmLicensed(key: string) {
+    try {
+      const response = await this.post('mailing/confirm?key=' + key, {});
+      return new Promise((res, rej) => {
+        setTimeout(() => {
+          return res({});
+        }, 2000);
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
   static async getAdmin(id: string) {
     try {
       const res = await this.get('users/admin/' + id);

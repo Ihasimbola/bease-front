@@ -26,6 +26,8 @@ export default [
       route('login', "./routes/auth/Login.tsx"),
       route('register', "./routes/auth/Signup.tsx")
     ])
-  ])
+  ]),
+
+  route('confirm', "./routes/auth/Confirm.tsx"),
   
 ] satisfies RouteConfig;
