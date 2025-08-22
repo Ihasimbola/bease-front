@@ -78,7 +78,7 @@ function Club({ loaderData }: Route.ComponentProps) {
 
       {club && (
         <div className="xl:flex gap-10">
-          <div className="mt-6 bg-white p-4 rounded-[20px] ">
+          <div className="mt-6 bg-white max-h-fit p-4 rounded-[20px] ">
             <AppText weight="semibold">{club.name}</AppText>
             {club.emblem ? (
               <img

@@ -18,6 +18,7 @@ import { ClubService } from "~/services/ClubService";
 import { CategoryService } from "~/services/CategoryService";
 import type { CategoryResponse, ClubResponse } from "~/services/type";
 import { MailingService } from "~/services/MailingService";
+import { toast } from "sonner";
 
 interface Props {
   isOpen: boolean;
@@ -42,6 +43,11 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
     data[key] = value;
   }
 
+  if (!data.email) {
+    console.log("no email");
+    return redirect("/membre");
+  }
+
   const res = await MailingService.sendInvitationMail(
     data.email,
     club,
@@ -56,17 +62,29 @@ export async function clientLoader() {
   if (!club)
     return { club: null, message: "Vous n' avez pas encore créé un club" };
 
-  // get admin club
-  const adminClub: ClubResponse = (await ClubService.getClub(club)) as any;
+  try {
+    // get admin club
+    const adminClub: ClubResponse = (await ClubService.getClub(club)) as any;
 
-  // get all categories
-  const categoriesId = adminClub.categories as string[];
-  const categories = [] as CategoryResponse[];
-  for (let i = 0; i < categoriesId.length; ++i) {
-    categories[i] = (await CategoryService.getCategory(categoriesId[i])).data;
+    // get all categories
+    const categoriesId = adminClub.categories as string[];
+    const categories = [] as CategoryResponse[];
+    for (let i = 0; i < categoriesId.length; ++i) {
+      categories[i] = (await CategoryService.getCategory(categoriesId[i])).data;
+    }
+
+    return {
+      club: club,
+      message: "",
+      categories: categories,
+    };
+  } catch (error: any) {
+    return {
+      club: null,
+      message: error.message,
+      categories: [],
+    };
   }
-
-  return { categories };
 }
 
 function AddMemberDialog({ loaderData }: Route.ComponentProps) {
@@ -74,6 +92,12 @@ function AddMemberDialog({ loaderData }: Route.ComponentProps) {
   const navigate = useNavigate();
   const fetcher = useFetcher();
   const { categories } = loaderData;
+
+  useEffect(() => {
+    if (loaderData.message) {
+      toast.error(loaderData.message);
+    }
+  }, [loaderData.message]);
 
   // pop back to the previous page
   useEffect(() => {
@@ -140,7 +164,11 @@ function AddMemberDialog({ loaderData }: Route.ComponentProps) {
               </>
             )}
           </AppButton>
-          <AppButton variant="outlined" onClick={() => navigate(-1)}>
+          <AppButton
+            variant="outlined"
+            type="button"
+            onClick={() => navigate(-1)}
+          >
             Annuler
           </AppButton>
         </div>

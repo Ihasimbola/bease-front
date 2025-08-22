@@ -22,7 +22,7 @@ export async function clientAction({ request }: Route.ActionArgs) {
 
   try {
     const res = await FileService.upload("files/excel/licensed", formData);
-    return data(res);
+    return redirect("/membre");
   } catch (error: any) {
     if (error.status === 400) {
       return data(

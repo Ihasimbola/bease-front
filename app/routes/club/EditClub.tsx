@@ -82,7 +82,7 @@ function EditClub({ loaderData, actionData }: Route.ComponentProps) {
 
       <div className="xl:flex gap-10">
         <Form
-          className="mt-6 bg-white p-4 rounded-[20px] logo-container relative"
+          className="mt-6 bg-white p-4 rounded-[20px] logo-container relative max-h-fit"
           method="PATCH"
           encType="multipart/form-data"
         >

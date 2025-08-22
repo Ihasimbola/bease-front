@@ -30,17 +30,21 @@ export async function clientLoader() {
   const { data: membres } = await UserService.getLicensedByClub(clubId);
 
   const data: TableData[] = membres.map((membre: LicensedResponse) => ({
-    firstname: membre.user.firstname,
-    lastname: membre.user.lastname,
-    age: membre.age,
-    category: membre.category.name,
-    isConfirmed: membre.isConfirmed,
-    gender: membre.gender,
-    _id: membre._id,
+    firstname: membre?.user?.firstname,
+    lastname: membre?.user?.lastname,
+    age: membre?.age,
+    category: membre?.category?.name || "-",
+    isConfirmed: membre?.isConfirmed,
+    gender: membre?.gender,
+    _id: membre?._id,
   }));
   return {
     membres: data,
   };
+}
+
+export function HydrateFallback() {
+  return <div>Loading data...</div>;
 }
 
 function Membre({ loaderData }: Route.ComponentProps) {
