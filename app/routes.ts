@@ -3,7 +3,9 @@ import { type RouteConfig, index, layout, prefix, route } from "@react-router/de
 export default [
     layout('./layouts/AppLayouts.tsx', [
       index("routes/home.tsx"),
-      route('planning', "./routes/planning/Planning.tsx"),
+      route('planning', "./routes/planning/Planning.tsx", [
+        route('import-match', "./routes/planning/ImportMatchExcelDialog.tsx"),
+      ]),
       route('club', "./routes/club/Club.tsx"),
       route('club/create', "./routes/club/CreateClub.tsx"),
       route('club/edit/:id', "./routes/club/EditClub.tsx", [
