@@ -18,4 +18,13 @@ export class PostService extends Http {
       throw error;
     }
   }
+
+  static async deletePost(id: string) {
+    try {
+      const res = await this.delete('post/' + id);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

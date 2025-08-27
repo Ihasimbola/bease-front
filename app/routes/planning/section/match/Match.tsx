@@ -1,15 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { matchTableHeader, matchData, postTableHeader } from "./matchData";
 import AppText from "~/components/general/AppText/AppText";
 import "./styles.css";
 import { Link, useNavigate } from "react-router";
 import type { MatchType } from "./type";
+import { Trash2, X } from "lucide-react";
+import { cn } from "~/lib/utils";
 
 type Post = {
   licensedId: string;
   name: string;
   firstname: string;
   lastname: string;
+  _id: string;
 };
 
 export interface Props {
@@ -89,11 +92,20 @@ export function findPostCell(
 ): React.ReactNode {
   const post = postsArray.find((post) => post.name === postHeaderData.dataKey);
   const navigate = useNavigate();
+  const [deleteIconIsVisible, setDeleteIconIsVisible] = useState(false);
 
   return post ? (
-    <AppText size="sm" weight="normal">
-      {`${post?.firstname} ${post?.lastname}`}
-    </AppText>
+    <div className="flex gap-2 relative">
+      <AppText size="sm" weight="normal">
+        {`${post?.firstname} ${post?.lastname}`}
+      </AppText>
+      <Trash2
+        size={16}
+        color="red"
+        className="cursor-pointer"
+        onClick={() => navigate("confirm-delete?id=" + post._id)}
+      />
+    </div>
   ) : (
     <AppText
       className="text-red cursor-pointer"
