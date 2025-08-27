@@ -1,6 +1,7 @@
 export type MatchType = {
   _id: string;
   matches: {
+    _id: string;
     division: string;
     teamA: string;
     startTime: string;

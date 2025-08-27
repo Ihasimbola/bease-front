@@ -50,7 +50,7 @@ function MatchAccordionContent(props: MatchProps) {
               ) => (
                 <li key={`match-${idx}`} className="flex justify-between">
                   <AppText>{post.label}</AppText>
-                  <AppText>{findPostCell(post, data.posts)}</AppText>
+                  {findPostCell(post, data.posts, data._id)}
                 </li>
               )
             )}

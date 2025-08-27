@@ -108,4 +108,13 @@ export class UserService extends Http {
     }
   }
 
+  static async getUserProfile(id: string) {
+    try {
+      const res = await this.get('users/' + id);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
 }

@@ -2,7 +2,7 @@ import React from "react";
 import { matchTableHeader, matchData, postTableHeader } from "./matchData";
 import AppText from "~/components/general/AppText/AppText";
 import "./styles.css";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import type { MatchType } from "./type";
 
 type Post = {
@@ -51,7 +51,11 @@ function matchTable(
         </thead>
         <tbody>
           {bodyData.map((data, idx) => (
-            <tr key={idx + "-" + data.division} className="body-row">
+            <tr
+              key={idx + "-" + data.division}
+              className="body-row"
+              id={data._id}
+            >
               {headData.map((head, idx) => (
                 <td key={`table-row-${idx}`}>
                   <AppText size="xs" weight="normal">
@@ -64,7 +68,9 @@ function matchTable(
                   post: { label: string; dataKey: string; iconName: string },
                   idx: number
                 ) => (
-                  <td key={`post-${idx}`}>{findPostCell(post, data.posts)}</td>
+                  <td key={`post-${idx}`}>
+                    {findPostCell(post, data.posts, data._id)}
+                  </td>
                 )
               )}
             </tr>
@@ -78,17 +84,25 @@ function matchTable(
 // find post in data
 export function findPostCell(
   postHeaderData: Props["postHeaderData"][0],
-  postsArray: Post[]
+  postsArray: Post[],
+  matchId: string
 ): React.ReactNode {
   const post = postsArray.find((post) => post.name === postHeaderData.dataKey);
+  const navigate = useNavigate();
+
   return post ? (
     <AppText size="sm" weight="normal">
       {`${post?.firstname} ${post?.lastname}`}
     </AppText>
   ) : (
-    <Link to="#" className="text-red">
+    <AppText
+      className="text-red cursor-pointer"
+      onClick={() =>
+        navigate(`assign-post?match=${matchId}&post=${postHeaderData.dataKey}`)
+      }
+    >
       Inscription
-    </Link>
+    </AppText>
   );
 }
 export default Match;
