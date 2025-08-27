@@ -6,6 +6,7 @@ export type MatchType = {
     teamA: string;
     startTime: string;
     teamB: string;
+    isAthome: boolean;
     Arbitrage: {
       licensed: string;
       _id: string;

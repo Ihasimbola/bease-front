@@ -56,7 +56,10 @@ function matchTable(
           {bodyData.map((data, idx) => (
             <tr
               key={idx + "-" + data.division}
-              className="body-row"
+              className={cn([
+                "body-row",
+                data.isAthome ? "" : "pointer-events-none opacity-50",
+              ])}
               id={data._id}
             >
               {headData.map((head, idx) => (
