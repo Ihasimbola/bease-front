@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { matchTableHeader, matchData, postTableHeader } from "./matchData";
 import AppText from "~/components/general/AppText/AppText";
 import "./styles.css";
@@ -20,17 +20,19 @@ export interface Props {
   postHeaderData: typeof postTableHeader;
   bodyData: MatchType["matches"];
   tableTitle: string;
+  handleNavigate: (path: string, query: string) => void;
 }
 
 function Match(props: Props) {
-  const { headerData, bodyData, tableTitle } = props;
-  return matchTable(headerData, bodyData, tableTitle);
+  const { headerData, bodyData, tableTitle, handleNavigate } = props;
+  return matchTable(headerData, bodyData, tableTitle, handleNavigate);
 }
 
 function matchTable(
   headData: Props["headerData"],
   bodyData: Props["bodyData"],
-  tableTitle: string
+  tableTitle: string,
+  handleNavigate: (path: string, query: string) => void
 ) {
   return (
     <div className="w-full bg-white p-6 rounded-2xl shadow-lg" key={tableTitle}>
@@ -75,7 +77,7 @@ function matchTable(
                   idx: number
                 ) => (
                   <td key={`post-${idx}`}>
-                    {findPostCell(post, data.posts, data._id)}
+                    {findPostCell(post, data.posts, data._id, handleNavigate)}
                   </td>
                 )
               )}
@@ -91,11 +93,12 @@ function matchTable(
 export function findPostCell(
   postHeaderData: Props["postHeaderData"][0],
   postsArray: Post[],
-  matchId: string
+  matchId: string,
+  handleNavigate: (path: string, query: string) => void
 ): React.ReactNode {
   const post = postsArray.find((post) => post.name === postHeaderData.dataKey);
-  const navigate = useNavigate();
-  const [deleteIconIsVisible, setDeleteIconIsVisible] = useState(false);
+  // const [deleteIconIsVisible, setDeleteIconIsVisible] = useState(false);
+  // const navigate = useNavigate();
 
   return post ? (
     <div className="flex gap-2 relative">
@@ -106,15 +109,26 @@ export function findPostCell(
         size={16}
         color="red"
         className="cursor-pointer"
-        onClick={() => navigate("confirm-delete?id=" + post._id)}
+        onClick={() => {
+          handleNavigate("confirm-delete", `?id=${post._id}`);
+          // navigate("confirm-delete?id=" + post._id);
+          // window.location.href = "confirm-delete?id=" + post._id;
+          // window.location.reload();
+        }}
       />
     </div>
   ) : (
     <AppText
       className="text-red cursor-pointer"
-      onClick={() =>
-        navigate(`assign-post?match=${matchId}&post=${postHeaderData.dataKey}`)
-      }
+      onClick={() => {
+        handleNavigate(
+          "assign-post",
+          `?match=${matchId}&post=${postHeaderData.dataKey}`
+        );
+        // navigate(`assign-post?match=${matchId}&post=${postHeaderData.dataKey}`);
+        // window.location.href = `assign-post?match=${matchId}&post=${postHeaderData.dataKey}`;
+        // window.location.reload();
+      }}
     >
       Inscription
     </AppText>

@@ -16,6 +16,7 @@ import {
 import AppButton from "~/components/general/AppButton/AppButton";
 import { toast } from "sonner";
 import { AssingPostSchema } from "./ValidationShema";
+import { useFetcherEffect } from "~/hooks/useFetcherEffect";
 
 type PostnameType = {
   _id: string;
@@ -66,7 +67,12 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
       matchId: matchId,
       postNameId: formData.get("postNameId")?.toString(),
     });
-    return redirect("/planning");
+    // return redirect("/planning");
+    return data({
+      message: "",
+      data: res.data,
+      error: null,
+    });
   } catch (error) {
     return data({
       message: "Une erreur est survenue",
@@ -118,18 +124,9 @@ function AssignPost({ loaderData }: Route.ComponentProps) {
   const [isOpen, setIsOpen] = useState(true);
   const navigate = useNavigate();
   const { data, error, message } = loaderData;
-  const fetcher = useFetcher();
 
-  useEffect(() => {
-    if (fetcher?.data?.message) {
-      toast.error(fetcher?.data?.message);
-    }
-
-    if (fetcher.data === null) {
-      toast.error("Une erreur est survenue");
-      navigate(-1);
-    }
-  }, [fetcher?.data]);
+  // this custom hook serve for showing error message or navigate(-1) for success
+  const { fetcher } = useFetcherEffect();
 
   useEffect(() => {
     if (!isOpen) navigate(-1);

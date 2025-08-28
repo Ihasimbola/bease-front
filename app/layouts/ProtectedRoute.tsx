@@ -1,10 +1,13 @@
+import { useEffect } from "react";
 import {
   Navigate,
   Outlet,
   useLocation,
+  useNavigation,
   useOutlet,
   useOutletContext,
 } from "react-router";
+import { cn } from "~/lib/utils";
 import { useAuth } from "~/libs/auth";
 
 interface Props {
@@ -14,7 +17,6 @@ interface Props {
 export const ProtectedRoute = () => {
   const { isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
-
   if (isLoading) {
     // Still verifying token—show a spinner or message
     return <div>Loading authentication status…</div>;
@@ -23,7 +25,9 @@ export const ProtectedRoute = () => {
   // If logged in, render child routes; otherwise redirect to /login
   return isAuthenticated ? (
     <>
-      <Outlet />
+      <div>
+        <Outlet />
+      </div>
     </>
   ) : (
     <Navigate to="/auth/login" replace />
