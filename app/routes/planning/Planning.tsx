@@ -97,16 +97,18 @@ function Planning({ loaderData }: Route.ComponentProps) {
             }),
           })
         )}
-        <div className="w-full m-auto">
-          <AppButton
-            variant="outlined"
-            className=""
-            type="button"
-            onClick={handleGetMore}
-          >
-            Afficher plus de matchs
-          </AppButton>
-        </div>
+        {matchDataFromLoader.length !== 0 && (
+          <div className="w-full m-auto">
+            <AppButton
+              variant="outlined"
+              className=""
+              type="button"
+              onClick={handleGetMore}
+            >
+              Afficher plus de matchs
+            </AppButton>
+          </div>
+        )}
       </section>
       <section className="mt-6 lg:hidden">
         <MatchAccordion data={matchData} />
