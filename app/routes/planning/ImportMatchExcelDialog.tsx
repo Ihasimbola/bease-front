@@ -102,7 +102,7 @@ function ImportMatchExcelDialog() {
             <AppText size="xs">
               {`Assurez-vous bien que les champs suivants sont bien présents suivant l'ordre: `}
             </AppText>
-            <AppText size="xs">
+            <AppText size="sm" weight="semibold">
               Division, Equipe 1, Equipe 2, Date de renconte, Heure, Salle.
             </AppText>
             <AppText size="xs">

@@ -22,7 +22,12 @@ export async function clientAction({ request }: Route.ActionArgs) {
 
   try {
     const res = await FileService.upload("files/excel/licensed", formData);
-    return redirect("/membre");
+
+    return data({
+      data: res.data,
+      message: res?.data?.message,
+      error: null,
+    });
   } catch (error: any) {
     if (error.status === 400) {
       return data(
@@ -53,6 +58,8 @@ function ImportExcelDialog() {
 
   useEffect(() => {
     const alreadyCreated = fetcher?.data?.data?.already_created;
+
+    console.log(fetcher.data);
 
     if (alreadyCreated) {
       toast.success("Certains membres ont déjà un compte.");
@@ -100,11 +107,17 @@ function ImportExcelDialog() {
           <TriangleAlert color="orange" size={48} />
           <div>
             <AppText size="xs">
-              {`Assurez-vous bien que l' adresse email \n est bien présent pour chaque
-            licencié pour l' envoi de confirmation.`}
+              {`Assurez-vous bien que les champs suivants sont remplis:`}
+            </AppText>
+            <AppText size="sm" weight="semibold">
+              {`Nom, Prénom, Né(e) le, Sexe, Catégorie et email.`}
             </AppText>
             <AppText size="xs">
-              Les lignes sans email ne seront pas traitées.
+              Si les colonnes ne correspondent pas, le fichier ne sera pas
+              importé.
+            </AppText>
+            <AppText size="xs" weight="medium">
+              La verification est sensible à la casse.
             </AppText>
           </div>
         </div>
