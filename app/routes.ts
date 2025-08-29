@@ -30,6 +30,7 @@ export default [
       route('login', "./routes/auth/Login.tsx"),
       route('register', "./routes/auth/Signup.tsx"),
       route('change-password', "./routes/auth/ChangePassword.tsx"),
+      route('change-password-request', "./routes/auth/SendMail.tsx"),
     ])
   ]),
 

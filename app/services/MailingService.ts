@@ -9,4 +9,13 @@ export class MailingService extends Http {
       throw error;
     }
   }
+
+  static async sendResetPasswordMail(mailto: string) {
+    try {
+      const res = await this.post('users/change-password-request', { mailto });
+      return res
+    } catch (error) {
+      throw error;
+    }
+  }
 }

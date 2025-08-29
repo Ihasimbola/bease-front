@@ -68,9 +68,10 @@ export class UserService extends Http {
     }
   }
 
-  static async resetPassword(email: string, newPassword: string) {
+  static async resetPassword(userId: string, newPassword: string) {
+    console.log("called")
     try {
-      const res = await this.patch('users/reset-password', { email, password: newPassword });
+      const res = await this.patch('users/reset-password', { userId, password: newPassword });
       return res.data;
     } catch (error) {
       throw error;
@@ -111,6 +112,15 @@ export class UserService extends Http {
   static async getUserProfile(id: string) {
     try {
       const res = await this.get('users/' + id);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async verifyChangePassKey(key: string) {
+    try {
+      const res = await this.get('auth/verify-change-pass-access-key?key=' + key);
       return res.data;
     } catch (error) {
       throw error;

@@ -20,14 +20,13 @@ export const formContainerClassName =
 export async function clientAction({ request }: Route.ActionArgs) {
   try {
     let formData = await request.formData();
-    const email = formData.get("email")?.toString()!;
     const password = formData.get("password")?.toString()!;
     const confirmPassword = formData.get("confirmPassword")?.toString()!;
+    const userId = formData.get("user-id")?.toString()!;
 
     const result = ChangePasswordSchema.safeParse({
       password,
       confirmPassword,
-      email,
     });
 
     let error = {};
@@ -46,19 +45,49 @@ export async function clientAction({ request }: Route.ActionArgs) {
     }
 
     // if there is no error
-    const res = await UserService.resetPassword(email, password);
+    const res = await UserService.resetPassword(userId, password);
     return redirect("/auth/login");
   } catch (error) {
     return data({ message: "Verifie bien votre email et mot de passe" });
   }
 }
 
-function ChangePassword({ actionData }: Route.ComponentProps) {
+// check if the key is valid
+export async function clientLoader({ request }: Route.ClientLoaderArgs) {
+  const url = new URL(request.url);
+  const key = new URLSearchParams(url.search).get("key");
+  if (!key) {
+    return {
+      message: "La clé est manquante",
+      data: null,
+      error: null,
+    };
+  }
+
+  try {
+    const res = await UserService.verifyChangePassKey(key);
+    return {
+      data: res.data,
+      message: null,
+      error: null,
+    };
+  } catch (error) {
+    return {
+      error,
+      message: "Une erreur est survenue",
+      data: null,
+    };
+  }
+}
+
+function ChangePassword({ actionData, loaderData }: Route.ComponentProps) {
   const fetcher = useFetcher();
   const userStore = useUserStore((state) => state.admin);
   const setUser = useUserStore((state) => state.setUser);
   const navigate = useNavigate();
-  const errors = fetcher.data;
+  const data = fetcher.data;
+  const errorCheckingKey = loaderData?.error;
+  const userData = loaderData.data;
   const [isEqual, setIsEqual] = useState<null | boolean>(null);
 
   const [password, setPassword] = useState<{
@@ -88,6 +117,19 @@ function ChangePassword({ actionData }: Route.ComponentProps) {
     }
   }, [fetcher.data]);
 
+  if (errorCheckingKey) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-5 w-full">
+        <AppText color="white" size="2xl" weight="semibold">
+          La clé est expirée. Veuiller réessayer.
+        </AppText>
+        <AppButton onClick={() => navigate("/auth/change-password-request")}>
+          Réessayer
+        </AppButton>
+      </div>
+    );
+  }
+
   return (
     <fetcher.Form
       className={cn(["max-w-[768px]", formContainerClassName])}
@@ -100,28 +142,7 @@ function ChangePassword({ actionData }: Route.ComponentProps) {
         <AppText color="white" size="2xl" weight="semibold">
           Changer de mot de passe
         </AppText>
-        <div className="w-full">
-          <label htmlFor="email">
-            <AppText color="white" weight="semibold">
-              Email
-            </AppText>
-          </label>
-          <div>
-            <LucideUser2 className="absolute mt-1.5 ml-2" />
-            <Input
-              className="text-black bg-white mt-1 pl-10 rounded-[20px] h-[40px]"
-              id="email"
-              type="email"
-              name="email"
-              required
-            />
-            {errors?.email && (
-              <AppText color="red" size="xs">
-                {errors.email[0]}
-              </AppText>
-            )}
-          </div>
-        </div>
+        <div className="w-full"></div>
 
         <div className="flex gap-3 w-full">
           <div className="w-full">
@@ -144,13 +165,20 @@ function ChangePassword({ actionData }: Route.ComponentProps) {
                   setPassword({ ...password, password: e.target.value })
                 }
               />
-              {errors?.password && (
+              {data?.errors?.password && (
                 <AppText color="red" size="xs">
-                  {errors.password[0]}
+                  {data?.errors?.password[0]}
                 </AppText>
               )}
             </div>
           </div>
+
+          <input
+            type="text"
+            name="user-id"
+            defaultValue={userData.sub}
+            className="hidden"
+          />
 
           <div className="w-full">
             <label htmlFor="confirmPassword">
@@ -172,9 +200,9 @@ function ChangePassword({ actionData }: Route.ComponentProps) {
                   setPassword({ ...password, confirmPassword: e.target.value })
                 }
               />
-              {errors?.confirmPassword && (
+              {data?.errors?.confirmPassword && (
                 <AppText color="red" size="xs">
-                  {errors.confirmPassword[0]}
+                  {data?.errors.confirmPassword[0]}
                 </AppText>
               )}
             </div>

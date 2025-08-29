@@ -19,7 +19,10 @@ export const AdminSchema  = z.object({
 })
 
 export const ChangePasswordSchema = z.object({
-  email: z.email({ message: "Email non valide" }),
   password: z.string({ message: "Mot de passe requis" }).trim().min(8, { message: "Au moins 8 caractères" }),
   confirmPassword: z.string().trim().min(8, { message: "Veuiller confirmer le mot de passe" })
+})
+
+export const EmailSchema = z.object({
+  email: z.email({ message: "Email non valide" })
 })

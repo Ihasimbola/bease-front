@@ -107,7 +107,10 @@ function Login({ actionData }: Route.ComponentProps) {
         </div>
       </div>
       <div className="self-end mt-3 flex flex-col gap-4 xl:flex-row justify-between w-full">
-        <Link to={"/auth/change-password"} className="flex flex-col gap-2">
+        <Link
+          to={"/auth/change-password-request"}
+          className="flex flex-col gap-2"
+        >
           <AppText color="white" weight="light" size="sm">
             Mot de passe oublie?
           </AppText>
