@@ -56,12 +56,7 @@ function ImportMatchExcelDialog() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const alreadyCreated = fetcher?.data?.data?.already_created;
-
-    if (alreadyCreated) {
-      toast.success("Certains membres ont déjà un compte.");
-      navigate(-1);
-    } else if (fetcher.data?.error?.message) {
+    if (fetcher.data?.error?.message) {
       toast.error(fetcher.data.error.message);
       navigate(-1);
     } else if (fetcher.data?.data) {
