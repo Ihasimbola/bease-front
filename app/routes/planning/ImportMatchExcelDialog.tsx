@@ -22,7 +22,11 @@ export async function clientAction({ request }: Route.ActionArgs) {
 
   try {
     const res = await FileService.upload("files/excel/match", formData);
-    return redirect("/planning");
+    return data({
+      data: res.data,
+      message: res?.data?.message,
+      error: null,
+    });
   } catch (error: any) {
     if (error.status === 400) {
       return data(
@@ -57,16 +61,12 @@ function ImportMatchExcelDialog() {
     if (alreadyCreated) {
       toast.success("Certains membres ont déjà un compte.");
       navigate(-1);
-    }
-    if (fetcher.data?.error?.message) {
+    } else if (fetcher.data?.error?.message) {
       toast.error(fetcher.data.error.message);
       navigate(-1);
+    } else if (fetcher.data?.data) {
+      navigate(-1);
     }
-    // if(fetcher.data?.data) {
-    //   navigate(-1);
-    // }
-
-    // navigate(-1);
   }, [fetcher.data]);
 
   useEffect(() => {

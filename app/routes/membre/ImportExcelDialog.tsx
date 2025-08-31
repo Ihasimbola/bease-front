@@ -59,19 +59,15 @@ function ImportExcelDialog() {
   useEffect(() => {
     const alreadyCreated = fetcher?.data?.data?.already_created;
 
-    console.log(fetcher.data);
-
     if (alreadyCreated) {
       toast.success("Certains membres ont déjà un compte.");
       navigate(-1);
-    }
-    if (fetcher.data?.error?.message) {
+    } else if (fetcher.data?.error?.message) {
       toast.error(fetcher.data.error.message);
       navigate(-1);
+    } else if (fetcher.data?.data) {
+      navigate(-1);
     }
-    // if(fetcher.data?.data) {
-    //   navigate(-1);
-    // }
 
     // navigate(-1);
   }, [fetcher.data]);
