@@ -50,7 +50,7 @@ function Login({ actionData }: Route.ComponentProps) {
       setUser(fetcher.data.user);
       navigate("/");
     }
-  }, [fetcher.data]);
+  }, [fetcher?.data]);
 
   return (
     <fetcher.Form className={cn([formContainerClassName])} method="post">

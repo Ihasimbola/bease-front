@@ -3,11 +3,13 @@ import { useNavigate, useOutlet, useOutletContext } from "react-router";
 import AppButton from "~/components/general/AppButton/AppButton";
 import AppText from "~/components/general/AppText/AppText";
 import Icon from "~/components/icon";
+import { useUserStore } from "~/store/userStore";
 
 type Props = {};
 
 function Info({}: Props) {
   const navigate = useNavigate();
+  const userConnected = useUserStore((state) => state.user);
   const userConnecteRole: string | undefined = useOutletContext();
 
   return (
@@ -26,7 +28,7 @@ function Info({}: Props) {
         </div>
       </div>
       <div className="flex gap-3 items-end">
-        {userConnecteRole !== "LICENSED" ? (
+        {userConnecteRole !== "LICENSED" && userConnected?.club ? (
           <>
             <AppButton onClick={() => navigate("import-match")}>
               <Icon name="ImportIcon" />

@@ -1,23 +1,15 @@
 import { PlusIcon, SearchIcon, Upload } from "lucide-react";
-import React, { useEffect, useLayoutEffect } from "react";
+import { useLayoutEffect } from "react";
 import AppButton from "~/components/general/AppButton/AppButton";
 import AppText from "~/components/general/AppText/AppText";
 import { Input } from "~/components/ui/input";
 import Table from "./Table";
-import ImportExcelDialog from "./ImportExcelDialog";
-import AddMemberDialog from "./AddMemberDialog";
-import DeleteConfirmationDialog from "./ConfirmationDialog";
-import EditMemberDialog from "./EditMemberDialog";
 import type { Route } from "./+types/Membre";
-import { data, Outlet, useFetcher, useNavigate } from "react-router";
-import { FileService } from "~/services/fileService";
+import { Outlet, useNavigate } from "react-router";
 import { UserService, type LicensedResponse } from "~/services/userService";
 import { tableHeader } from "./tableData";
 import type { TableData } from "./type";
 import { toast } from "sonner";
-import { useUserStore } from "~/store/userStore";
-
-type Props = {};
 
 export async function clientLoader() {
   const clubId = JSON.parse(localStorage.getItem("user")!)?.club;
@@ -41,7 +33,7 @@ export async function clientLoader() {
       _id: membre?._id,
     }));
     return {
-      data: membres,
+      data,
       error: null,
       message: "",
     };
@@ -59,10 +51,6 @@ export function HydrateFallback() {
 }
 
 function Membre({ loaderData }: Route.ComponentProps) {
-  const [addMembreDialog, setAddMembreDialog] = React.useState(false);
-  const [deleteConfirmationDialog, setDeleteConfirmationDialog] =
-    React.useState(false);
-  const [editMembreDialog, setEditMembreDialog] = React.useState(false);
   const navigate = useNavigate();
   const { data: membres, message } = loaderData;
 

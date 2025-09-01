@@ -30,6 +30,17 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
   const skip = url.searchParams.get("skip") || 0;
   const limit = url.searchParams.get("limit") || 0;
 
+  // check first if the user have a club
+  const club = JSON.parse(localStorage.getItem("user")!)?.club;
+
+  if (!club) {
+    return {
+      message: "Vous n' avez pas encore créé un club",
+      data: null,
+      error: null,
+    };
+  }
+
   try {
     const res = await MatchService.getMatchByClub(+skip, +limit);
     return {
