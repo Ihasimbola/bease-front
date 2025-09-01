@@ -1,6 +1,5 @@
-import { PlusIcon } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
-import { Form, redirect, useFetcher, data as fetcherData } from "react-router";
+import { redirect, useFetcher, data as fetcherData } from "react-router";
 import AppButton from "~/components/general/AppButton/AppButton";
 import AppText from "~/components/general/AppText/AppText";
 import { Input } from "~/components/ui/input";
@@ -22,38 +21,46 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
     return fetcherData({ message: "Veuillez choisir un logo" });
   }
 
-  const res = await FileService.upload("club/emblem", form);
+  try {
+    const res = await FileService.upload("club/emblem", form);
 
-  let data = {} as any;
-  for (let [key, value] of form.entries()) {
-    if (key === "emblem") continue;
-    if (key === "subteamNames") {
-      if (Array.isArray(data["subteamNames"])) {
-        data["subteamNames"] = [...data["subteamNames"], value];
-        continue;
+    let data = {} as any;
+    for (let [key, value] of form.entries()) {
+      if (key === "emblem") continue;
+      if (key === "subteamNames") {
+        if (Array.isArray(data["subteamNames"])) {
+          data["subteamNames"] = [...data["subteamNames"], value];
+          continue;
+        } else {
+          data["subteamNames"] = [value];
+        }
       } else {
-        data["subteamNames"] = [value];
+        data[key] = value;
       }
-    } else {
-      data[key] = value;
     }
+
+    const adminId = JSON.parse(localStorage.getItem("user")!)._id;
+
+    data["profileAdmin"] = adminId;
+    data["emblem"] = res.data._id;
+
+    const club = await ClubService.createClub(data);
+
+    // update localstorage for this new club
+    // get admin first
+    const admin = await UserService.getAdmin(adminId);
+
+    // set localstorage for new admin profile
+    localStorage.setItem("user", JSON.stringify(admin));
+
+    return redirect("/club");
+  } catch (error: any) {
+    return {
+      error,
+      message: error.message,
+      data: null,
+    };
   }
-
-  const adminId = JSON.parse(localStorage.getItem("user")!)._id;
-
-  data["profileAdmin"] = adminId;
-  data["emblem"] = res.data._id;
-
-  const club = await ClubService.createClub(data);
-
-  // update localstorage for this new club
-  // get admin first
-  const admin = await UserService.getAdmin(adminId);
-
-  // set localstorage for new admin profile
-  localStorage.setItem("user", JSON.stringify(admin));
-
-  return redirect("/club");
 }
 
 function CreateClub({ actionData }: Route.ComponentProps) {
@@ -62,6 +69,12 @@ function CreateClub({ actionData }: Route.ComponentProps) {
   const [subTeam, setuSubTeam] = useState<{ name: string }[]>([]);
   const [file, setFile] = useState<any>();
   const emblemRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (actionData?.message) {
+      toast.error(actionData.message);
+    }
+  }, [actionData?.message]);
 
   useEffect(() => {
     if (errors?.message) {
