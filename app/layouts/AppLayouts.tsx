@@ -1,4 +1,10 @@
-import React, { use, useEffect, type ReactNode } from "react";
+import React, {
+  use,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 import {
   Navigate,
   Outlet,
@@ -16,6 +22,7 @@ import { useUserStore } from "~/store/userStore";
 import { cn } from "~/lib/utils";
 import { Loader2 } from "lucide-react";
 import { createPortal } from "react-dom";
+import { ClubService } from "~/services/ClubService";
 
 interface Props {
   children: ReactNode;
@@ -24,12 +31,26 @@ interface Props {
 function AppLayouts({ children }: Props) {
   const setUser = useUserStore((state) => state.setUser);
   const navigation = useNavigation();
+  const [emblem, setEmblem] = useState("");
 
   // set the connected user to the store
   useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user")!);
     if (localStorage.getItem("user")) {
       setUser(JSON.parse(localStorage.getItem("user")!));
     }
+
+    const getClub = async (id: string) => {
+      try {
+        const res = (await ClubService.getClub(id)) as any;
+        setEmblem(res.emblem);
+      } catch (error) {
+        throw error;
+      }
+    };
+
+    // get user club
+    getClub(user?.club);
   }, [localStorage.getItem("user")]);
 
   // register the scroll event into localStorage
@@ -56,7 +77,16 @@ function AppLayouts({ children }: Props) {
             <div className="hidden lg:block">
               <Icon name="LogoBease" />
             </div>
-            <Icon name="KunheimIcon" />
+            {emblem ? (
+              <img
+                src={`${import.meta.env.VITE_API_URL}files/image/${emblem}`}
+                alt="emblem"
+                width="150px"
+                height="auto"
+              />
+            ) : (
+              <Icon name="KunheimIcon" />
+            )}
           </div>
           <main className="lg:ml-[94px] mb-6 pt-8 pl-6 pr-5 bg-grayblue">
             <ProtectedRoute />

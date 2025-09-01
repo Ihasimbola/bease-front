@@ -43,6 +43,7 @@ export async function clientAction({ request, params }: Route.ActionArgs) {
   }
 
   const res = await ClubService.updateClub(clubId, data);
+  window.location.reload();
   return res;
 }
 
