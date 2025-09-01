@@ -12,7 +12,9 @@ import { toast } from "sonner";
 
 export async function clientAction({ request }: Route.ActionArgs) {
   const formData = await request.formData();
+  const user = JSON.parse(localStorage.getItem("user")!);
   const excel: any = formData.get("excel");
+  formData.append("club", user?.club);
 
   if (!excel?.name) {
     return data({

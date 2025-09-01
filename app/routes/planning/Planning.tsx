@@ -61,6 +61,12 @@ function Planning({ loaderData }: Route.ComponentProps) {
     if (location.pathname === "/planning") {
       setMatchStore(matchDataFromLoader);
     }
+
+    // get scroll position from local storage and set the scroll of the page to it
+    const scrollPosition = localStorage.getItem("scrollPosition");
+    if (scrollPosition) {
+      window.scrollTo(0, +scrollPosition);
+    }
   }, [loaderData.data]);
 
   // get more match from server
