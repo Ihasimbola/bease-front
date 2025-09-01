@@ -4,9 +4,18 @@ import AppText from "~/components/general/AppText/AppText";
 import { Checkbox } from "@radix-ui/react-checkbox";
 import Icon from "~/components/icon";
 import { postTableHeader } from "./matchData";
+import { cn } from "~/lib/utils";
 
 function MatchAccordionContent(props: MatchProps) {
-  const { headerData, bodyData, tableTitle, postHeaderData } = props;
+  const {
+    headerData,
+    bodyData,
+    tableTitle,
+    postHeaderData,
+    handleNavigate,
+    userConnected,
+    userConnecteRole,
+  } = props;
   return (
     <div>
       <Checkbox />
@@ -16,8 +25,14 @@ function MatchAccordionContent(props: MatchProps) {
       </div>
       <div className="flex flex-col gap-6">
         {bodyData.map((data, idx) => (
-          <ul key={`match-${idx}`} className="flex flex-col gap-1.5">
-            <li className="p-2 bg-gray2">
+          <ul
+            key={`match-${idx}`}
+            className={cn([
+              data.isAthome ? "" : "pointer-events-none opacity-50",
+              "flex flex-col gap-1.5",
+            ])}
+          >
+            <li className={cn(["p-2 bg-gray2"])}>
               <AppText>{data.teamA}</AppText>
               <AppText>{data.teamB}</AppText>
             </li>
@@ -50,7 +65,14 @@ function MatchAccordionContent(props: MatchProps) {
               ) => (
                 <li key={`match-${idx}`} className="flex justify-between">
                   <AppText>{post.label}</AppText>
-                  {findPostCell(post, data.posts, data._id)}
+                  {findPostCell(
+                    post,
+                    data.posts,
+                    data._id,
+                    handleNavigate,
+                    userConnected,
+                    userConnecteRole
+                  )}
                 </li>
               )
             )}

@@ -20,9 +20,10 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import AppButton from "~/components/general/AppButton/AppButton";
-import { toast } from "sonner";
+import "./styles.css";
 import { AssingPostSchema } from "./ValidationShema";
 import { useFetcherEffect } from "~/hooks/useFetcherEffect";
+import { LoaderCircle } from "lucide-react";
 
 type PostnameType = {
   _id: string;
@@ -252,7 +253,17 @@ function AssignPost({ loaderData }: Route.ComponentProps) {
         </div>
 
         <div className="flex gap-4">
-          <AppButton type="submit">Assigner</AppButton>
+          <AppButton type="submit">
+            {fetcher.state !== "idle" ? (
+              <LoaderCircle
+                className="loader-circle"
+                id="loader-circle"
+                stroke="stroke-white"
+              />
+            ) : (
+              "Assigner"
+            )}
+          </AppButton>
           <AppButton
             type="button"
             variant="outlined"

@@ -9,12 +9,18 @@ import { matchTableHeader, type matchData } from "./matchData";
 import AppText from "~/components/general/AppText/AppText";
 import MatchAccordionContent from "./MatchAccordionContent";
 import type { MatchType } from "./type";
+import type { UserStore } from "~/store/userStore";
 
 interface Props {
   data: MatchType[];
+  handleNavigate: (path: string, query: string) => void;
+  userConnected?: UserStore["user"];
+  userConnecteRole?: string;
 }
 
-function MatchAccordion({ data }: Props) {
+function MatchAccordion(props: Props) {
+  const { data, handleNavigate, userConnecteRole, userConnected } = props;
+
   return (
     <Accordion
       type="single"
@@ -43,6 +49,9 @@ function MatchAccordion({ data }: Props) {
               bodyData={match.matches}
               tableTitle={match._id}
               postHeaderData={matchTableHeader}
+              handleNavigate={handleNavigate}
+              userConnecteRole={userConnecteRole}
+              userConnected={userConnected}
             />
           </AccordionContent>
         </AccordionItem>

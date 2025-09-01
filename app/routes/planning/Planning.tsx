@@ -105,22 +105,27 @@ function Planning({ loaderData }: Route.ComponentProps) {
             }),
           })
         )}
-        {matchDataFromLoader.length !== 0 && (
-          <div className="w-full m-auto">
-            <AppButton
-              variant="outlined"
-              className=""
-              type="button"
-              onClick={handleGetMore}
-            >
-              Afficher plus de matchs
-            </AppButton>
-          </div>
-        )}
       </section>
       <section className="mt-6 lg:hidden">
-        <MatchAccordion data={matchData} />
+        <MatchAccordion
+          data={matchDataFromLoader}
+          handleNavigate={handleNavigate}
+          userConnecteRole={userConnecteRole}
+          userConnected={userConnected}
+        />
       </section>
+      {matchDataFromLoader.length !== 0 && (
+        <div className="w-full mt-8">
+          <AppButton
+            variant="outlined"
+            className=""
+            type="button"
+            onClick={handleGetMore}
+          >
+            Afficher plus de matchs
+          </AppButton>
+        </div>
+      )}
       <Outlet />
     </>
   );

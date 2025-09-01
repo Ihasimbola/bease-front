@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useOutlet, useOutletContext } from "react-router";
 import AppButton from "~/components/general/AppButton/AppButton";
 import AppText from "~/components/general/AppText/AppText";
 import Icon from "~/components/icon";
@@ -8,6 +8,7 @@ type Props = {};
 
 function Info({}: Props) {
   const navigate = useNavigate();
+  const userConnecteRole: string | undefined = useOutletContext();
 
   return (
     <section className="flex flex-col lg:flex-row gap-5 items-center justify-between">
@@ -25,18 +26,24 @@ function Info({}: Props) {
         </div>
       </div>
       <div className="flex gap-3 items-end">
-        <AppButton onClick={() => navigate("import-match")}>
-          <Icon name="ImportIcon" />
-          <AppText size="sm" weight="medium" color="white">
-            Importer
-          </AppText>
-        </AppButton>
-        <AppButton>
-          <Icon name="ExportIcon" />
-          <AppText size="sm" color="white" weight="medium">
-            Exporter
-          </AppText>
-        </AppButton>
+        {userConnecteRole !== "LICENSED" ? (
+          <>
+            <AppButton onClick={() => navigate("import-match")}>
+              <Icon name="ImportIcon" />
+              <AppText size="sm" weight="medium" color="white">
+                Importer
+              </AppText>
+            </AppButton>
+            <AppButton>
+              <Icon name="ExportIcon" />
+              <AppText size="sm" color="white" weight="medium">
+                Exporter
+              </AppText>
+            </AppButton>
+          </>
+        ) : (
+          <></>
+        )}
       </div>
     </section>
   );
