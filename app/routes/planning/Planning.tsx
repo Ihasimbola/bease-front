@@ -11,6 +11,7 @@ import {
   useFetcher,
   useLocation,
   useNavigate,
+  useOutletContext,
   useSearchParams,
 } from "react-router";
 import { ClubService } from "~/services/ClubService";
@@ -20,6 +21,7 @@ import type { MatchType } from "./section/match/type";
 import { useCallback, useEffect, useState } from "react";
 import { useMatchStore } from "~/store/matchStore";
 import AppButton from "~/components/general/AppButton/AppButton";
+import { useUserStore } from "~/store/userStore";
 
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {
   const url = new URL(request.url);
@@ -47,10 +49,14 @@ function Planning({ loaderData }: Route.ComponentProps) {
   const setMatchStore = useMatchStore((state) => state.setData);
   const updateMatchStore = useMatchStore((state) => state.pushData);
   const matchData = useMatchStore((state) => state.data);
+  const userConnected = useUserStore((state) => state.user);
   const [total, setTotal] = useState(4);
   const location = useLocation();
   const fetcher = useFetcher();
   const [searchParam, setSearchParam] = useSearchParams();
+  const userConnecteRole: string | undefined = useOutletContext();
+
+  // console.log(userConnected);
 
   useEffect(() => {
     if (location.pathname === "/planning") {
@@ -86,6 +92,8 @@ function Planning({ loaderData }: Route.ComponentProps) {
       <section className="hidden lg:flex w-full flex-col gap-10 mt-6">
         {matchDataFromLoader?.map((match, idx) =>
           Match({
+            userConnecteRole,
+            userConnected,
             handleNavigate,
             headerData: matchTableHeader,
             bodyData: match.matches,

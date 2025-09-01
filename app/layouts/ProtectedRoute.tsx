@@ -17,6 +17,8 @@ interface Props {
 export const ProtectedRoute = () => {
   const { isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
+  const role = useOutletContext();
+
   if (isLoading) {
     // Still verifying token—show a spinner or message
     return <div>Loading authentication status…</div>;
@@ -26,7 +28,7 @@ export const ProtectedRoute = () => {
   return isAuthenticated ? (
     <>
       <div>
-        <Outlet />
+        <Outlet context={role} />
       </div>
     </>
   ) : (

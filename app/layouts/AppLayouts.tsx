@@ -1,4 +1,4 @@
-import React, { type ReactNode } from "react";
+import React, { use, useEffect, type ReactNode } from "react";
 import {
   Navigate,
   Outlet,
@@ -21,8 +21,15 @@ interface Props {
 }
 
 function AppLayouts({ children }: Props) {
-  const userStore = useUserStore((state) => state.admin);
+  const setUser = useUserStore((state) => state.setUser);
   const navigation = useNavigation();
+
+  // set the connected user to the store
+  useEffect(() => {
+    if (localStorage.getItem("user")) {
+      setUser(JSON.parse(localStorage.getItem("user")!));
+    }
+  }, [localStorage.getItem("user")]);
 
   return (
     <>

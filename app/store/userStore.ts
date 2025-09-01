@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
-interface UserStore {
-  admin: {
+export interface UserStore {
+  user: {
     club: string;
     phone: string;
     _id: string;
@@ -14,10 +14,10 @@ interface UserStore {
       role: string;
     };
   };
-  setUser: (newUser: UserStore["admin"]) => void;
+  setUser: (newUser: UserStore["user"]) => void;
 }
 
-const initialState: UserStore["admin"] = {
+const initialState: UserStore["user"] = {
   club: "",
   phone: "",
   _id: "",
@@ -32,11 +32,11 @@ const initialState: UserStore["admin"] = {
 
 export const useUserStore = create<UserStore>()(
   devtools((set) => ({
-    admin: initialState,
-    setUser: (newUser: UserStore["admin"]) =>
+    user: initialState,
+    setUser: (newUser: UserStore["user"]) =>
       set(
         (state: UserStore) => ({
-          admin: newUser,
+          user: newUser,
         }),
         false,
         'user/setUser'

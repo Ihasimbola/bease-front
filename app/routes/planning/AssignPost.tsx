@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { data, redirect, useFetcher, useNavigate } from "react-router";
+import {
+  data,
+  redirect,
+  useFetcher,
+  useLocation,
+  useNavigate,
+} from "react-router";
 import Dialog from "~/components/common/dialog/Dialog";
 import AppText from "~/components/general/AppText/AppText";
 import { PostService } from "~/services/PostService";
@@ -86,6 +92,25 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
   const url = new URL(request.url);
   const post = new URLSearchParams(url.search).get("post");
 
+  // check query if there is licensedId
+  // if licensedId is present then get data of licensed from localstorage
+  const licensedId = new URLSearchParams(url.search).get("licensedId");
+  if (licensedId) {
+    const licensedData = JSON.parse(localStorage.getItem("user")!);
+    const postNames = await PostService.getPostNames();
+
+    return {
+      message: "",
+      data: {
+        allLicensed: [licensedData],
+        postname: postNames.data.find(
+          (postItem: { _id: string; name: string }) => postItem.name === post
+        ),
+      },
+      error: null,
+    };
+  }
+
   const club = JSON.parse(localStorage.getItem("user")!)?.club;
   if (!club) {
     return {
@@ -124,6 +149,22 @@ function AssignPost({ loaderData }: Route.ComponentProps) {
   const [isOpen, setIsOpen] = useState(true);
   const navigate = useNavigate();
   const { data, error, message } = loaderData;
+  const location = useLocation();
+  let licensedId = new URLSearchParams(location.search).get("licensedId");
+
+  let licensedContent = licensedId ? (
+    <SelectItem defaultValue={licensedId} value={licensedId}>
+      {`${data?.allLicensed[0].user.firstname} ${data?.allLicensed[0].user.lastname}`}
+    </SelectItem>
+  ) : (
+    data?.allLicensed.map((licensed, idx: number) => (
+      <SelectItem key={`licensed-${idx}`} value={licensed?._id} className="">
+        {`${licensed.user.firstname} ${licensed.user.lastname}`}
+      </SelectItem>
+    ))
+  );
+
+  // console.log(data);
 
   // this custom hook serve for showing error message or navigate(-1) for success
   const { fetcher } = useFetcherEffect();
@@ -189,21 +230,22 @@ function AssignPost({ loaderData }: Route.ComponentProps) {
               Les membres du club
             </AppText>
           </label>
-          <Select name="licensedId">
+          <Select name="licensedId" defaultValue={licensedId ? licensedId : ""}>
             <SelectTrigger className="bg-white">
-              <SelectValue placeholder="Selectionner un Membre" />
+              <SelectValue
+                placeholder={licensedId ? licensedId : "Selectionner un Membre"}
+              />
             </SelectTrigger>
-            <SelectContent className="relative z-[1300]" id="category">
-              <SelectGroup className="bg-white relative z-[1300]">
-                {data?.allLicensed.map((licensed, idx: number) => (
-                  <SelectItem
-                    key={`licensed-${idx}`}
-                    value={licensed?._id}
-                    className=""
-                  >
-                    {`${licensed.user.firstname} ${licensed.user.lastname}`}
-                  </SelectItem>
-                ))}
+            <SelectContent
+              className="relative z-[1300]"
+              id="category"
+              defaultValue={licensedId ? licensedId : ""}
+            >
+              <SelectGroup
+                className="bg-white relative z-[1300]"
+                defaultValue={licensedId ? licensedId : ""}
+              >
+                {licensedContent}
               </SelectGroup>
             </SelectContent>
           </Select>

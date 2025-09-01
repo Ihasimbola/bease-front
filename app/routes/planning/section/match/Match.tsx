@@ -2,10 +2,11 @@ import React, { useCallback, useState } from "react";
 import { matchTableHeader, matchData, postTableHeader } from "./matchData";
 import AppText from "~/components/general/AppText/AppText";
 import "./styles.css";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useOutletContext } from "react-router";
 import type { MatchType } from "./type";
 import { Trash2, X } from "lucide-react";
 import { cn } from "~/lib/utils";
+import { useUserStore, type UserStore } from "~/store/userStore";
 
 type Post = {
   licensedId: string;
@@ -21,18 +22,36 @@ export interface Props {
   bodyData: MatchType["matches"];
   tableTitle: string;
   handleNavigate: (path: string, query: string) => void;
+  userConnected?: UserStore["user"];
+  userConnecteRole?: string;
 }
 
 function Match(props: Props) {
-  const { headerData, bodyData, tableTitle, handleNavigate } = props;
-  return matchTable(headerData, bodyData, tableTitle, handleNavigate);
+  const {
+    headerData,
+    bodyData,
+    tableTitle,
+    handleNavigate,
+    userConnected,
+    userConnecteRole,
+  } = props;
+  return matchTable(
+    headerData,
+    bodyData,
+    tableTitle,
+    handleNavigate,
+    userConnected,
+    userConnecteRole
+  );
 }
 
 function matchTable(
   headData: Props["headerData"],
   bodyData: Props["bodyData"],
   tableTitle: string,
-  handleNavigate: (path: string, query: string) => void
+  handleNavigate: (path: string, query: string) => void,
+  userConnected?: UserStore["user"],
+  userConnecteRole?: string
 ) {
   return (
     <div className="w-full bg-white p-6 rounded-2xl shadow-lg" key={tableTitle}>
@@ -77,7 +96,14 @@ function matchTable(
                   idx: number
                 ) => (
                   <td key={`post-${idx}`}>
-                    {findPostCell(post, data.posts, data._id, handleNavigate)}
+                    {findPostCell(
+                      post,
+                      data.posts,
+                      data._id,
+                      handleNavigate,
+                      userConnected,
+                      userConnecteRole
+                    )}
                   </td>
                 )
               )}
@@ -94,40 +120,52 @@ export function findPostCell(
   postHeaderData: Props["postHeaderData"][0],
   postsArray: Post[],
   matchId: string,
-  handleNavigate: (path: string, query: string) => void
+  handleNavigate: (path: string, query: string) => void,
+  userConnected?: UserStore["user"],
+  userConnecteRole?: string
 ): React.ReactNode {
   const post = postsArray.find((post) => post.name === postHeaderData.dataKey);
-  // const [deleteIconIsVisible, setDeleteIconIsVisible] = useState(false);
-  // const navigate = useNavigate();
+  let isAuthorizedDeleting: boolean = true;
+
+  if (userConnecteRole === "LICENSED") {
+    isAuthorizedDeleting = Boolean(post?.licensedId === userConnected?._id);
+  }
+
+  // console.log(userConnected);
 
   return post ? (
     <div className="flex gap-2 relative">
       <AppText size="sm" weight="normal">
         {`${post?.firstname} ${post?.lastname}`}
       </AppText>
-      <Trash2
-        size={16}
-        color="red"
-        className="cursor-pointer"
-        onClick={() => {
-          handleNavigate("confirm-delete", `?id=${post._id}`);
-          // navigate("confirm-delete?id=" + post._id);
-          // window.location.href = "confirm-delete?id=" + post._id;
-          // window.location.reload();
-        }}
-      />
+      {isAuthorizedDeleting ? (
+        <Trash2
+          size={16}
+          color="red"
+          className="cursor-pointer"
+          onClick={() => {
+            handleNavigate("confirm-delete", `?id=${post._id}`);
+          }}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   ) : (
     <AppText
       className="text-red cursor-pointer"
       onClick={() => {
-        handleNavigate(
-          "assign-post",
-          `?match=${matchId}&post=${postHeaderData.dataKey}`
-        );
-        // navigate(`assign-post?match=${matchId}&post=${postHeaderData.dataKey}`);
-        // window.location.href = `assign-post?match=${matchId}&post=${postHeaderData.dataKey}`;
-        // window.location.reload();
+        if (userConnecteRole === "LICENSED") {
+          handleNavigate(
+            "assign-post",
+            `?match=${matchId}&post=${postHeaderData.dataKey}&licensedId=${userConnected?._id}`
+          );
+        } else {
+          handleNavigate(
+            "assign-post",
+            `?match=${matchId}&post=${postHeaderData.dataKey}`
+          );
+        }
       }}
     >
       Inscription

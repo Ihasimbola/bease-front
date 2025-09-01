@@ -73,6 +73,7 @@ export default function App({ loaderData }: Route.ComponentProps) {
   useEffect(() => {
     setRole(loaderData?.data?.attribute);
   }, [loaderData?.data?.attribute]);
+
   return <Outlet context={role} />;
 }
 

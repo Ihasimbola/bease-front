@@ -82,7 +82,7 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
 
 function ChangePassword({ actionData, loaderData }: Route.ComponentProps) {
   const fetcher = useFetcher();
-  const userStore = useUserStore((state) => state.admin);
+  const userStore = useUserStore((state) => state.user);
   const setUser = useUserStore((state) => state.setUser);
   const navigate = useNavigate();
   const data = fetcher.data;
