@@ -7,6 +7,7 @@ export default [
         route('import-match', "./routes/planning/ImportMatchExcelDialog.tsx"),
         route('assign-post', "./routes/planning/AssignPost.tsx"),
         route('confirm-delete', "./routes/planning/ConfirmDeletePost.tsx"),
+        route('confirm-delete-match', "./routes/planning/section/match/ConfirmDeleteMatch.tsx")
       ]),
       route('club', "./routes/club/Club.tsx"),
       route('club/create', "./routes/club/CreateClub.tsx"),

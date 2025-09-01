@@ -22,8 +22,8 @@ import { useCallback, useEffect, useState } from "react";
 import { useMatchStore } from "~/store/matchStore";
 import AppButton from "~/components/general/AppButton/AppButton";
 import { useUserStore } from "~/store/userStore";
-import { useDebounce } from "~/hooks/useDebounce";
 
+const limitInitialValue = 4;
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {
   const url = new URL(request.url);
   const skip = url.searchParams.get("skip") || 0;
@@ -51,7 +51,7 @@ function Planning({ loaderData }: Route.ComponentProps) {
   const updateMatchStore = useMatchStore((state) => state.pushData);
   const matchData = useMatchStore((state) => state.data);
   const userConnected = useUserStore((state) => state.user);
-  const [total, setTotal] = useState(4);
+  const [total, setTotal] = useState(limitInitialValue);
   const location = useLocation();
   const fetcher = useFetcher();
   const [searchParam, setSearchParam] = useSearchParams();
@@ -68,6 +68,13 @@ function Planning({ loaderData }: Route.ComponentProps) {
       window.scrollTo(0, +scrollPosition);
     }
   }, [loaderData.data]);
+
+  // reset limit value to the initial value when the user changes the page
+  useEffect(() => {
+    if (!location.search.includes("limit")) {
+      setTotal(limitInitialValue);
+    }
+  }, [location]);
 
   // get more match from server
   const handleGetMore = async () => {

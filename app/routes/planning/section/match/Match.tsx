@@ -2,11 +2,12 @@ import React, { useCallback, useState } from "react";
 import { matchTableHeader, matchData, postTableHeader } from "./matchData";
 import AppText from "~/components/general/AppText/AppText";
 import "./styles.css";
-import { Link, useNavigate, useOutletContext } from "react-router";
+import { Form, Link, useNavigate, useOutletContext } from "react-router";
 import type { MatchType } from "./type";
 import { Trash2, X } from "lucide-react";
 import { cn } from "~/lib/utils";
 import { useUserStore, type UserStore } from "~/store/userStore";
+import AppButton from "~/components/general/AppButton/AppButton";
 
 type Post = {
   licensedId: string;
@@ -53,11 +54,29 @@ function matchTable(
   userConnected?: UserStore["user"],
   userConnecteRole?: string
 ) {
+  // get limit number of match from localstorage
+  const limit = localStorage.getItem("limit") || "2";
+
   return (
     <div className="w-full bg-white p-6 rounded-2xl shadow-lg" key={tableTitle}>
-      <AppText weight="semibold" size="lg">
-        {tableTitle}
-      </AppText>
+      <div className="flex justify-between items-center">
+        <AppText weight="semibold" size="lg">
+          {tableTitle}
+        </AppText>
+        {userConnecteRole !== "LICENSED" && (
+          <AppButton
+            variant="primary"
+            onClick={() => {
+              handleNavigate(
+                "confirm-delete-match",
+                `?match=${bodyData[0]._id}&limit=${limit}`
+              );
+            }}
+          >
+            Supprimer le match
+          </AppButton>
+        )}
+      </div>
       <table className="w-full mt-3">
         <thead>
           <tr>

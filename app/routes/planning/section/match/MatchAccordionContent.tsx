@@ -5,6 +5,7 @@ import { Checkbox } from "@radix-ui/react-checkbox";
 import Icon from "~/components/icon";
 import { postTableHeader } from "./matchData";
 import { cn } from "~/lib/utils";
+import AppButton from "~/components/general/AppButton/AppButton";
 
 function MatchAccordionContent(props: MatchProps) {
   const {
@@ -16,12 +17,29 @@ function MatchAccordionContent(props: MatchProps) {
     userConnected,
     userConnecteRole,
   } = props;
+
+  // get limit number of match from localstorage
+  const limit = localStorage.getItem("limit") || "2";
+
   return (
     <div>
       <Checkbox />
       <AppText>Masquer les matchs exterieurs</AppText>
-      <div className="mt-4 mb-1">
+      <div className="mt-4 mb-1 flex justify-between items-center">
         <AppText weight="semibold">Matchs</AppText>
+        {userConnecteRole !== "LICENSED" && (
+          <AppButton
+            variant="primary"
+            onClick={() => {
+              handleNavigate(
+                "confirm-delete-match",
+                `?match=${bodyData[0]._id}&limit=${limit}`
+              );
+            }}
+          >
+            Supprimer le match
+          </AppButton>
+        )}
       </div>
       <div className="flex flex-col gap-6">
         {bodyData.map((data, idx) => (

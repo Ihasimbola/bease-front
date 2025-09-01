@@ -10,4 +10,13 @@ export class MatchService extends Http {
       throw error;
     }
   }
+
+  static async deleteMatch(matchId: string) {
+    try {
+      const res = await this.delete("match/" + matchId);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
