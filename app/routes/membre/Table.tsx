@@ -5,13 +5,14 @@ import { cn } from "~/lib/utils";
 import "./styles.css";
 import { Pen, Trash2 } from "lucide-react";
 import type { TableData } from "./type";
+import type { LicensedResponse } from "~/services/userService";
 
 interface Props {
   className?: string;
   onClickTrash?: (id: string | number) => void;
   onClickEdit?: (id: string | number, category: string) => void;
   tableHeader: typeof tableHeader;
-  tableData: TableData[] | never[];
+  tableData: any[];
 }
 
 const Table = (props: Props) => {

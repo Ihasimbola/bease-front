@@ -92,24 +92,35 @@ export async function clientLoader({
     };
   }
 
-  const club = await ClubService.getClub(clubId);
+  try {
+    const club = await ClubService.getClub(clubId);
 
-  const categoriesId = club.categories as string[];
-  const categories = [] as CategoryResponse[];
-  for (let i = 0; i < categoriesId.length; ++i) {
-    categories[i] = (await CategoryService.getCategory(categoriesId[i])).data;
+    const categoriesId = club.categories as string[];
+    const categories = [] as CategoryResponse[];
+    for (let i = 0; i < categoriesId.length; ++i) {
+      categories[i] = (await CategoryService.getCategory(categoriesId[i])).data;
+    }
+
+    // get the default category
+    const defaultCategory = categories.find((category) => {
+      return category.name === licensedDefaultCategory;
+    });
+
+    return {
+      message: "",
+      data: {
+        categories,
+        defaultCategory: defaultCategory?._id,
+      },
+      error: null,
+    };
+  } catch (error) {
+    return {
+      error,
+      message: "Une erreur est survenue",
+      data: null,
+    };
   }
-
-  // get the default category
-  const defaultCategory = categories.find((category) => {
-    return category.name === licensedDefaultCategory;
-  });
-
-  return {
-    categories,
-    message: "",
-    defaultCategory: defaultCategory?._id,
-  };
 }
 
 const EditMemberDialog = ({ loaderData, actionData }: Route.ComponentProps) => {
@@ -117,7 +128,9 @@ const EditMemberDialog = ({ loaderData, actionData }: Route.ComponentProps) => {
   const navigate = useNavigate();
   const fetcher = useFetcher();
   const navigation = useNavigation();
-  const { categories, message, defaultCategory } = loaderData;
+  const message = loaderData.message;
+  const categories = loaderData.data?.categories;
+  const defaultCategory = loaderData.data?.defaultCategory;
 
   useEffect(() => {
     if (actionData?.message) {
@@ -145,7 +158,7 @@ const EditMemberDialog = ({ loaderData, actionData }: Route.ComponentProps) => {
               <SelectValue placeholder="Selectionner une catégorie" />
             </SelectTrigger>
             <SelectContent className="relative z-[1200]">
-              {categories.map((category, idx) => (
+              {categories?.map((category, idx) => (
                 <SelectItem key={`category-${idx}`} value={category._id}>
                   {category.name}
                 </SelectItem>

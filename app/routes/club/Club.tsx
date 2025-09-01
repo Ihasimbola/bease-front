@@ -8,6 +8,8 @@ import type { Route } from "./+types/Club";
 import { LoaderCircle } from "lucide-react";
 import { CategoryService } from "~/services/CategoryService";
 import { useUserStore } from "~/store/userStore";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 const ApiBaseUrl = import.meta.env.VITE_API_URL;
 
@@ -20,7 +22,11 @@ export async function clientLoader() {
 
     return { club: club.data, categories: categories.data };
   } catch (error) {
-    throw error;
+    return {
+      error,
+      message: "Une erreur est survenue",
+      data: null,
+    };
   }
 }
 
@@ -48,8 +54,14 @@ export function HydrateFallback() {
 }
 
 function Club({ loaderData }: Route.ComponentProps) {
-  const { club, categories } = loaderData;
+  const { club, categories, message } = loaderData;
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (message) {
+      toast.error(message);
+    }
+  }, [loaderData?.message]);
 
   return (
     <section className="club">

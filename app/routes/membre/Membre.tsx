@@ -27,20 +27,31 @@ export async function clientLoader() {
       message: "Vous n' avez pas encore créé un club",
     };
   }
-  const { data: membres } = await UserService.getLicensedByClub(clubId);
 
-  const data: TableData[] = membres.map((membre: LicensedResponse) => ({
-    firstname: membre?.user?.firstname,
-    lastname: membre?.user?.lastname,
-    age: membre?.age,
-    category: membre?.category?.name || "-",
-    isConfirmed: membre?.isConfirmed,
-    gender: membre?.gender,
-    _id: membre?._id,
-  }));
-  return {
-    membres: data,
-  };
+  try {
+    const { data: membres } = await UserService.getLicensedByClub(clubId);
+
+    const data: TableData[] = membres.map((membre: LicensedResponse) => ({
+      firstname: membre?.user?.firstname,
+      lastname: membre?.user?.lastname,
+      age: membre?.age,
+      category: membre?.category?.name || "-",
+      isConfirmed: membre?.isConfirmed,
+      gender: membre?.gender,
+      _id: membre?._id,
+    }));
+    return {
+      data: membres,
+      error: null,
+      message: "",
+    };
+  } catch (error) {
+    return {
+      message: "Une erreur est survenue",
+      error,
+      data: null,
+    };
+  }
 }
 
 export function HydrateFallback() {
@@ -53,7 +64,7 @@ function Membre({ loaderData }: Route.ComponentProps) {
     React.useState(false);
   const [editMembreDialog, setEditMembreDialog] = React.useState(false);
   const navigate = useNavigate();
-  const { membres, message } = loaderData;
+  const { data: membres, message } = loaderData;
 
   useLayoutEffect(() => {
     if (message) {
@@ -111,7 +122,7 @@ function Membre({ loaderData }: Route.ComponentProps) {
           <SearchIcon color="gray" size={16} />
         </div>
       </div>
-      {membres.length ? (
+      {membres?.length && membres !== null && membres !== undefined ? (
         <Table
           className="mt-8"
           onClickTrash={handleOnDelete}

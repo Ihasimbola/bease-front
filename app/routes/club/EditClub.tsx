@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AppText from "~/components/general/AppText/AppText";
 import Icon from "~/components/icon";
 import { Input } from "~/components/ui/input";
@@ -11,6 +11,7 @@ import type { Route } from "./+types/EditClub";
 import placeholderImage from "~/assets/images/placeholder_image.png";
 import { Form, Outlet, useNavigate } from "react-router";
 import { FileService } from "~/services/fileService";
+import { toast } from "sonner";
 
 const ApiBaseUrl = import.meta.env.VITE_API_URL;
 
@@ -18,9 +19,17 @@ export async function clientLoader() {
   try {
     const club = await ClubService.getClub();
     const categories = await CategoryService.getCategories();
-    return { club: club.data, categories: categories.data };
+    return {
+      data: { club: club.data, categories: categories.data },
+      message: "",
+      error: null,
+    };
   } catch (error) {
-    throw error;
+    return {
+      data: null,
+      error,
+      message: "Une erreur est survenue",
+    };
   }
 }
 
@@ -48,7 +57,8 @@ export async function clientAction({ request, params }: Route.ActionArgs) {
 }
 
 function EditClub({ loaderData, actionData }: Route.ComponentProps) {
-  const { club } = loaderData;
+  const club = loaderData.data?.club;
+  const categories = loaderData.data?.categories;
   const data = actionData;
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [emblem, setEmblem] = useState<any>();
@@ -67,6 +77,12 @@ function EditClub({ loaderData, actionData }: Route.ComponentProps) {
     setEmblem(file);
     setChangeEmblem(true);
   };
+
+  useEffect(() => {
+    if (loaderData?.message) {
+      toast.error(loaderData?.message);
+    }
+  }, [loaderData?.message]);
 
   return (
     <section className="club edit">

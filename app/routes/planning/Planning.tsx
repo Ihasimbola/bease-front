@@ -22,6 +22,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useMatchStore } from "~/store/matchStore";
 import AppButton from "~/components/general/AppButton/AppButton";
 import { useUserStore } from "~/store/userStore";
+import { toast } from "sonner";
 
 const limitInitialValue = 4;
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {
@@ -56,6 +57,12 @@ function Planning({ loaderData }: Route.ComponentProps) {
   const fetcher = useFetcher();
   const [searchParam, setSearchParam] = useSearchParams();
   const userConnecteRole: string | undefined = useOutletContext();
+
+  useEffect(() => {
+    if (loaderData?.message) {
+      toast.error(loaderData.message);
+    }
+  }, [loaderData?.message]);
 
   useEffect(() => {
     if (location.pathname === "/planning") {
