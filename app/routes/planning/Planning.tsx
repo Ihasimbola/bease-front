@@ -22,6 +22,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useMatchStore } from "~/store/matchStore";
 import AppButton from "~/components/general/AppButton/AppButton";
 import { useUserStore } from "~/store/userStore";
+import { useDebounce } from "~/hooks/useDebounce";
 
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {
   const url = new URL(request.url);
@@ -56,8 +57,6 @@ function Planning({ loaderData }: Route.ComponentProps) {
   const [searchParam, setSearchParam] = useSearchParams();
   const userConnecteRole: string | undefined = useOutletContext();
 
-  // console.log(userConnected);
-
   useEffect(() => {
     if (location.pathname === "/planning") {
       setMatchStore(matchDataFromLoader);
@@ -72,6 +71,8 @@ function Planning({ loaderData }: Route.ComponentProps) {
     });
 
     setTotal((prevState) => prevState + 2); // add total for next request
+    localStorage.setItem("skip", "0");
+    localStorage.setItem("limit", total.toString());
   };
 
   const navigate = useNavigate();

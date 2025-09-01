@@ -15,6 +15,7 @@ import { Toaster } from "~/components/ui/sonner";
 import { useUserStore } from "~/store/userStore";
 import { cn } from "~/lib/utils";
 import { Loader2 } from "lucide-react";
+import { createPortal } from "react-dom";
 
 interface Props {
   children: ReactNode;
@@ -31,26 +32,26 @@ function AppLayouts({ children }: Props) {
     }
   }, [localStorage.getItem("user")]);
 
+  // register the scroll event into localStorage
+  useEffect(() => {
+    const setScrollPositionInLocalStorage = () => {
+      localStorage.setItem("scrollPosition", JSON.stringify(window.scrollY));
+    };
+    document.addEventListener("scrollend", setScrollPositionInLocalStorage);
+
+    return () =>
+      document.removeEventListener(
+        "scrollend",
+        setScrollPositionInLocalStorage
+      );
+  }, []);
+
   return (
     <>
       <AuthProvider>
         <Sidebar />
         <div className="relative">
-          <div
-            className={cn([
-              "",
-              navigation.state === "loading"
-                ? "fixed flex items-center justify-center z-[1400] opacity-35 w-screen h-screen bg-black transition-all duration-300 ease-in-out"
-                : "hidden",
-            ])}
-          >
-            <Loader2
-              size={74}
-              strokeWidth={2}
-              color="white"
-              className="animate-spin duratiion-300"
-            />
-          </div>
+          {navigation.state === "loading" && <AppLoader />}
           <div className="banner flex justify-start pl-32 lg:pl-[25%] items-center lg:gap-16">
             <div className="hidden lg:block">
               <Icon name="LogoBease" />
@@ -65,6 +66,25 @@ function AppLayouts({ children }: Props) {
       </AuthProvider>
       <Toaster />
     </>
+  );
+}
+
+function AppLoader() {
+  return createPortal(
+    <div
+      className={cn([
+        "",
+        "fixed flex top-0 items-center justify-center z-[1400] opacity-35 w-screen h-screen bg-black transition-all duration-300 ease-in-out",
+      ])}
+    >
+      <Loader2
+        size={74}
+        strokeWidth={2}
+        color="white"
+        className="animate-spin duratiion-300"
+      />
+    </div>,
+    document.body
   );
 }
 

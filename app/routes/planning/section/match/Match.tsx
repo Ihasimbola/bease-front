@@ -131,7 +131,8 @@ export function findPostCell(
     isAuthorizedDeleting = Boolean(post?.licensedId === userConnected?._id);
   }
 
-  // console.log(userConnected);
+  // get limit number of match from localstorage
+  const limit = localStorage.getItem("limit") || "2";
 
   return post ? (
     <div className="flex gap-2 relative">
@@ -144,7 +145,7 @@ export function findPostCell(
           color="red"
           className="cursor-pointer"
           onClick={() => {
-            handleNavigate("confirm-delete", `?id=${post._id}`);
+            handleNavigate("confirm-delete", `?id=${post._id}&limit=${limit}`);
           }}
         />
       ) : (
@@ -158,12 +159,12 @@ export function findPostCell(
         if (userConnecteRole === "LICENSED") {
           handleNavigate(
             "assign-post",
-            `?match=${matchId}&post=${postHeaderData.dataKey}&licensedId=${userConnected?._id}`
+            `?match=${matchId}&limit=${limit}&post=${postHeaderData.dataKey}&licensedId=${userConnected?._id}`
           );
         } else {
           handleNavigate(
             "assign-post",
-            `?match=${matchId}&post=${postHeaderData.dataKey}`
+            `?match=${matchId}&limit=${limit}&post=${postHeaderData.dataKey}`
           );
         }
       }}

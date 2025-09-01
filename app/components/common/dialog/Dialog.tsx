@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { cn } from "~/lib/utils";
 import { createPortal } from "react-dom";
 import "./styles.css";
@@ -14,6 +14,10 @@ interface Props {
 
 function Dialog(props: Props) {
   const { className, children, close = false, setIsOpen } = props;
+
+  useEffect(() => {
+    window.scrollTo(0, +localStorage.getItem("scrollPosition")!);
+  }, []);
 
   return createPortal(
     <div
