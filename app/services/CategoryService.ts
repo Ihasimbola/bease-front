@@ -20,6 +20,15 @@ export class CategoryService extends Http {
     }
   }
 
+  static async getCategoriesByClub(clubId: string) {
+    try {
+      const res = await this.get(`category/category-by-club/${clubId}`);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   static async create(data: { name: string }) {
     try {
       const res = await this.post("category", data);

@@ -23,3 +23,15 @@ tbody tr:nth-child(even) {
   gap: 5px;
   grid-template-columns: 24px 1fr;
 }
+
+.loader-circle {
+  animation: rotation 1s linear infinite;
+  stroke: var(--color-white);
+  
+}
+
+#loader-circle {
+  stroke: var(--color-white);
+  width: 24px;
+  height: auto;
+}

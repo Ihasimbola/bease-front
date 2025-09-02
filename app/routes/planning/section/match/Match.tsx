@@ -4,7 +4,7 @@ import AppText from "~/components/general/AppText/AppText";
 import "./styles.css";
 import { Form, Link, useNavigate, useOutletContext } from "react-router";
 import type { MatchType } from "./type";
-import { Trash2, X } from "lucide-react";
+import { Send, SendHorizonalIcon, Trash2, X } from "lucide-react";
 import { cn } from "~/lib/utils";
 import { useUserStore, type UserStore } from "~/store/userStore";
 import AppButton from "~/components/general/AppButton/AppButton";
@@ -102,13 +102,32 @@ function matchTable(
               ])}
               id={data._id}
             >
-              {headData.map((head, idx) => (
-                <td key={`table-row-${idx}`}>
-                  <AppText size="xs" weight="normal">
-                    {data[head.dataKey]}
-                  </AppText>
-                </td>
-              ))}
+              {headData.map((head, idx) => {
+                if (head.dataKey === "message") {
+                  return (
+                    <td
+                      key={`table-row-${idx}`}
+                      className="pt-1 pl-2 cursor-pointer"
+                      id={data._id}
+                      onClick={() =>
+                        handleNavigate(
+                          "assign-invitation",
+                          `?match=${data._id}`
+                        )
+                      }
+                    >
+                      <Send size={24} color="brown" />
+                    </td>
+                  );
+                }
+                return (
+                  <td key={`table-row-${idx}`}>
+                    <AppText size="xs" weight="normal">
+                      {data[head.dataKey]}
+                    </AppText>
+                  </td>
+                );
+              })}
               {postTableHeader.map(
                 (
                   post: { label: string; dataKey: string; iconName: string },

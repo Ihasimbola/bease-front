@@ -11,6 +11,24 @@ export class MatchService extends Http {
     }
   }
 
+  static async getMatchById(id: string) {
+    try {
+      const res = await this.get("match/" + id);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async sendAssignForMatchFromInvitation(data: { matchId: string, categoryId: string }) {
+    try {
+      const res = await this.post(`match/assign-invitation`, data);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   static async deleteMatch(matchId: string) {
     try {
       const res = await this.delete("match/" + matchId);

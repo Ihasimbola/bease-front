@@ -18,4 +18,13 @@ export class MailingService extends Http {
       throw error;
     }
   }
+
+  static async sendAssignInvitationMail(mailto: string, matchInfo: { startTime: string, date: Date, place: string }) {
+    try {
+      const res = await this.post('mailing/invite/assign', { email: mailto, matchInfo });
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
