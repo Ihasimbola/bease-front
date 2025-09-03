@@ -69,7 +69,6 @@ export class UserService extends Http {
   }
 
   static async resetPassword(userId: string, newPassword: string) {
-    console.log("called")
     try {
       const res = await this.patch('users/reset-password', { userId, password: newPassword });
       return res.data;
@@ -102,7 +101,12 @@ export class UserService extends Http {
 
   static async getLicensedByClub(clubId: string, search?: string) {
     try {
-      const res = await this.get<LicensedResponse[]>('users/licensed-club/' + clubId + `?search=${search}`);
+      if(search) {
+        const res = await this.get<LicensedResponse[]>('users/licensed-club/' + clubId + `?search=${search}`);
+        return res.data;
+      }
+
+      const res = await this.get<LicensedResponse[]>('users/licensed-club/' + clubId);
       return res.data;
     } catch (error) {
       throw error;
