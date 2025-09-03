@@ -100,9 +100,9 @@ export class UserService extends Http {
     }
   }
 
-  static async getLicensedByClub(clubId: string) {
+  static async getLicensedByClub(clubId: string, search?: string) {
     try {
-      const res = await this.get<LicensedResponse[]>('users/licensed-club/' + clubId,);
+      const res = await this.get<LicensedResponse[]>('users/licensed-club/' + clubId + `?search=${search}`);
       return res.data;
     } catch (error) {
       throw error;

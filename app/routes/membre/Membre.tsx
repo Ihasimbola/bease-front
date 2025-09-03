@@ -5,14 +5,17 @@ import AppText from "~/components/general/AppText/AppText";
 import { Input } from "~/components/ui/input";
 import Table from "./Table";
 import type { Route } from "./+types/Membre";
-import { Outlet, useNavigate } from "react-router";
+import { Form, Outlet, useNavigate, useSubmit } from "react-router";
 import { UserService, type LicensedResponse } from "~/services/userService";
 import { tableHeader } from "./tableData";
 import type { TableData } from "./type";
 import { toast } from "sonner";
 
-export async function clientLoader() {
+export async function clientLoader({ request }: Route.ClientLoaderArgs) {
   const clubId = JSON.parse(localStorage.getItem("user")!)?.club;
+  const url = new URL(request.url);
+  const search = new URLSearchParams(url.search).get("search")?.toString();
+
   if (!clubId) {
     return {
       membres: [],
@@ -21,7 +24,10 @@ export async function clientLoader() {
   }
 
   try {
-    const { data: membres } = await UserService.getLicensedByClub(clubId);
+    const { data: membres } = await UserService.getLicensedByClub(
+      clubId,
+      search
+    );
 
     const data: TableData[] = membres.map((membre: LicensedResponse) => ({
       firstname: membre?.user?.firstname,
@@ -52,6 +58,7 @@ export function HydrateFallback() {
 
 function Membre({ loaderData }: Route.ComponentProps) {
   const navigate = useNavigate();
+  const submit = useSubmit();
   const { data: membres, message } = loaderData;
 
   useLayoutEffect(() => {
@@ -100,16 +107,31 @@ function Membre({ loaderData }: Route.ComponentProps) {
         </div>
       </div>
 
-      <div className="relative mt-6">
+      <Form
+        className="relative mt-6"
+        role="search"
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            submit(e.currentTarget, { replace: true });
+          }
+        }}
+      >
         <Input
-          type="text"
-          placeholder="Rechercher un membre..."
+          type="search"
+          id="search"
+          name="search"
+          placeholder="Rechercher par Nom ou Prénom..."
           className="text-xs rounded-[20px] pl-8 max-w-[450px] bg-white"
+          onChange={(e) => {
+            if (e.currentTarget.value === "") {
+              submit(e.currentTarget.form, { replace: true });
+            }
+          }}
         />
         <div className="absolute top-2.5 left-2">
           <SearchIcon color="gray" size={16} />
         </div>
-      </div>
+      </Form>
       {membres?.length && membres !== null && membres !== undefined ? (
         <Table
           className="mt-8"
