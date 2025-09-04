@@ -6,6 +6,7 @@ import Icon from "~/components/icon";
 import { postTableHeader } from "./matchData";
 import { cn } from "~/lib/utils";
 import AppButton from "~/components/general/AppButton/AppButton";
+import { Send } from "lucide-react";
 
 function MatchAccordionContent(props: MatchProps) {
   const {
@@ -56,7 +57,27 @@ function MatchAccordionContent(props: MatchProps) {
             </li>
             {headerData.map((head, idx) => {
               if (head.dataKey === "message") {
-                return "";
+                return (
+                  <li
+                    key={`match-${idx}`}
+                    className="flex justify-between"
+                    id={data._id}
+                  >
+                    <AppText>Message</AppText>
+                    <Send
+                      size={24}
+                      id={data._id}
+                      color="brown"
+                      className="cursor-pointer"
+                      onClick={() =>
+                        handleNavigate(
+                          "assign-invitation",
+                          `?match=${data._id}`
+                        )
+                      }
+                    />
+                  </li>
+                );
               }
 
               return (
