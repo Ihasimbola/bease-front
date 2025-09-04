@@ -30,7 +30,7 @@ export class MatchService extends Http {
     }
   }
 
-  static async createMatch(data: CreateMatchType) {
+  static async createMatch(data: any) {
     try {
       const res = await this.post('match', data);
       return res.data;
