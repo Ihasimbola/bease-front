@@ -1,3 +1,4 @@
+import { PlusIcon } from "lucide-react";
 import React from "react";
 import { useNavigate, useOutlet, useOutletContext } from "react-router";
 import AppButton from "~/components/general/AppButton/AppButton";
@@ -36,10 +37,10 @@ function Info({}: Props) {
                 Importer
               </AppText>
             </AppButton>
-            <AppButton>
-              <Icon name="ExportIcon" />
+            <AppButton type="button" onClick={() => navigate("create-match")}>
+              <PlusIcon size={16} />
               <AppText size="sm" color="white" weight="medium">
-                Exporter
+                Créer un match
               </AppText>
             </AppButton>
           </>

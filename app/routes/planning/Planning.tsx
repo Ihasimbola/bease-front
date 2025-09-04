@@ -121,43 +121,48 @@ function Planning({ loaderData }: Route.ComponentProps) {
   return (
     <>
       <Info />
-      <section className="hidden lg:flex w-full flex-col gap-10 mt-6">
-        {matchDataFromLoader?.map((match, idx) =>
-          Match({
-            userConnecteRole,
-            userConnected,
-            handleNavigate,
-            headerData: matchTableHeader,
-            bodyData: match.matches,
-            postHeaderData: postTableHeader,
-            tableTitle: new Date(match._id).toLocaleString("fr-FR", {
-              day: "2-digit",
-              month: "long",
-              year: "numeric",
-            }),
-          })
-        )}
-      </section>
-      <section className="mt-6 lg:hidden">
-        <MatchAccordion
-          data={matchDataFromLoader}
-          handleNavigate={handleNavigate}
-          userConnecteRole={userConnecteRole}
-          userConnected={userConnected}
-        />
-      </section>
-      {matchDataFromLoader.length !== 0 && (
-        <div className="w-full mt-8">
-          <AppButton
-            variant="outlined"
-            className=""
-            type="button"
-            onClick={handleGetMore}
-          >
-            Afficher plus de matchs
-          </AppButton>
-        </div>
+      {!location.pathname.includes("create-match") && (
+        <section className="hidden lg:flex w-full flex-col gap-10 mt-6">
+          {matchDataFromLoader?.map((match, idx) =>
+            Match({
+              userConnecteRole,
+              userConnected,
+              handleNavigate,
+              headerData: matchTableHeader,
+              bodyData: match.matches,
+              postHeaderData: postTableHeader,
+              tableTitle: new Date(match._id).toLocaleString("fr-FR", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+              }),
+            })
+          )}
+        </section>
       )}
+      {!location.pathname.includes("create-match") && (
+        <section className="mt-6 lg:hidden">
+          <MatchAccordion
+            data={matchDataFromLoader}
+            handleNavigate={handleNavigate}
+            userConnecteRole={userConnecteRole}
+            userConnected={userConnected}
+          />
+        </section>
+      )}
+      {matchDataFromLoader.length !== 0 &&
+        !location.pathname.includes("create-match") && (
+          <div className="w-full mt-8">
+            <AppButton
+              variant="outlined"
+              className=""
+              type="button"
+              onClick={handleGetMore}
+            >
+              Afficher plus de matchs
+            </AppButton>
+          </div>
+        )}
       <Outlet />
     </>
   );
