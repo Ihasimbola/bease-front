@@ -106,8 +106,12 @@ function ImportMatchExcelDialog() {
               Si les colonnes ne correspondent pas, le fichier ne sera pas
               importé.
             </AppText>
-            <AppText size="xs" weight="medium">
-              La verification est sensible à la casse.
+            <AppText size="xs">
+              Verrifie aussi le nom de votre club dans le fichier. Il doit
+              correspondre au nom de votre club dans l' application.
+            </AppText>
+            <AppText size="xs" weight="bold">
+              Toutes les verifications sont sensible à la casse.
             </AppText>
           </div>
         </div>

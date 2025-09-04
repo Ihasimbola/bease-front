@@ -112,7 +112,7 @@ function ImportExcelDialog() {
               Si les colonnes ne correspondent pas, le fichier ne sera pas
               importé.
             </AppText>
-            <AppText size="xs" weight="medium">
+            <AppText size="xs" weight="bold">
               La verification est sensible à la casse.
             </AppText>
           </div>
