@@ -1,4 +1,4 @@
-import { data, redirect, useFetcher, useOutletContext } from "react-router";
+import { data, redirect, useOutletContext, useSubmit } from "react-router";
 import AppText from "~/components/general/AppText/AppText";
 import type { Route } from "./+types/Profile";
 import { Input } from "~/components/ui/input";
@@ -6,7 +6,7 @@ import { useUserStore } from "~/store/userStore";
 import AppButton from "~/components/general/AppButton/AppButton";
 import { useFetcherEffect } from "~/hooks/useFetcherEffect";
 import { UserService } from "~/services/userService";
-import { Loader2 } from "lucide-react";
+import { Camera, Loader2 } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -15,6 +15,11 @@ import {
   SelectGroup,
   SelectItem,
 } from "~/components/ui/select";
+import profile_placeholder from "~/assets/images/profile_placeholder.jpg";
+import { useEffect, useRef, useState } from "react";
+import { FileService } from "~/services/fileService";
+
+const apiBaseURL = import.meta.env.VITE_API_URL;
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
   const user = JSON.parse(localStorage.getItem("user")!);
@@ -39,6 +44,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
     const res = await UserService.updateUser(user.user._id, {
       firstname: formData.get("firstname")?.toString(),
       lastname: formData.get("lastname")?.toString(),
+      profile: formData.get("profile")?.toString(),
     });
 
     // update profile
@@ -58,10 +64,8 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
     let updatedUser;
     if (role === "ADMIN") {
       updatedUser = await UserService.getAdmin(user._id);
-      console.log("admin", updatedUser);
     } else if (role === "LICENSED") {
       updatedUser = await UserService.getLicensed(user._id);
-      console.log("licensed", updatedUser);
     }
 
     localStorage.setItem("user", JSON.stringify(updatedUser));
@@ -95,6 +99,61 @@ function Profile({ loaderData }: Route.ComponentProps) {
   const userStore = useUserStore((state) => state.user);
   const userConnecteRole = useOutletContext();
   const { fetcher } = useFetcherEffect();
+  const inputFileRef = useRef<HTMLInputElement>(null);
+  const profileRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+  const [profileImg, setProfileImg] = useState<any>();
+  const [profileHasChanged, setProfileHasChanged] = useState<boolean>(false);
+  const submit = useSubmit();
+
+  const handleChangeImage = () => {
+    if (inputFileRef.current) {
+      inputFileRef.current.click();
+    }
+  };
+
+  const handleSelectImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = URL.createObjectURL(e.target.files![0]);
+    setProfileImg(file);
+    setProfileHasChanged(true);
+  };
+
+  const saveProfileImg = async () => {
+    if (!profileHasChanged) {
+      return;
+    }
+
+    try {
+      const file = inputFileRef.current?.files![0];
+      if (!file) {
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("profile", file);
+
+      const res = await FileService.uploadProfile(formData);
+      if (!res?.data?._id && profileRef.current) {
+        profileRef.current.value = res?._id;
+        submit(formRef.current, {
+          method: "post",
+        });
+      }
+
+      return;
+    } catch (error) {
+      console.error("There is error");
+      return;
+    }
+  };
+
+  useEffect(() => {
+    if (user?.user?.profile) {
+      setProfileImg(apiBaseURL + "files/image/" + user?.user?.profile);
+    } else {
+      setProfileImg(profile_placeholder);
+    }
+  }, []);
 
   return (
     <section className="">
@@ -106,114 +165,174 @@ function Profile({ loaderData }: Route.ComponentProps) {
       </div>
       <fetcher.Form
         method="post"
-        className="rounded-[20px] mt-8 flex flex-col gap-5 bg-white p-5"
+        className="rounded-[20px] mt-8 flex flex-col-reverse gap-5 bg-white p-5"
+        ref={formRef}
       >
-        <div className="flex flex-col gap-3">
-          <div>
-            <label htmlFor="firstname">
-              <AppText weight="semibold" size="sm">
-                Prénom
-              </AppText>
-            </label>
-            <Input
-              type="text"
-              name="firstname"
-              id="firstname"
-              defaultValue={user?.user.firstname}
-            />
+        <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-3">
+            <div>
+              <label htmlFor="firstname">
+                <AppText weight="semibold" size="sm">
+                  Prénom
+                </AppText>
+              </label>
+              <Input
+                type="text"
+                name="firstname"
+                id="firstname"
+                defaultValue={user?.user.firstname}
+              />
+            </div>
+            <div>
+              <label htmlFor="lastname">
+                <AppText weight="semibold" size="sm">
+                  Nom
+                </AppText>
+              </label>
+              <Input
+                type="text"
+                name="lastname"
+                id="lastname"
+                defaultValue={user?.user.lastname}
+              />
+            </div>
           </div>
+
+          <div className="flex flex-col gap-3">
+            <div>
+              <label htmlFor="phone">
+                <AppText weight="semibold" size="sm">
+                  Téléphone
+                </AppText>
+              </label>
+              <Input
+                type="text"
+                name="phone"
+                id="phone"
+                defaultValue={user?.phone}
+              />
+            </div>
+            <div>
+              <label htmlFor="email">
+                <AppText weight="semibold" size="sm">
+                  Email
+                </AppText>
+              </label>
+              <Input
+                type="email"
+                name="email"
+                id="email"
+                readOnly
+                defaultValue={user?.user?.email}
+              />
+            </div>
+          </div>
+
+          {user?.age && (
+            <div>
+              <label htmlFor="age">
+                <AppText weight="semibold" size="sm">
+                  Age
+                </AppText>
+              </label>
+              <Input type="text" name="age" id="age" defaultValue={user?.age} />
+            </div>
+          )}
+
+          {user?.gender && (
+            <div>
+              <label htmlFor="gender">
+                <AppText weight="semibold" size="sm">
+                  Genre
+                </AppText>
+              </label>
+              <Select name="gender">
+                <SelectTrigger>
+                  <SelectValue placeholder={user?.gender} />
+                </SelectTrigger>
+                <SelectContent id="gender" defaultValue={user?.gender}>
+                  <SelectGroup defaultValue={user?.gender}>
+                    <SelectItem value="M">Masculin</SelectItem>
+                    <SelectItem value="F">Feminin</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+          <input
+            type="text"
+            defaultValue={userConnecteRole as string}
+            name="role"
+            id="role"
+            hidden
+          />
+
           <div>
-            <label htmlFor="lastname">
-              <AppText weight="semibold" size="sm">
-                Nom
-              </AppText>
-            </label>
-            <Input
-              type="text"
-              name="lastname"
-              id="lastname"
-              defaultValue={user?.user.lastname}
-            />
+            <AppButton
+              type="button"
+              onClick={async (e) => {
+                await saveProfileImg();
+                submit(e.currentTarget, {
+                  method: "post",
+                });
+              }}
+            >
+              {fetcher.state !== "idle" ? (
+                <Loader2 className="animate-spin" size={16} stroke="white" />
+              ) : (
+                "Sauvegarder"
+              )}
+            </AppButton>
           </div>
         </div>
-
-        <div className="flex flex-col gap-3">
-          <div>
-            <label htmlFor="phone">
-              <AppText weight="semibold" size="sm">
-                Téléphone
-              </AppText>
-            </label>
-            <Input
-              type="text"
-              name="phone"
-              id="phone"
-              defaultValue={user?.phone}
-            />
-          </div>
-          <div>
-            <label htmlFor="email">
-              <AppText weight="semibold" size="sm">
-                Email
-              </AppText>
-            </label>
-            <Input
-              type="email"
-              name="email"
-              id="email"
-              readOnly
-              defaultValue={user?.user?.email}
-            />
-          </div>
-        </div>
-
-        {user?.age && (
-          <div>
-            <label htmlFor="age">
-              <AppText weight="semibold" size="sm">
-                Age
-              </AppText>
-            </label>
-            <Input type="text" name="age" id="age" defaultValue={user?.age} />
-          </div>
-        )}
-
-        {user?.gender && (
-          <div>
-            <label htmlFor="gender">
-              <AppText weight="semibold" size="sm">
-                Genre
-              </AppText>
-            </label>
-            <Select name="gender">
-              <SelectTrigger>
-                <SelectValue placeholder={user?.gender} />
-              </SelectTrigger>
-              <SelectContent id="gender" defaultValue={user?.gender}>
-                <SelectGroup defaultValue={user?.gender}>
-                  <SelectItem value="M">Masculin</SelectItem>
-                  <SelectItem value="F">Feminin</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-        )}
-
-        <input
-          type="text"
-          defaultValue={userConnecteRole as string}
-          name="role"
-          id="role"
-          hidden
-        />
-        <div>
-          <AppButton type="submit">
-            {fetcher.state !== "idle" ? (
-              <Loader2 className="animate-spin" size={16} stroke="white" />
+        <div className="relative flex justify-center">
+          <div className="w-fit relative">
+            {/* {user?.user?.profile ? (
+              <img
+                alt=""
+                className="rounded-full"
+                width={250}
+                height="auto"
+                src={profileImg}
+              />
             ) : (
-              "Sauvegarder"
-            )}
-          </AppButton>
+              <img
+                alt=""
+                className="rounded-full"
+                width={250}
+                height="auto"
+                src={profile_placeholder}
+              />
+            )} */}
+            <img
+              alt=""
+              className="rounded-full"
+              width={250}
+              height="auto"
+              src={profileImg}
+            />
+            <input
+              type="text"
+              name="profile"
+              id="profile"
+              ref={profileRef}
+              hidden
+            />
+
+            <input
+              type="file"
+              name="file"
+              id="file"
+              ref={inputFileRef}
+              hidden
+              onChange={handleSelectImage}
+            />
+            <Camera
+              className="absolute cursor-pointer bottom-0 right-0"
+              onClick={handleChangeImage}
+              stroke="#9d9d9d"
+            />
+          </div>
         </div>
       </fetcher.Form>
     </section>

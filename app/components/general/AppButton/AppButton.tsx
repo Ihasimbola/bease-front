@@ -30,12 +30,12 @@ export default function AppButton({
 
   // experimental
   // prevent button width to change when loading
-  useLayoutEffect(() => {
-    if (ref.current?.offsetWidth) {
-      const width = +ref.current.offsetWidth + 1;
-      ref.current.style.width = `${width}px`;
-    }
-  }, [props.children]);
+  // useLayoutEffect(() => {
+  //   if (ref.current?.offsetWidth) {
+  //     const width = +ref.current.offsetWidth + 1;
+  //     ref.current.style.width = `${width}px`;
+  //   }
+  // }, [props.children]);
 
   return (
     <button

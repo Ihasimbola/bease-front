@@ -94,13 +94,13 @@ function Membre({ loaderData }: Route.ComponentProps) {
             }}
           >
             <Upload size={16} />
-            <AppText color="white" size="xs">
+            <AppText size="sm" weight="medium" color="white">
               Importer un ficher excel
             </AppText>
           </AppButton>
           <AppButton onClick={() => navigate("add-member")}>
             <PlusIcon size={16} />
-            <AppText color="white" size="xs">
+            <AppText size="sm" weight="medium" color="white">
               Ajouter un membre
             </AppText>
           </AppButton>

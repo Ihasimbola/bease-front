@@ -9,4 +9,13 @@ export class FileService extends Http {
       throw error;
     }
   }
+
+  static async uploadProfile(file: any) {
+    try {
+      const res = await this.post('files/image/profile', file);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
