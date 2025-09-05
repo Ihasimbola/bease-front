@@ -59,7 +59,9 @@ function ImportMatchExcelDialog() {
 
   useEffect(() => {
     if (fetcher.data?.error?.message) {
-      toast.error(fetcher.data.error.message);
+      toast.error(
+        fetcher.data.error?.response?.data?.message || "Une erreur est survenue"
+      );
       navigate(-1);
     } else if (fetcher.data?.data) {
       navigate(-1);

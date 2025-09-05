@@ -19,6 +19,7 @@ import { CategoryService } from "~/services/CategoryService";
 import type { CategoryResponse, ClubResponse } from "~/services/type";
 import { MailingService } from "~/services/MailingService";
 import { toast } from "sonner";
+import { useFetcherEffect } from "~/hooks/useFetcherEffect";
 
 interface Props {
   isOpen: boolean;
@@ -47,13 +48,21 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
     return redirect("/membre");
   }
 
-  const res = await MailingService.sendInvitationMail(
-    data.email,
-    club,
-    data.category
-  );
+  try {
+    const res = await MailingService.sendInvitationMail(
+      data.email,
+      club,
+      data.category
+    );
 
-  return redirect("/membre");
+    return redirect("/membre");
+  } catch (error: any) {
+    return {
+      message: error?.response?.data?.message || "Une erreur est survenue",
+      data: null,
+      error,
+    };
+  }
 }
 
 export async function clientLoader() {
@@ -80,7 +89,7 @@ export async function clientLoader() {
   } catch (error: any) {
     return {
       club: null,
-      message: error.message,
+      message: error.data.message,
       categories: [],
     };
   }
@@ -89,14 +98,14 @@ export async function clientLoader() {
 function AddMemberDialog({ loaderData }: Route.ComponentProps) {
   const [isOpen, setIsOpen] = React.useState(true);
   const navigate = useNavigate();
-  const fetcher = useFetcher();
-  const { categories } = loaderData;
+  const { fetcher } = useFetcherEffect();
+  const categories = loaderData?.categories;
 
   useEffect(() => {
-    if (loaderData.message) {
-      toast.error(loaderData.message);
+    if (loaderData?.message) {
+      toast.error(loaderData?.message);
     }
-  }, [loaderData.message]);
+  }, [loaderData?.message]);
 
   // pop back to the previous page
   useEffect(() => {
@@ -129,7 +138,7 @@ function AddMemberDialog({ loaderData }: Route.ComponentProps) {
               Sa categorie
             </AppText>
           </label>
-          <Select name="category">
+          <Select name="category" required>
             <SelectTrigger className="bg-white">
               <SelectValue placeholder="Selectionner une categorie" />
             </SelectTrigger>

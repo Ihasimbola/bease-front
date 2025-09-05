@@ -57,7 +57,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
   } catch (error: any) {
     return {
       error,
-      message: error.message,
+      message: error?.response?.data?.message || "Une erreur est survenue",
       data: null,
     };
   }

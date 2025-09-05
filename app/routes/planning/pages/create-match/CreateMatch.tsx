@@ -78,7 +78,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
     return data({
       error,
       data: null,
-      message: error.message,
+      message: error?.response?.data?.message || "Une erreur est survenue",
     });
   }
 }
@@ -100,7 +100,7 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
     };
   } catch (error: any) {
     return {
-      message: error.message,
+      message: error?.response?.data?.message || "Une erreur est survenue",
       data: null,
       error,
     };

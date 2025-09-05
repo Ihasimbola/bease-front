@@ -69,7 +69,7 @@ export async function clientAction({
     return redirect("/membre");
   } catch (error: any) {
     return data({
-      message: error.message,
+      message: error?.response?.data?.message || "Une erreur est survenue",
       data: null,
       error,
     });

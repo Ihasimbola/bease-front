@@ -37,7 +37,10 @@ function MatchAccordionContent(props: MatchProps) {
               <AppText>{data.teamB}</AppText>
             </li>
             {headerData.map((head, idx) => {
-              if (head.dataKey === "message") {
+              if (
+                head.dataKey === "message" &&
+                userConnecteRole !== "LICENSED"
+              ) {
                 return (
                   <li
                     key={`match-${idx}`}

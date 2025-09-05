@@ -65,20 +65,29 @@ const Sidebar = ({}: Props) => {
   const [openMenu, setOpenMenu] = useState(false);
   const { logout } = useAuth();
   const role = useOutletContext();
-  const [itemsSidebar, setItemsSidebar] = useState(appItems);
+  // const [itemsSidebar, setItemsSidebar] = useState(appItems);
+  const filteredItems = appItems.filter((item) => {
+    if (
+      role === "LICENSED" &&
+      (item.label === "Membres" || item.label === "Club")
+    ) {
+      return false;
+    }
+    return true;
+  });
 
-  useLayoutEffect(() => {
-    const filteredItems = appItems.filter((item) => {
-      if (
-        role === "LICENSED" &&
-        (item.label === "Membres" || item.label === "Club")
-      ) {
-        return false;
-      }
-      return true;
-    });
-    setItemsSidebar(filteredItems);
-  }, []);
+  // useLayoutEffect(() => {
+  //   const filteredItems = appItems.filter((item) => {
+  //     if (
+  //       role === "LICENSED" &&
+  //       (item.label === "Membres" || item.label === "Club")
+  //     ) {
+  //       return false;
+  //     }
+  //     return true;
+  //   });
+  //   setItemsSidebar(filteredItems);
+  // }, []);
 
   return (
     <>
@@ -106,7 +115,7 @@ const Sidebar = ({}: Props) => {
           <Icon name="CloseIcon" />
         </div>
         <ul className="py-4 cursor-pointer">
-          {itemsSidebar.map((item, idx) => (
+          {filteredItems.map((item, idx) => (
             <li key={`sidebaritem-${idx}`}>
               <NavLink
                 to={item.link}

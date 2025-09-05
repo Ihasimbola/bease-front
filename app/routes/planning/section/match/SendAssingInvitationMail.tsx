@@ -83,7 +83,7 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
     };
   } catch (error: any) {
     return {
-      message: error.message,
+      message: error?.response?.data?.message || "Une erreur est survenue",
       error,
       data: null,
     };

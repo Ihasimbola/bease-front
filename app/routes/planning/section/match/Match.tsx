@@ -87,7 +87,10 @@ function matchTable(
               id={data._id}
             >
               {headData.map((head, idx) => {
-                if (head.dataKey === "message") {
+                if (
+                  head.dataKey === "message" &&
+                  userConnecteRole !== "LICENSED"
+                ) {
                   return (
                     <td
                       key={`table-row-${idx}`}
@@ -133,18 +136,21 @@ function matchTable(
                   </td>
                 )
               )}
-              <td>
-                <Pen
-                  color="black"
-                  size={16}
-                  className="cursor-pointer"
-                  onClick={() =>
-                    handleNavigate("create-match", `?match=${data._id}`)
-                  }
-                />
-              </td>
-              <td>
-                {userConnecteRole !== "LICENSED" && (
+              {userConnecteRole !== "LICENSED" && (
+                <td>
+                  <Pen
+                    color="black"
+                    size={16}
+                    className="cursor-pointer"
+                    onClick={() =>
+                      handleNavigate("create-match", `?match=${data._id}`)
+                    }
+                  />
+                </td>
+              )}
+
+              {userConnecteRole !== "LICENSED" && (
+                <td>
                   <Trash2
                     color="red"
                     className="cursor-pointer"
@@ -156,8 +162,8 @@ function matchTable(
                       );
                     }}
                   />
-                )}
-              </td>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>
