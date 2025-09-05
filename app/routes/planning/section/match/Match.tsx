@@ -4,7 +4,7 @@ import AppText from "~/components/general/AppText/AppText";
 import "./styles.css";
 import { Form, Link, useNavigate, useOutletContext } from "react-router";
 import type { MatchType } from "./type";
-import { Send, SendHorizonalIcon, Trash2, X } from "lucide-react";
+import { Pen, Send, SendHorizonalIcon, Trash2, X } from "lucide-react";
 import { cn } from "~/lib/utils";
 import { useUserStore, type UserStore } from "~/store/userStore";
 import AppButton from "~/components/general/AppButton/AppButton";
@@ -63,19 +63,6 @@ function matchTable(
         <AppText weight="semibold" size="lg">
           {tableTitle}
         </AppText>
-        {userConnecteRole !== "LICENSED" && (
-          <AppButton
-            variant="primary"
-            onClick={() => {
-              handleNavigate(
-                "confirm-delete-match",
-                `?match=${bodyData[0]._id}&limit=${limit}`
-              );
-            }}
-          >
-            Supprimer le match
-          </AppButton>
-        )}
       </div>
       <table className="w-full mt-3">
         <thead>
@@ -96,10 +83,7 @@ function matchTable(
           {bodyData.map((data, idx) => (
             <tr
               key={idx + "-" + data.division}
-              className={cn([
-                "body-row",
-                data.isAthome ? "" : "pointer-events-none opacity-50",
-              ])}
+              className={cn(["body-row", data.isAthome ? "" : "opacity-50"])}
               id={data._id}
             >
               {headData.map((head, idx) => {
@@ -107,7 +91,10 @@ function matchTable(
                   return (
                     <td
                       key={`table-row-${idx}`}
-                      className="pt-1 pl-2 cursor-pointer"
+                      className={cn([
+                        "pt-1 pl-2 cursor-pointer",
+                        !data.isAthome && "pointer-events-none",
+                      ])}
                       id={data._id}
                       onClick={() =>
                         handleNavigate(
@@ -139,12 +126,38 @@ function matchTable(
                       data.posts,
                       data._id,
                       handleNavigate,
+                      data.isAthome,
                       userConnected,
                       userConnecteRole
                     )}
                   </td>
                 )
               )}
+              <td>
+                <Pen
+                  color="black"
+                  size={16}
+                  className="cursor-pointer"
+                  onClick={() =>
+                    handleNavigate("create-match", `?match=${data._id}`)
+                  }
+                />
+              </td>
+              <td>
+                {userConnecteRole !== "LICENSED" && (
+                  <Trash2
+                    color="red"
+                    className="cursor-pointer"
+                    size={16}
+                    onClick={() => {
+                      handleNavigate(
+                        "confirm-delete-match",
+                        `?match=${data._id}&limit=${limit}`
+                      );
+                    }}
+                  />
+                )}
+              </td>
             </tr>
           ))}
         </tbody>
@@ -159,6 +172,7 @@ export function findPostCell(
   postsArray: Post[],
   matchId: string,
   handleNavigate: (path: string, query: string) => void,
+  isAthome: boolean,
   userConnected?: UserStore["user"],
   userConnecteRole?: string
 ): React.ReactNode {
@@ -192,7 +206,10 @@ export function findPostCell(
     </div>
   ) : (
     <AppText
-      className="text-red cursor-pointer"
+      className={cn([
+        "text-red cursor-pointer",
+        !isAthome && "pointer-events-none",
+      ])}
       onClick={() => {
         if (userConnecteRole === "LICENSED") {
           handleNavigate(

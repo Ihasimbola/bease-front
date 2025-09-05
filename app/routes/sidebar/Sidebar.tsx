@@ -19,11 +19,11 @@ type SidebarItem = {
 };
 
 const appItems = [
-  {
-    label: "Dashboard",
-    icon: "DashboardIcon",
-    link: "/",
-  },
+  // {
+  //   label: "Dashboard",
+  //   icon: "DashboardIcon",
+  //   link: "/",
+  // },
   {
     label: "Planning",
     icon: "PlanningIcon",

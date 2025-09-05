@@ -56,4 +56,13 @@ export class MatchService extends Http {
       throw error;
     }
   }
+
+  static async updateMatch(matchId: string, data: any) {
+    try {
+      const res = await this.put("match/" + matchId, data);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

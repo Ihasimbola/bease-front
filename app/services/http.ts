@@ -59,6 +59,15 @@ export class Http {
     }
   }
 
+  static async put(url: string, data: any) {
+    try {
+      const res = await axiosInstance.put(url, data);
+      return res;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   static async delete(url: string) {
     try {
       const res = await axiosInstance.delete(url);

@@ -28,29 +28,10 @@ function MatchAccordionContent(props: MatchProps) {
       <AppText>Masquer les matchs exterieurs</AppText>
       <div className="mt-4 mb-1 flex justify-between items-center">
         <AppText weight="semibold">Matchs</AppText>
-        {userConnecteRole !== "LICENSED" && (
-          <AppButton
-            variant="primary"
-            onClick={() => {
-              handleNavigate(
-                "confirm-delete-match",
-                `?match=${bodyData[0]._id}&limit=${limit}`
-              );
-            }}
-          >
-            Supprimer le match
-          </AppButton>
-        )}
       </div>
       <div className="flex flex-col gap-6">
         {bodyData.map((data, idx) => (
-          <ul
-            key={`match-${idx}`}
-            className={cn([
-              data.isAthome ? "" : "pointer-events-none opacity-50",
-              "flex flex-col gap-1.5",
-            ])}
-          >
+          <ul key={`match-${idx}`} className={cn(["flex flex-col gap-1.5"])}>
             <li className={cn(["p-2 bg-gray2"])}>
               <AppText>{data.teamA}</AppText>
               <AppText>{data.teamB}</AppText>
@@ -60,7 +41,10 @@ function MatchAccordionContent(props: MatchProps) {
                 return (
                   <li
                     key={`match-${idx}`}
-                    className="flex justify-between"
+                    className={cn([
+                      "flex justify-between",
+                      data.isAthome ? "" : "opacity-50 pointer-events-none",
+                    ])}
                     id={data._id}
                   >
                     <AppText>Message</AppText>
@@ -81,7 +65,13 @@ function MatchAccordionContent(props: MatchProps) {
               }
 
               return (
-                <li key={`match-${idx}`} className="flex justify-between">
+                <li
+                  key={`match-${idx}`}
+                  className={cn([
+                    data.isAthome ? "" : "opacity-50",
+                    "flex justify-between",
+                  ])}
+                >
                   <div className="match-info">
                     <div className="self-center justify-self-center">
                       <Icon name={head.iconName} />
@@ -102,18 +92,48 @@ function MatchAccordionContent(props: MatchProps) {
                 post: { label: string; dataKey: string; iconName: string },
                 idx: number
               ) => (
-                <li key={`match-${idx}`} className="flex justify-between">
+                <li
+                  key={`match-${idx}`}
+                  className={cn([
+                    data.isAthome ? "" : "opacity-50",
+                    "flex justify-between",
+                  ])}
+                >
                   <AppText>{post.label}</AppText>
                   {findPostCell(
                     post,
                     data.posts,
                     data._id,
                     handleNavigate,
+                    data.isAthome,
                     userConnected,
                     userConnecteRole
                   )}
                 </li>
               )
+            )}
+            {userConnecteRole !== "LICENSED" && (
+              <li className="flex gap-4">
+                <AppButton
+                  variant="primary"
+                  onClick={() => {
+                    handleNavigate(
+                      "confirm-delete-match",
+                      `?match=${data._id}&limit=${limit}`
+                    );
+                  }}
+                >
+                  Supprimer le match
+                </AppButton>
+                <AppButton
+                  variant="outlined"
+                  onClick={() =>
+                    handleNavigate("create-match", `?match=${data._id}`)
+                  }
+                >
+                  Editer le match
+                </AppButton>
+              </li>
             )}
           </ul>
         ))}

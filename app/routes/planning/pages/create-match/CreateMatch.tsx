@@ -3,7 +3,6 @@ import AppButton from "~/components/general/AppButton/AppButton";
 import AppText from "~/components/general/AppText/AppText";
 import { Input } from "~/components/ui/input";
 import type { Route } from "./+types/CreateMatch";
-import { formatTime } from "~/lib/utils";
 import { CreateMatchValidationSchema } from "./createMatch-schema";
 import z from "zod";
 import { MatchService } from "~/services/MatchService";
@@ -13,10 +12,12 @@ import "../../styles.css";
 export async function clientAction({ request }: Route.ClientActionArgs) {
   const formData = await request.formData();
   const clubId = JSON.parse(localStorage.getItem("user")!).club;
+  const url = new URL(request.url);
+  const matchId = new URLSearchParams(url.search).get("match");
 
   if (!clubId) {
     return data({
-      message: "Vouss n' avez pas encore créé un club",
+      message: "Vous n' avez pas encore créé un club",
       data: null,
       error: null,
     });
@@ -24,7 +25,6 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
 
   // get match date and transform it
   const date = new Date(formData.get("matchDate")!.toString());
-  const starTime = formatTime(date);
 
   // validate form
   const result = CreateMatchValidationSchema.safeParse({
@@ -33,7 +33,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
     teamB: formData.get("teamB")?.toString(),
     place: formData.get("place")?.toString(),
     matchDate: date,
-    startTime: starTime,
+    startTime: formData.get("startTime")?.toString(),
   });
 
   // return error if there is
@@ -46,17 +46,31 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
   }
 
   // append startTime and clubId
-  formData.append("startTime", starTime);
   formData.append("clubId", clubId);
 
   try {
+    // if matchId is present then call update method instead
+    if (matchId) {
+      const res = await MatchService.updateMatch(matchId, {
+        division: formData.get("division")?.toString(),
+        teamA: formData.get("teamA")?.toString(),
+        teamB: formData.get("teamB")?.toString(),
+        place: formData.get("place")?.toString(),
+        matchDate: date.toISOString(),
+        startTime: formData.get("startTime")?.toString(),
+      });
+
+      return redirect("/planning");
+    }
+
+    // create new match if matchId is not present
     const res = await MatchService.createMatch({
       division: formData.get("division")?.toString(),
       teamA: formData.get("teamA")?.toString(),
       teamB: formData.get("teamB")?.toString(),
       place: formData.get("place")?.toString(),
       matchDate: date.toISOString(),
-      startTime: starTime,
+      startTime: formData.get("startTime")?.toString(),
       clubId,
     });
     return redirect("/planning");
@@ -67,21 +81,43 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
       message: error.message,
     });
   }
-  return;
 }
 
-function CreateMatch() {
+export async function clientLoader({ request }: Route.ClientLoaderArgs) {
+  const url = new URL(request.url);
+  const matchId = new URLSearchParams(url.search).get("match");
+
+  if (!matchId) {
+    return;
+  }
+
+  try {
+    const match = await MatchService.getMatchById(matchId);
+    return {
+      data: match,
+      message: "",
+      error: null,
+    };
+  } catch (error: any) {
+    return {
+      message: error.message,
+      data: null,
+      error,
+    };
+  }
+}
+
+function CreateMatch({ loaderData }: Route.ComponentProps) {
   const fetcher = useFetcher();
   const navigate = useNavigate();
   const errors = fetcher.data?.error;
-
-  console.log(errors);
+  const match = loaderData?.data?.data as any;
 
   return (
     <section className="mt-8 bg-white rounded-[20px] p-5">
       <div>
         <AppText size="lg" weight="semibold">
-          Création de match
+          {!!match ? "Editer le match" : "Création de match"}
         </AppText>
       </div>
       <fetcher.Form method="post" className="flex flex-col gap-8 mt-4">
@@ -97,6 +133,7 @@ function CreateMatch() {
               type="text"
               name="division"
               id="division"
+              defaultValue={match?.division || ""}
             />
             {errors?.division && (
               <AppText size="xs" color="red">
@@ -111,10 +148,34 @@ function CreateMatch() {
                 Date du match
               </AppText>
             </label>
-            <Input type="datetime-local" name="matchDate" id="date" />
+            <Input
+              type="date"
+              name="matchDate"
+              id="date"
+              defaultValue={match?.matchDate.split("T")[0] || ""}
+            />
             {errors?.matchDate && (
               <AppText size="xs" color="red">
                 {errors.matchDate[0]}
+              </AppText>
+            )}
+          </div>
+
+          <div className="flex flex-col flex-1 gap-1">
+            <label htmlFor="date">
+              <AppText weight="semibold" size="sm">
+                Heure du match
+              </AppText>
+            </label>
+            <Input
+              type="time"
+              name="startTime"
+              id="startTime"
+              defaultValue={match?.startTime || ""}
+            />
+            {errors?.startTime && (
+              <AppText size="xs" color="red">
+                {errors.startTime[0]}
               </AppText>
             )}
           </div>
@@ -132,6 +193,7 @@ function CreateMatch() {
               type="text"
               name="teamA"
               id="teamA"
+              defaultValue={match?.teamA || ""}
             />
             {errors?.teamA && (
               <AppText size="xs" color="red">
@@ -151,6 +213,7 @@ function CreateMatch() {
               type="text"
               name="teamB"
               id="teamB"
+              defaultValue={match?.teamB || ""}
             />
             {errors?.teamB && (
               <AppText size="xs" color="red">
@@ -184,6 +247,7 @@ function CreateMatch() {
               type="text"
               name="place"
               id="place"
+              defaultValue={match?.place || ""}
             />
             {errors?.place && (
               <AppText size="xs" color="red">
@@ -213,6 +277,8 @@ function CreateMatch() {
                 id="loader-circle"
                 stroke="stroke-white"
               />
+            ) : !!match ? (
+              "Sauvegarder"
             ) : (
               "Ajouter"
             )}
