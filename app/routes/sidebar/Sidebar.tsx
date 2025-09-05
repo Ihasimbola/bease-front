@@ -47,11 +47,11 @@ const profilItems = [
     icon: "ProfileIcon",
     link: "profile",
   },
-  {
-    label: "Aide",
-    icon: "HelpIcon",
-    link: "help",
-  },
+  // {
+  //   label: "Aide",
+  //   icon: "HelpIcon",
+  //   link: "help",
+  // },
   {
     label: "Deconnexion",
     icon: "LogoutIcon",

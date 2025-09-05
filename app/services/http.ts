@@ -17,7 +17,16 @@ axiosInstance.interceptors.response.use(function(response) {
 }, function(error) {
   if(error.status === 401) {
     localStorage.clear();
-    window.location.href = "/auth/login";
+    return window.location.href = "/auth/login";
+  } else if(error.status === 500) {
+    return Promise.reject({
+      ...error,
+      response: {
+        data: {
+          message: "Une erreur est survenue"
+        }
+      }
+    })
   }
   return Promise.reject(error);
 })

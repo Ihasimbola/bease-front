@@ -25,6 +25,7 @@ export default [
         route('delete-member/:id', './routes/membre/ConfirmationDialog.tsx'),
         route('edit-member/:id', './routes/membre/EditMemberDialog.tsx'),
       ]),
+      route('profile', "./routes/profile/Profile.tsx"),
     ]),
   
 

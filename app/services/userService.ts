@@ -68,6 +68,24 @@ export class UserService extends Http {
     }
   }
 
+  static async updateAdmin(id: string, data: any) {
+    try {
+      const res = await this.patch('users/admin/' + id, data);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async updateUser(id: string, data: any) {
+    try {
+      const res = await this.patch('users/' + id, data);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   static async resetPassword(userId: string, newPassword: string) {
     try {
       const res = await this.patch('users/reset-password', { userId, password: newPassword });
@@ -93,6 +111,15 @@ export class UserService extends Http {
   static async getAdmin(id: string) {
     try {
       const res = await this.get('users/admin/' + id);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async getLicensed(id: string) {
+    try {
+      const res = await this.get("users/licensed/" + id);
       return res.data;
     } catch (error) {
       throw error;
