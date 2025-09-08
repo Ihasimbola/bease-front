@@ -2,15 +2,11 @@ import AppText from "~/components/general/AppText/AppText";
 import type { icons } from "~/components/icon";
 import Icon from "~/components/icon";
 import "./styles.css";
-import { Link, NavLink, redirect, useOutletContext } from "react-router";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { NavLink, useOutletContext } from "react-router";
+import { useEffect, useState } from "react";
 import { cn } from "~/libs/twMerge";
 import { useAuth } from "~/libs/auth";
-import { RoleService } from "~/services/RoleService";
-import type { Route } from "../../+types/root";
-import { UserService } from "~/services/userService";
-import { Http } from "~/services/http";
-import useSWR from "swr";
+import { FileService } from "~/services/fileService";
 
 type SidebarItem = {
   label: string;
@@ -43,7 +39,7 @@ const appItems = [
 
 const profilItems = [
   {
-    label: "Mon Profil",
+    label: "Mon Profile",
     icon: "ProfileIcon",
     link: "profile",
   },
@@ -65,7 +61,8 @@ const Sidebar = ({}: Props) => {
   const [openMenu, setOpenMenu] = useState(false);
   const { logout } = useAuth();
   const role = useOutletContext();
-  // const [itemsSidebar, setItemsSidebar] = useState(appItems);
+  const imgProfileId = JSON.parse(localStorage.getItem("user")!)?.user.profile;
+
   const filteredItems = appItems.filter((item) => {
     if (
       role === "LICENSED" &&
@@ -152,7 +149,16 @@ const Sidebar = ({}: Props) => {
                   }
                 }}
               >
-                <Icon name={item.icon} />
+                {item.label === "Mon Profile" && imgProfileId ? (
+                  <img
+                    src={`${import.meta.env.VITE_API_URL}/files/image/${imgProfileId}`}
+                    alt="profile"
+                    className="w-[54px] h-[54px] rounded-[50%]"
+                  />
+                ) : (
+                  <Icon name={item.icon} />
+                )}
+
                 <AppText color="white" weight="normal" size="xs">
                   {item.label}
                 </AppText>

@@ -1,10 +1,15 @@
-import { data, redirect, useOutletContext, useSubmit } from "react-router";
+import {
+  data,
+  redirect,
+  useFetcher,
+  useOutletContext,
+  useSubmit,
+} from "react-router";
 import AppText from "~/components/general/AppText/AppText";
 import type { Route } from "./+types/Profile";
 import { Input } from "~/components/ui/input";
 import { useUserStore } from "~/store/userStore";
 import AppButton from "~/components/general/AppButton/AppButton";
-import { useFetcherEffect } from "~/hooks/useFetcherEffect";
 import { UserService } from "~/services/userService";
 import { Camera, Loader2 } from "lucide-react";
 import {
@@ -18,6 +23,7 @@ import {
 import profile_placeholder from "~/assets/images/profile_placeholder.jpg";
 import { useEffect, useRef, useState } from "react";
 import { FileService } from "~/services/fileService";
+import { toast } from "sonner";
 
 const apiBaseURL = import.meta.env.VITE_API_URL;
 
@@ -29,7 +35,6 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
 
   const formData = await request.formData();
   const role = formData.get("role")?.toString();
-
   // check if role is present
   if (!role) {
     return data({
@@ -40,14 +45,21 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
   }
 
   try {
+    // post img first
+    let imgProfileId = "";
+    if ((formData.get("profile") as File)?.name) {
+      const res = await FileService.uploadProfile(formData);
+      imgProfileId = res._id;
+    }
+
     // update user info first
     const res = await UserService.updateUser(user.user._id, {
       firstname: formData.get("firstname")?.toString(),
       lastname: formData.get("lastname")?.toString(),
-      profile: formData.get("profile")?.toString(),
+      profile: imgProfileId || user.user.profile,
     });
 
-    // update profile
+    // // update profile
     if (role === "ADMIN") {
       const res = await UserService.updateAdmin(user?._id, {
         phone: formData.get("phone")?.toString(),
@@ -98,8 +110,9 @@ function Profile({ loaderData }: Route.ComponentProps) {
   const user = loaderData?.data;
   const userStore = useUserStore((state) => state.user);
   const userConnecteRole = useOutletContext();
-  const { fetcher } = useFetcherEffect();
+  const fetcher = useFetcher();
   const inputFileRef = useRef<HTMLInputElement>(null);
+  const roleInputRef = useRef<HTMLInputElement>(null);
   const profileRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const [profileImg, setProfileImg] = useState<any>();
@@ -118,34 +131,11 @@ function Profile({ loaderData }: Route.ComponentProps) {
     setProfileHasChanged(true);
   };
 
-  const saveProfileImg = async () => {
-    if (!profileHasChanged) {
-      return;
+  useEffect(() => {
+    if (fetcher?.data?.message) {
+      toast.error(fetcher?.data?.message);
     }
-
-    try {
-      const file = inputFileRef.current?.files![0];
-      if (!file) {
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append("profile", file);
-
-      const res = await FileService.uploadProfile(formData);
-      if (!res?.data?._id && profileRef.current) {
-        profileRef.current.value = res?._id;
-        submit(formRef.current, {
-          method: "post",
-        });
-      }
-
-      return;
-    } catch (error) {
-      console.error("There is error");
-      return;
-    }
-  };
+  }, [fetcher?.data?.message]);
 
   useEffect(() => {
     if (user?.user?.profile) {
@@ -164,9 +154,10 @@ function Profile({ loaderData }: Route.ComponentProps) {
         <AppText size="xs">Les informations concernant votre profile</AppText>
       </div>
       <fetcher.Form
-        method="post"
+        method="patch"
         className="rounded-[20px] mt-8 flex flex-col-reverse gap-5 bg-white p-5"
         ref={formRef}
+        encType="multipart/form-data"
       >
         <div className="flex flex-col gap-5">
           <div className="flex flex-col gap-3">
@@ -246,8 +237,8 @@ function Profile({ loaderData }: Route.ComponentProps) {
                   Genre
                 </AppText>
               </label>
-              <Select name="gender">
-                <SelectTrigger>
+              <Select name="gender" defaultValue={user?.gender}>
+                <SelectTrigger name="gender">
                   <SelectValue placeholder={user?.gender} />
                 </SelectTrigger>
                 <SelectContent id="gender" defaultValue={user?.gender}>
@@ -264,6 +255,7 @@ function Profile({ loaderData }: Route.ComponentProps) {
             defaultValue={userConnecteRole as string}
             name="role"
             id="role"
+            ref={roleInputRef}
             hidden
           />
 
@@ -271,8 +263,8 @@ function Profile({ loaderData }: Route.ComponentProps) {
             <AppButton
               type="button"
               onClick={async (e) => {
-                await saveProfileImg();
-                submit(e.currentTarget, {
+                // await saveProfileImg();
+                submit(formRef.current, {
                   method: "post",
                 });
               }}
@@ -306,22 +298,13 @@ function Profile({ loaderData }: Route.ComponentProps) {
             )} */}
             <img
               alt=""
-              className="rounded-full"
-              width={250}
-              height="auto"
+              className="rounded-[50%] w-[250px] h-[250px]"
               src={profileImg}
-            />
-            <input
-              type="text"
-              name="profile"
-              id="profile"
-              ref={profileRef}
-              hidden
             />
 
             <input
               type="file"
-              name="file"
+              name="profile"
               id="file"
               ref={inputFileRef}
               hidden

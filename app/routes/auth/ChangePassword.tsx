@@ -48,7 +48,7 @@ export async function clientAction({ request }: Route.ActionArgs) {
     const res = await UserService.resetPassword(userId, password);
     return redirect("/auth/login");
   } catch (error) {
-    return data({ message: "Verifie bien votre email et mot de passe" });
+    return data({ message: "Une erreur est survenue" });
   }
 }
 
