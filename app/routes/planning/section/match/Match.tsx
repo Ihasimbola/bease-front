@@ -1,19 +1,19 @@
-import React, { useCallback, useState } from "react";
-import { matchTableHeader, matchData, postTableHeader } from "./matchData";
+import React from "react";
+import { matchTableHeader, postTableHeader } from "./matchData";
 import AppText from "~/components/general/AppText/AppText";
 import "./styles.css";
-import { Form, Link, useNavigate, useOutletContext } from "react-router";
 import type { MatchType } from "./type";
-import { Pen, Send, SendHorizonalIcon, Trash2, X } from "lucide-react";
+import { Pen, Send, Trash2 } from "lucide-react";
 import { cn } from "~/lib/utils";
-import { useUserStore, type UserStore } from "~/store/userStore";
-import AppButton from "~/components/general/AppButton/AppButton";
+import type { UserStore } from "~/store/userStore";
+import profile_placeholder from "~/assets/images/profile_placeholder.jpg";
 
 type Post = {
   licensedId: string;
   name: string;
   firstname: string;
   lastname: string;
+  profile: string;
   _id: string;
 };
 
@@ -193,7 +193,20 @@ export function findPostCell(
   const limit = localStorage.getItem("limit") || "2";
 
   return post ? (
-    <div className="flex gap-2 relative">
+    <div className="flex items-center gap-2 relative">
+      {post.profile ? (
+        <img
+          src={import.meta.env.VITE_API_URL + `files/image/${post.profile}`}
+          alt=""
+          className="w-[40px] h-[40px] rounded-[50%]"
+        />
+      ) : (
+        <img
+          src={profile_placeholder}
+          alt=""
+          className="w-[40px] h-[40px] rounded-[50%]"
+        />
+      )}
       <AppText size="sm" weight="normal">
         {`${post?.firstname} ${post?.lastname}`}
       </AppText>

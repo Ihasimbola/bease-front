@@ -32,6 +32,7 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
     const data: TableData[] = membres.map((membre: LicensedResponse) => ({
       firstname: membre?.user?.firstname,
       lastname: membre?.user?.lastname,
+      profile: membre?.user?.profile,
       age: membre?.age,
       category: membre?.category?.name || "-",
       isConfirmed: membre?.isConfirmed,

@@ -6,6 +6,7 @@ import "./styles.css";
 import { Pen, Trash2 } from "lucide-react";
 import type { TableData } from "./type";
 import type { LicensedResponse } from "~/services/userService";
+import ImageProfile from "./ImageProfile";
 
 interface Props {
   className?: string;
@@ -37,10 +38,10 @@ const Table = (props: Props) => {
       </div>
 
       <div className="flex flex-col gap-4 mt-2">
-        {tableData.map((tableData, idx) => (
+        {tableData.map((data, idx) => (
           <ul
             className="items-center list-item gap-2 min-w-[670px] rounded-[20px] bg-white p-4 shadow-sm hover:bg-gray-100"
-            id={tableData._id}
+            id={data._id}
             key={`licensed-${idx}`}
           >
             {tableHeader.map((head, idx) => (
@@ -48,19 +49,22 @@ const Table = (props: Props) => {
                 {head.key === "isConfirmed" ? (
                   <Badge
                     color={
-                      tableData[head.key as keyof typeof tableData]
-                        ? "green"
-                        : "red"
+                      data[head.key as keyof typeof data] ? "green" : "red"
                     }
                   >
-                    {tableData[head.key as keyof typeof tableData]
+                    {data[head.key as keyof typeof data]
                       ? "Confirmé"
                       : "Non confirmé"}
                   </Badge>
                 ) : (
-                  <AppText size="sm">
-                    {tableData[head.key as keyof typeof tableData]}
-                  </AppText>
+                  <div className="flex items-center gap-3">
+                    {head.key === "firstname" && (
+                      <ImageProfile profile={data.profile} />
+                    )}
+                    <AppText size="sm">
+                      {data[head.key as keyof typeof data]}
+                    </AppText>
+                  </div>
                 )}
               </li>
             ))}
@@ -70,7 +74,7 @@ const Table = (props: Props) => {
                 className="cursor-pointer justify-self-end"
                 onClick={() => {
                   if (onClickEdit) {
-                    onClickEdit(tableData._id, tableData.category);
+                    onClickEdit(data._id, data.category);
                   }
                 }}
               />
@@ -80,7 +84,7 @@ const Table = (props: Props) => {
                 className="cursor-pointer justify-self-end"
                 onClick={() => {
                   if (onClickTrash) {
-                    onClickTrash(tableData._id);
+                    onClickTrash(data._id);
                   }
                   return;
                 }}
