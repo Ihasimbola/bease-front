@@ -6,4 +6,8 @@ node_modules/*
 # React Router
 /.react-router/
 /build/
+<<<<<<< HEAD
 .env
+=======
+.env
+>>>>>>> 20d078d (init git)

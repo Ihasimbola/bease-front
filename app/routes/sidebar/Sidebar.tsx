@@ -122,8 +122,8 @@ const Sidebar = ({}: Props) => {
                   const activeState = isActive
                     ? "active transition-colors duration-200 ease-out"
                     : isPending
-                      ? "pending"
-                      : "";
+                    ? "pending"
+                    : "";
                   return defaultClassName + " " + activeState;
                 }}
                 onClick={() => setOpenMenu(false)}
@@ -151,7 +151,9 @@ const Sidebar = ({}: Props) => {
               >
                 {item.label === "Mon Profile" && imgProfileId ? (
                   <img
-                    src={`${import.meta.env.VITE_API_URL}/files/image/${imgProfileId}`}
+                    src={`${
+                      import.meta.env.VITE_API_URL
+                    }files/image/${imgProfileId}`}
                     alt="profile"
                     className="w-[54px] h-[54px] rounded-[50%]"
                   />
