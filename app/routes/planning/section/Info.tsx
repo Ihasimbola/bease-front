@@ -34,7 +34,7 @@ function Info({}: Props) {
             <AppButton onClick={() => navigate("import-match")}>
               <Icon name="ImportIcon" />
               <AppText size="sm" weight="medium" color="white">
-                Importer
+                Importer un fichier excel
               </AppText>
             </AppButton>
             <AppButton type="button" onClick={() => navigate("create-match")}>

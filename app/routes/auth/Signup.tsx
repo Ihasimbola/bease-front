@@ -200,7 +200,9 @@ function Signup({ actionData }: Route.ComponentProps) {
       </div>
       <div className="flex flex-col items-center gap-5 w-full">
         <AppText color="white" size="2xl" weight="semibold">
-          Inscription
+          {emailFromInvitation
+            ? "Inscription"
+            : "Inscription pour Administrateur de club"}
         </AppText>
         <div className="flex gap-5 justify-between w-full">
           <div className="w-full">
