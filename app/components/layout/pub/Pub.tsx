@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { useIntersection } from "~/hooks/useIntersection";
 import { MatchService } from "~/services/MatchService";
 import { useMatchStore } from "~/store/matchStore";
+import { Link } from "react-router";
 
 type Props = {};
 
@@ -37,12 +38,28 @@ const Pub = (props: Props) => {
           {/* <img src={banner_pub} alt="banner_pub" className="absolute" /> */}
           <div className="flex flex-col gap-8 ">
             <Icon name="LogoBease" />
-            <AppButton>Voir les produits</AppButton>
+            <Link
+              to="https://www.beasebasket.com/home-particulier/"
+              target="_blank"
+            >
+              <AppButton>Voir les produits</AppButton>
+            </Link>
           </div>
         </div>
 
-        <div className="bg-pub-img justify-center items-center flex flex-col gap-5 h-[300px] rounded-[20px] lg:flex-1 lg:flex-row xl:justify-start xl:pl-16">
-          {/* <img src={banner_pub} alt="banner_pub" className="absolute" /> */}
+        <div className="bg-pub-img justify-center items-center flex h-[300px] rounded-[20px] lg:flex-1 xl:justify-start xl:pl-16">
+          <div className="flex flex-col gap-8 ">
+            <Icon name="LogoBease" />
+            <Link
+              to="https://www.beasebasket.com/home-particulier/"
+              target="_blank"
+            >
+              <AppButton>Voir les produits</AppButton>
+            </Link>
+          </div>
+        </div>
+
+        {/* <div className="bg-pub-img justify-center items-center flex flex-col gap-5 h-[300px] rounded-[20px] lg:flex-1 lg:flex-row xl:justify-start xl:pl-16">
           <Icon name="KunheimIcon" />
           <div className="flex flex-col gap-2">
             <AppText weight="semibold" size="xl" color="white">
@@ -57,7 +74,7 @@ const Pub = (props: Props) => {
               </AppText>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
       <div className="flex gap-9 items-center justify-center mt-16">
         <AppText color="gray" size="xs">
