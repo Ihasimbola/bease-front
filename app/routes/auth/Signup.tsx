@@ -158,11 +158,16 @@ function Signup({ actionData }: Route.ComponentProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const setUser = useUserStore((state) => state.setUser);
+  const [accept, setAccept] = useState(false);
 
   // if the user register from email, get search param
   const emailFromInvitation = new URLSearchParams(location.search)?.get(
     "email"
   );
+
+  useEffect(() => {
+    console.log(!accept && !isEqual);
+  }, [accept]);
 
   // check if password and confirm password are equal
   useEffect(() => {
@@ -414,12 +419,42 @@ function Signup({ actionData }: Route.ComponentProps) {
           </AppText>
         </Link>
       </div>
+      <div className="flex flex-col gap-2 mt-5">
+        <AppText color="white" size="xs" weight="normal">
+          En m’inscrivant, j’accepte que mes données soient utilisées par B.EASE
+          pour la gestion des plannings et la communication du club.
+        </AppText>
+        <AppText color="white" size="xs" weight="normal">
+          Elles sont conservées tant que mon compte est actif et accessibles aux
+          administrateurs du club et à B.EASE. Je peux exercer mes droits
+          (accès, modification, suppression) à tout moment
+        </AppText>
+        <div className="flex gap-3">
+          <input
+            type="checkbox"
+            id="accept"
+            name="accept"
+            checked={accept}
+            onChange={() => setAccept((prev) => !prev)}
+          />
+          <Link to="#" target="_blank">
+            <AppText
+              color="white"
+              size="xs"
+              weight="normal"
+              className="underline"
+            >
+              J’ai lu et j’accepte la politique de confidentialité
+            </AppText>
+          </Link>
+        </div>
+      </div>
       <AppButton
         className={cn([
           "w-full mt-8",
-          isEqual === false && "filter grayscale cursor-not-allowed",
+          !accept && "filter grayscale cursor-not-allowed",
         ])}
-        disabled={isEqual === false}
+        disabled={!accept}
       >
         {fetcher.state === "idle" ? (
           "S'inscrire"
