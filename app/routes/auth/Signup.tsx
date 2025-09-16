@@ -437,7 +437,10 @@ function Signup({ actionData }: Route.ComponentProps) {
             checked={accept}
             onChange={() => setAccept((prev) => !prev)}
           />
-          <Link to="#" target="_blank">
+          <Link
+            to="https://www.beasebasket.com/protection-de-vos-donnees-personnelles/"
+            target="_blank"
+          >
             <AppText
               color="white"
               size="xs"
