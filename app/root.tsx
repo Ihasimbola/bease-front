@@ -11,6 +11,7 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import { useEffect, useState } from "react";
 import { RoleService } from "./services/RoleService";
+import * as Prismic from "@prismicio/client";
 
 type RoleContextType = {
   _id: string;
@@ -18,6 +19,13 @@ type RoleContextType = {
 };
 
 export async function clientLoader() {
+  const client = Prismic.createClient("bease", {
+    accessToken:
+      "MC5hTVFXMHhNQUFDUUFneUd6.b--_vSNz77-9RO-_vSnvv71V77-9Q--_ve-_ve-_vSIMSWpW77-9IyHvv73vv73vv73vv71NE--_ve-_ve-_vQ",
+  });
+  const pubData = await client.getByType("pub");
+  const socialMediaLinks = await client.getByType("social_media_links");
+
   try {
     const roles: any[] = await RoleService.getRoles();
     const connecetedUserRole = JSON.parse(localStorage.getItem("user")!).user
@@ -28,6 +36,8 @@ export async function clientLoader() {
     return {
       data: role,
       error: null,
+      pubData,
+      socialMediaLinks,
     };
   } catch (error) {
     return {
@@ -73,8 +83,15 @@ export default function App({ loaderData }: Route.ComponentProps) {
   useEffect(() => {
     setRole(loaderData?.data?.attribute);
   }, [loaderData?.data?.attribute]);
-
-  return <Outlet context={role} />;
+  return (
+    <Outlet
+      context={{
+        role,
+        pubData: loaderData?.pubData,
+        socialMediaLinks: loaderData?.socialMediaLinks,
+      }}
+    />
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

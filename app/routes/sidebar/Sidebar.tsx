@@ -60,7 +60,8 @@ interface Props {}
 const Sidebar = ({}: Props) => {
   const [openMenu, setOpenMenu] = useState(false);
   const { logout } = useAuth();
-  const role = useOutletContext();
+  const data = useOutletContext() as any;
+  const role = data?.role;
   const imgProfileId = JSON.parse(localStorage.getItem("user")!)?.user.profile;
 
   const filteredItems = appItems.filter((item) => {
@@ -122,8 +123,8 @@ const Sidebar = ({}: Props) => {
                   const activeState = isActive
                     ? "active transition-colors duration-200 ease-out"
                     : isPending
-                    ? "pending"
-                    : "";
+                      ? "pending"
+                      : "";
                   return defaultClassName + " " + activeState;
                 }}
                 onClick={() => setOpenMenu(false)}
