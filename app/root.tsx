@@ -19,9 +19,9 @@ type RoleContextType = {
 };
 
 export async function clientLoader() {
-  const client = Prismic.createClient("bease", {
+  const client = Prismic.createClient("bease-basket", {
     accessToken:
-      "MC5hTVFXMHhNQUFDUUFneUd6.b--_vSNz77-9RO-_vSnvv71V77-9Q--_ve-_ve-_vSIMSWpW77-9IyHvv73vv73vv73vv71NE--_ve-_ve-_vQ",
+      "MC5hTXFqclJNQUFDTUFKTHRt.Eu-_vQEgfu-_ve-_vRTvv73vv73vv73vv71GdjQR77-977-977-977-9Me-_vSIp77-9A0Nodu-_vTw8",
   });
   const pubData = await client.getByType("pub");
   const socialMediaLinks = await client.getByType("social_media_links");
