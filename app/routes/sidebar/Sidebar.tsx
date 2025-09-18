@@ -39,7 +39,7 @@ const appItems = [
 
 const profilItems = [
   {
-    label: "Mon Profile",
+    label: "Mon Profil",
     icon: "ProfileIcon",
     link: "profile",
   },

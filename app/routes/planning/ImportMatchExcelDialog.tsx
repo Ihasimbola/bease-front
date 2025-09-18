@@ -9,6 +9,7 @@ import { data, redirect, useFetcher, useNavigate } from "react-router";
 import type { Route } from "./+types/ImportMatchExcelDialog";
 import { FileService } from "~/services/fileService";
 import { toast } from "sonner";
+import ClubNameWarning from "~/components/common/ClubNameWarning";
 
 export async function clientAction({ request }: Route.ActionArgs) {
   const formData = await request.formData();
@@ -115,6 +116,7 @@ function ImportMatchExcelDialog() {
             <AppText size="xs" weight="bold">
               Toutes les verifications sont sensible à la casse.
             </AppText>
+            <ClubNameWarning showWarningLogo={false} />
           </div>
         </div>
 

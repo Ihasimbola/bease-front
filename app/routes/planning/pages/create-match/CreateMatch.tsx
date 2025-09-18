@@ -6,8 +6,9 @@ import type { Route } from "./+types/CreateMatch";
 import { CreateMatchValidationSchema } from "./createMatch-schema";
 import z from "zod";
 import { MatchService } from "~/services/MatchService";
-import { LoaderCircle } from "lucide-react";
+import { LoaderCircle, TriangleAlert } from "lucide-react";
 import "../../styles.css";
+import ClubNameWarning from "~/components/common/ClubNameWarning";
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
   const formData = await request.formData();
@@ -121,6 +122,7 @@ function CreateMatch({ loaderData }: Route.ComponentProps) {
         </AppText>
       </div>
       <fetcher.Form method="post" className="flex flex-col gap-8 mt-4">
+        <ClubNameWarning className="mt-3" />
         <div className="sm:flex-row flex w-full flex-col gap-5">
           <div className="flex flex-col flex-1 gap-1">
             <label htmlFor="division">

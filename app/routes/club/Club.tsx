@@ -10,6 +10,7 @@ import { CategoryService } from "~/services/CategoryService";
 import { useUserStore } from "~/store/userStore";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import ClubNameWarning from "~/components/common/ClubNameWarning";
 
 const ApiBaseUrl = import.meta.env.VITE_API_URL;
 
@@ -127,6 +128,11 @@ function Club({ loaderData }: Route.ComponentProps) {
               )}
             </ul>
           </div>
+        </div>
+      )}
+      {club && (
+        <div className="mt-6 bg-white p-4 rounded-[20px] flex-1">
+          <ClubNameWarning />
         </div>
       )}
     </section>
