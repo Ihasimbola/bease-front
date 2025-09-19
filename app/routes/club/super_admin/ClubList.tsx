@@ -37,14 +37,19 @@ function ClubList({ loaderData }: Route.ComponentProps) {
             Les informations concernant tout les clubs
           </AppText>
         </div>
+        <div className="flex items-end">
+          <AppText>
+            Nombre total des clubs:
+            <AppText as="span" weight="semibold">
+              {` ${clubs?.length}`}
+            </AppText>
+          </AppText>
+        </div>
       </section>
       <section className="mt-6 p-6 bg-white rounded-[20px]">
         <ul className="flex flex-wrap gap-8">
           {clubs?.map((club, idx) => (
-            <li
-              key={`club-${idx}`}
-              className="bg-gray-100/35 p-6 rounded-[12px]"
-            >
+            <li key={`club-${idx}`}>
               <Suspense key={`club-${idx}`} fallback={<Squeleton />}>
                 <ClubCard club={club} key={`club-${idx}`} />
               </Suspense>

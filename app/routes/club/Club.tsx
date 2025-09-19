@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import ClubNameWarning from "~/components/common/ClubNameWarning";
 import ClubList from "./super_admin/ClubList";
 import { RoleService } from "~/services/RoleService";
+import { chekcIfSuperAdmin } from "~/lib/utils";
 
 const ApiBaseUrl = import.meta.env.VITE_API_URL;
 
@@ -19,17 +20,9 @@ type Props = {};
 
 export async function clientLoader() {
   try {
-    const roles = (await RoleService.getRoles()) as {
-      _id: string;
-      attribute: string;
-    }[];
-    const userConnectedRoleId = JSON.parse(localStorage.getItem("user")!).user
-      .role;
-    const userConnectedRole = roles.find(
-      (role) => role._id === userConnectedRoleId
-    );
+    const { isSuperAdmin } = await chekcIfSuperAdmin();
 
-    if (userConnectedRole?.attribute === "SUPER_ADMIN") {
+    if (isSuperAdmin) {
       return redirect("/club/all");
     }
 

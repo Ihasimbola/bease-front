@@ -35,7 +35,7 @@ function ClubCard(props: Props) {
     <>
       <div
         key={`club-${club._id}`}
-        className="flex flex-col gap-5 min-w-[320px] items-center cursor-pointer"
+        className="flex flex-col gap-5 w-[300px] items-center bg-gray-100/35 hover:bg-gray-100/95 p-6 rounded-[12px] cursor-pointer"
       >
         <div className="flex self-start items-center gap-3">
           <img
@@ -53,7 +53,7 @@ function ClubCard(props: Props) {
           src={import.meta.env.VITE_API_URL + `files/image/${club.emblem}`}
           alt="emblem"
           loading="lazy"
-          className="w-[250px] h-[250px]"
+          className="w-[150px] h-[150px]"
         />
         <AppText weight="bold" size="lg">
           {club.name}
