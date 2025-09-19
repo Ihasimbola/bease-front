@@ -2,15 +2,16 @@ import AppButton from "~/components/general/AppButton/AppButton";
 import AppText from "~/components/general/AppText/AppText";
 import placeholderImage from "~/assets/images/placeholder_image.png";
 import "./styles.css";
-import { useNavigate } from "react-router";
+import { redirect, useNavigate } from "react-router";
 import { ClubService } from "~/services/ClubService";
 import type { Route } from "./+types/Club";
 import { LoaderCircle } from "lucide-react";
 import { CategoryService } from "~/services/CategoryService";
-import { useUserStore } from "~/store/userStore";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import ClubNameWarning from "~/components/common/ClubNameWarning";
+import ClubList from "./super_admin/ClubList";
+import { RoleService } from "~/services/RoleService";
 
 const ApiBaseUrl = import.meta.env.VITE_API_URL;
 
@@ -18,6 +19,20 @@ type Props = {};
 
 export async function clientLoader() {
   try {
+    const roles = (await RoleService.getRoles()) as {
+      _id: string;
+      attribute: string;
+    }[];
+    const userConnectedRoleId = JSON.parse(localStorage.getItem("user")!).user
+      .role;
+    const userConnectedRole = roles.find(
+      (role) => role._id === userConnectedRoleId
+    );
+
+    if (userConnectedRole?.attribute === "SUPER_ADMIN") {
+      return redirect("/club/all");
+    }
+
     const club = await ClubService.getClub();
     const categories = await CategoryService.getCategories();
 

@@ -34,7 +34,8 @@ axiosInstance.interceptors.response.use(function(response) {
 export class Http {
   static async get<T = any>(url: string) {
     try {
-      const res = (await axiosInstance.get<AxiosResponse<T>>(url));
+      const res = (await axiosInstance.get(url));
+      // const res = (await axiosInstance.get<AxiosResponse<T>>(url));
       return res;
     } catch (error) {
       throw error;

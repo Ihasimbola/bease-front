@@ -25,6 +25,15 @@ export class ClubService extends Http {
     }
   }
 
+  static async getAllClubs() {
+    try {
+      const res = await this.get('club/all');
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   static async updateClub(clubId: string, data: { name?: string, emblem?: string }) {
     try {
       const res = await this.patch(`club/${clubId}`, data);
