@@ -10,13 +10,9 @@ import { CategoryService } from "~/services/CategoryService";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import ClubNameWarning from "~/components/common/ClubNameWarning";
-import ClubList from "./super_admin/ClubList";
-import { RoleService } from "~/services/RoleService";
 import { chekcIfSuperAdmin } from "~/lib/utils";
 
 const ApiBaseUrl = import.meta.env.VITE_API_URL;
-
-type Props = {};
 
 export async function clientLoader() {
   try {

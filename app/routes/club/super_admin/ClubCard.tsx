@@ -7,6 +7,7 @@ import profile_placeholder from "~/assets/images/profile_placeholder.jpg";
 interface Props {
   club: ClubDataType;
   className?: string;
+  handleNavigate: (path: string, query?: string) => void;
 }
 
 const apiBaseUrl = import.meta.env.VITE_API_URL;
@@ -16,7 +17,7 @@ const fetcher = (id: string): Promise<ClubDataType[]> => {
 };
 
 function ClubCard(props: Props) {
-  const { club, className } = props;
+  const { club, className, handleNavigate } = props;
 
   const {
     isLoading,
@@ -34,8 +35,10 @@ function ClubCard(props: Props) {
   return (
     <>
       <div
+        id={club._id}
         key={`club-${club._id}`}
         className="flex flex-col gap-5 w-[300px] items-center bg-gray-100/35 hover:bg-gray-100/95 p-6 rounded-[12px] cursor-pointer"
+        onClick={() => handleNavigate("details/" + club._id)}
       >
         <div className="flex self-start items-center gap-3">
           <img

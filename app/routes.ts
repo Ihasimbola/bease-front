@@ -12,7 +12,10 @@ export default [
         route('create-match', "./routes/planning/pages/create-match/CreateMatch.tsx"),
       ]),
       route('club', "./routes/club/Club.tsx"),
-      route('club/all', "./routes/club/super_admin/ClubList.tsx"),
+      route('club/all', "./routes/club/super_admin/AllClubs.tsx", [
+        index("./routes/club/super_admin/ClubList.tsx"),
+        route('details/:id', "./routes/club/super_admin/ClubDetails.tsx"),
+      ]),
       route('club/create', "./routes/club/CreateClub.tsx"),
       route('club/edit/:id', "./routes/club/EditClub.tsx", [
         route('create-category', "./routes/club/CreateCategory.tsx"),
