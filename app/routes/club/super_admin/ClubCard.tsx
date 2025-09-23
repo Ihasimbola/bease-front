@@ -3,6 +3,8 @@ import AppText from "~/components/general/AppText/AppText";
 import { ClubService } from "~/services/ClubService";
 import type { ClubDataType } from "./types";
 import profile_placeholder from "~/assets/images/profile_placeholder.jpg";
+import { cn } from "~/lib/utils";
+import { useOutletContext } from "react-router";
 
 interface Props {
   club: ClubDataType;
@@ -18,6 +20,7 @@ const fetcher = (id: string): Promise<ClubDataType[]> => {
 
 function ClubCard(props: Props) {
   const { club, className, handleNavigate } = props;
+  const userConnecteRole = useOutletContext<{ role: string }>();
 
   const {
     isLoading,
@@ -32,13 +35,25 @@ function ClubCard(props: Props) {
     ? `${apiBaseUrl}files/image/${club?.profileAdmin?.user?.profile}`
     : profile_placeholder;
 
+  const handleOnCardClick = () => {
+    if (userConnecteRole?.role === "SUPER_ADMIN") {
+      localStorage.setItem("clubAdminId", club.profileAdmin._id);
+    }
+
+    handleNavigate("details/" + club._id + `?admin=${club.profileAdmin._id}`);
+  };
+
   return (
     <>
       <div
         id={club._id}
+        data-admin-id={club.profileAdmin._id}
         key={`club-${club._id}`}
-        className="flex flex-col gap-5 w-[300px] items-center bg-gray-100/35 hover:bg-gray-100/95 p-6 rounded-[12px] cursor-pointer"
-        onClick={() => handleNavigate("details/" + club._id)}
+        className={cn([
+          className,
+          "flex flex-col gap-5 w-[300px] items-center bg-gray-100/35 hover:bg-gray-100/95 p-6 rounded-[12px] cursor-pointer",
+        ])}
+        onClick={handleOnCardClick}
       >
         <div className="flex self-start items-center gap-3">
           <img

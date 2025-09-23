@@ -11,6 +11,17 @@ export default [
         route('assign-invitation', "./routes/planning/section/match/SendAssingInvitationMail.tsx"),
         route('create-match', "./routes/planning/pages/create-match/CreateMatch.tsx"),
       ]),
+
+      // routes planning for super admin
+      route("planning/clubs", "./routes/planning/super_admin/AllClub.tsx", [
+        index('./routes/planning/super_admin/ClubList.tsx'),
+        route('details/:id', "./routes/planning/super_admin/ClubDetails.tsx", [
+          route("import-match", "./routes/planning/super_admin/ImportExcel.tsx"),
+        ]),
+
+      ]),
+
+      // routes club for super admin
       route('club', "./routes/club/Club.tsx"),
       route('club/all', "./routes/club/super_admin/AllClubs.tsx", [
         index("./routes/club/super_admin/ClubList.tsx"),

@@ -1,0 +1,198 @@
+import { CrossIcon, LoaderCircle, TriangleAlert, X } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import Dialog from "~/components/common/dialog/Dialog";
+import AppButton from "~/components/general/AppButton/AppButton";
+import AppText from "~/components/general/AppText/AppText";
+import Icon from "~/components/icon";
+import "../styles.css";
+import { data, redirect, useFetcher, useNavigate } from "react-router";
+import type { Route } from "../super_admin/+types/ImportExcel";
+import { FileService } from "~/services/fileService";
+import { toast } from "sonner";
+import ClubNameWarning from "~/components/common/ClubNameWarning";
+import { chekcIfSuperAdmin } from "~/lib/utils";
+import { UserService } from "~/services/userService";
+
+export async function clientAction({ request, params }: Route.ActionArgs) {
+  const formData = await request.formData();
+  const user = JSON.parse(localStorage.getItem("user")!);
+  const excel: any = formData.get("excel");
+
+  /************* IF SUPER ADMIN IMPORT MATCH FOR A CLUB ****************************/
+
+  // check if connected user is SuperAdmin
+  const roleInfo = await chekcIfSuperAdmin();
+  if (roleInfo.isSuperAdmin) {
+    // get admin of the club that super admin want to import matchs
+    const clubAdmin = localStorage.getItem("clubAdminId")!;
+    const adminData = await UserService.getAdmin(clubAdmin);
+    formData.append("club", params.id);
+    formData.append("isSuperAdmin", "true");
+    formData.append("userId", adminData?.user?._id);
+  } else {
+    formData.append("club", user?.club);
+  }
+
+  /**********************************************************************************/
+
+  if (!excel?.name) {
+    return data({
+      message: "Veuillez choisir un fichier",
+    });
+  }
+
+  try {
+    const res = await FileService.upload("files/excel/match", formData);
+    return data({
+      data: res.data,
+      message: res?.data?.message,
+      error: null,
+    });
+  } catch (error: any) {
+    if (error.status === 400) {
+      return data(
+        {
+          error: {
+            message: error.response.data.message,
+          },
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+  }
+}
+
+function ImportMatchExcelDialog() {
+  const [isOpen, setIsOpen] = useState(true);
+
+  const excelRef = React.useRef<HTMLInputElement>(null);
+  const [file, setFile] = React.useState<{
+    name: string;
+    size: string;
+  }>();
+
+  const fetcher = useFetcher();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (fetcher.data?.error?.message) {
+      toast.error(
+        fetcher.data.error?.response?.data?.message || "Une erreur est survenue"
+      );
+      navigate(-1);
+    } else if (fetcher.data?.data) {
+      navigate(-1);
+    }
+  }, [fetcher.data]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      navigate(-1);
+    }
+  }, [isOpen]);
+
+  const handleBrowseFile = () => {
+    if (excelRef.current) {
+      excelRef.current.click();
+    }
+  };
+
+  const handleSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = URL.createObjectURL(e.target.files![0]);
+
+    setFile({
+      name: e.target.files![0].name,
+      size: e.target.files![0].size.toString(),
+    });
+  };
+
+  return (
+    <Dialog setIsOpen={setIsOpen} close={isOpen} className="mx-3 lg:mx-0">
+      <div>
+        <AppText as="h1" weight="bold">
+          Importer votre fichier excel
+        </AppText>
+        <div className="flex gap-3 items-center p-3 bg-amber-100 mt-3 rounded">
+          <TriangleAlert color="orange" size={48} />
+          <div>
+            <AppText size="xs">
+              {`Assurez-vous bien que les champs suivants sont bien présents suivant l'ordre: `}
+            </AppText>
+            <AppText size="sm" weight="semibold">
+              Division, Equipe 1, Equipe 2, Date de renconte, Heure, Salle.
+            </AppText>
+            <AppText size="xs">
+              Si les colonnes ne correspondent pas, le fichier ne sera pas
+              importé.
+            </AppText>
+            <AppText size="xs">
+              Verrifie aussi le nom de votre club dans le fichier. Il doit
+              correspondre au nom de votre club dans l' application.
+            </AppText>
+            <AppText size="xs" weight="bold">
+              Toutes les verifications sont sensible à la casse.
+            </AppText>
+            <ClubNameWarning showWarningLogo={false} />
+          </div>
+        </div>
+
+        <fetcher.Form
+          className="mt-5 file-container"
+          method="POST"
+          encType="multipart/form-data"
+        >
+          <input
+            type="file"
+            accept=".xlsx, .xls"
+            onChange={handleSelectFile}
+            className="hidden"
+            name="excel"
+            ref={excelRef}
+          />
+          {!!file && (
+            <div className="relative w-fit border p-2 rounded-[20px]">
+              <div
+                className="absolute top-2 right-2 cursor-pointer"
+                onClick={() => setFile(undefined)}
+              >
+                <X className="close-icon" />
+              </div>
+              <Icon name="ExcelIcon" />
+              <AppText size="xs" color="gray">
+                {file.name}
+              </AppText>
+              <AppText size="xs" color="gray">
+                {`${Number(file.size) / 1000} KB`}
+              </AppText>
+            </div>
+          )}
+          {file ? (
+            <AppButton type="submit" className="mt-3 w-full">
+              {fetcher.state !== "idle" ? (
+                <LoaderCircle
+                  className="loader-circle"
+                  id="loader-circle"
+                  stroke="stroke-white"
+                />
+              ) : (
+                "importer"
+              )}
+            </AppButton>
+          ) : (
+            <AppButton
+              type="button"
+              onClick={handleBrowseFile}
+              className="mt-3"
+            >
+              Parcourir le ficher
+            </AppButton>
+          )}
+        </fetcher.Form>
+      </div>
+    </Dialog>
+  );
+}
+
+export default ImportMatchExcelDialog;

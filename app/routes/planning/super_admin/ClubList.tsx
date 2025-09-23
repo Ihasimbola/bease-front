@@ -1,11 +1,11 @@
-import React, { Suspense, useCallback } from "react";
-import ClubCard from "./ClubCard";
+import { Suspense, useCallback } from "react";
+import ClubCard from "../../club/super_admin/ClubCard";
 import { ClubService } from "~/services/ClubService";
 import AppText from "~/components/general/AppText/AppText";
-import type { Route } from "../super_admin/+types/ClubList";
-import type { ClubDataType } from "./types";
-import Squeleton from "./Squeleton";
+import type { ClubDataType } from "../../club/super_admin/types";
+import Squeleton from "../../club/super_admin/Squeleton";
 import { useNavigate } from "react-router";
+import type { Route } from "../super_admin/+types/ClubList";
 
 export async function clientLoader() {
   try {
@@ -41,7 +41,7 @@ function ClubList({ loaderData }: Route.ComponentProps) {
 
   return (
     <>
-      <div className="w-full text-right mt-6">
+      <div className="w-full text-right mt-5">
         <AppText>
           Nombre total des clubs:
           <AppText as="span" weight="semibold">
@@ -50,7 +50,10 @@ function ClubList({ loaderData }: Route.ComponentProps) {
         </AppText>
       </div>
       <section className="mt-6 p-6 bg-white rounded-[20px]">
-        <ul className="flex flex-wrap gap-8">
+        <AppText weight="bold" size="lg" className="underline">
+          Selectionner un club pour voir ses plannings
+        </AppText>
+        <ul className="flex flex-wrap gap-8 mt-5">
           {clubs?.map((club, idx) => (
             <li key={`club-${idx}`}>
               <Suspense key={`club-${idx}`} fallback={<Squeleton />}>

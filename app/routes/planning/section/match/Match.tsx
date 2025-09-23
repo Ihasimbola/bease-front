@@ -99,12 +99,13 @@ function matchTable(
                         !data.isAthome && "pointer-events-none",
                       ])}
                       id={data._id}
-                      onClick={() =>
-                        handleNavigate(
+                      onClick={() => {
+                        if (userConnecteRole === "SUPER_ADMIN") return;
+                        return handleNavigate(
                           "assign-invitation",
                           `?match=${data._id}`
-                        )
-                      }
+                        );
+                      }}
                     >
                       <Send size={24} color="brown" />
                     </td>
@@ -142,9 +143,13 @@ function matchTable(
                     color="black"
                     size={16}
                     className="cursor-pointer"
-                    onClick={() =>
-                      handleNavigate("create-match", `?match=${data._id}`)
-                    }
+                    onClick={() => {
+                      if (userConnecteRole === "SUPER_ADMIN") return;
+                      return handleNavigate(
+                        "create-match",
+                        `?match=${data._id}`
+                      );
+                    }}
                   />
                 </td>
               )}
@@ -156,7 +161,8 @@ function matchTable(
                     className="cursor-pointer"
                     size={16}
                     onClick={() => {
-                      handleNavigate(
+                      if (userConnecteRole === "SUPER_ADMIN") return;
+                      return handleNavigate(
                         "confirm-delete-match",
                         `?match=${data._id}&limit=${limit}`
                       );
@@ -216,6 +222,9 @@ export function findPostCell(
           color="red"
           className="cursor-pointer"
           onClick={() => {
+            if (userConnecteRole === "SUPER_ADMIN") {
+              return;
+            }
             handleNavigate("confirm-delete", `?id=${post._id}&limit=${limit}`);
           }}
         />
@@ -230,7 +239,9 @@ export function findPostCell(
         !isAthome && "pointer-events-none",
       ])}
       onClick={() => {
-        if (userConnecteRole === "LICENSED") {
+        if (userConnecteRole === "SUPER_ADMIN") {
+          return;
+        } else if (userConnecteRole === "LICENSED") {
           handleNavigate(
             "assign-post",
             `?match=${matchId}&limit=${limit}&post=${postHeaderData.dataKey}&licensedId=${userConnected?._id}`

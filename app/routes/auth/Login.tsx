@@ -5,7 +5,7 @@ import AppButton from "~/components/general/AppButton/AppButton";
 import AppText from "~/components/general/AppText/AppText";
 import Icon from "~/components/icon";
 import { Input } from "~/components/ui/input";
-import { cn } from "~/lib/utils";
+import { chekcIfSuperAdmin, cn } from "~/lib/utils";
 import { UserService } from "~/services/userService";
 import type { Route } from "./+types/Login";
 import { toast } from "sonner";
@@ -25,6 +25,11 @@ export async function clientAction({ request }: Route.ActionArgs) {
     localStorage.setItem("token", "Bearer " + res.token);
     localStorage.setItem("refreshToken", "Bearer " + res.refreshToken);
     localStorage.setItem("user", JSON.stringify(res.adminDoc));
+
+    // store role in localStorage
+    const attribute = await chekcIfSuperAdmin();
+    localStorage.setItem("role", JSON.stringify(attribute));
+
     return data({
       user: res.adminDoc,
     });

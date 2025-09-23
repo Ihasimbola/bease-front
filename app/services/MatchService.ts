@@ -11,9 +11,14 @@ type CreateMatchType = {
 }
 
 export class MatchService extends Http {
-  static async getMatchByClub(skipValue?: number, limitValue?: number) {
+  static async getMatchByClub(skipValue?: number, limitValue?: number, clubId?: string) {
     skipValue = skipValue || 0;
     try {
+      if(clubId) {
+        const res = await this.get(`match/club/${clubId}?skip=${skipValue}&limit=${limitValue}`);
+        return res.data;
+      }
+
       const res = await this.get("match?skip=" + skipValue + "&limit=" + limitValue);
       return res.data;
     } catch (error) {

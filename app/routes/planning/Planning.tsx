@@ -1,31 +1,31 @@
 import Info from "./section/Info";
-import Match from "./section/match/Match";
-import {
-  matchData,
-  matchTableHeader,
-  postTableHeader,
-} from "./section/match/matchData";
-import MatchAccordion from "./section/match/MatchAccordion";
+
 import {
   Outlet,
+  redirect,
   useFetcher,
   useLocation,
   useNavigate,
   useOutletContext,
   useSearchParams,
 } from "react-router";
-import { ClubService } from "~/services/ClubService";
 import type { Route } from "./+types/Planning";
 import { MatchService } from "~/services/MatchService";
 import type { MatchType } from "./section/match/type";
 import { useCallback, useEffect, useState } from "react";
 import { useMatchStore } from "~/store/matchStore";
-import AppButton from "~/components/general/AppButton/AppButton";
 import { useUserStore } from "~/store/userStore";
 import { toast } from "sonner";
+import { chekcIfSuperAdmin } from "~/lib/utils";
+import MatchDetail from "./MatchDetail";
 
-const limitInitialValue = 4;
+export const limitInitialValue = 4;
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {
+  const { isSuperAdmin } = await chekcIfSuperAdmin();
+  if (isSuperAdmin) {
+    return redirect("/planning/clubs");
+  }
+
   const url = new URL(request.url);
   const skip = url.searchParams.get("skip") || 0;
   const limit = url.searchParams.get("limit") || 0;
@@ -123,48 +123,13 @@ function Planning({ loaderData }: Route.ComponentProps) {
       <Info />
       {!location.pathname.includes("create-match") &&
         !location.pathname.includes("edit-match") && (
-          <section className="hidden lg:flex w-full flex-col gap-10 mt-6">
-            {matchDataFromLoader?.map((match, idx) =>
-              Match({
-                userConnecteRole,
-                userConnected,
-                handleNavigate,
-                headerData: matchTableHeader,
-                bodyData: match.matches,
-                postHeaderData: postTableHeader,
-                tableTitle: new Date(match._id).toLocaleString("fr-FR", {
-                  day: "2-digit",
-                  month: "long",
-                  year: "numeric",
-                }),
-              })
-            )}
-          </section>
-        )}
-      {!location.pathname.includes("create-match") &&
-        !location.pathname.includes("edit-match") && (
-          <section className="mt-6 lg:hidden">
-            <MatchAccordion
-              data={matchDataFromLoader}
-              handleNavigate={handleNavigate}
-              userConnecteRole={userConnecteRole}
-              userConnected={userConnected}
-            />
-          </section>
-        )}
-      {matchDataFromLoader.length !== 0 &&
-        !location.pathname.includes("create-match") &&
-        !location.pathname.includes("edit-match") && (
-          <div className="w-full mt-8">
-            <AppButton
-              variant="outlined"
-              className=""
-              type="button"
-              onClick={handleGetMore}
-            >
-              Afficher plus de matchs
-            </AppButton>
-          </div>
+          <MatchDetail
+            matchData={matchDataFromLoader}
+            userConnecteRole={userConnecteRole}
+            userConnected={userConnected}
+            handleNavigate={handleNavigate}
+            handleGetMore={handleGetMore}
+          />
         )}
       <Outlet />
     </>

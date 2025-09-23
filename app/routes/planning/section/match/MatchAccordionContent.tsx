@@ -37,10 +37,7 @@ function MatchAccordionContent(props: MatchProps) {
               <AppText>{data.teamB}</AppText>
             </li>
             {headerData.map((head, idx) => {
-              if (
-                head.dataKey === "message" &&
-                userConnecteRole !== "LICENSED"
-              ) {
+              if (head.dataKey === "message" && userConnecteRole === "ADMIN") {
                 return (
                   <li
                     key={`match-${idx}`}
@@ -94,33 +91,39 @@ function MatchAccordionContent(props: MatchProps) {
               (
                 post: { label: string; dataKey: string; iconName: string },
                 idx: number
-              ) => (
-                <li
-                  key={`match-${idx}`}
-                  className={cn([
-                    data.isAthome ? "" : "opacity-50",
-                    "flex justify-between",
-                  ])}
-                >
-                  <AppText>{post.label}</AppText>
-                  {findPostCell(
-                    post,
-                    data.posts,
-                    data._id,
-                    handleNavigate,
-                    data.isAthome,
-                    userConnected,
-                    userConnecteRole
-                  )}
-                </li>
-              )
+              ) => {
+                return (
+                  <li
+                    key={`match-${idx}`}
+                    className={cn([
+                      data.isAthome ? "" : "opacity-50",
+                      "flex justify-between",
+                    ])}
+                  >
+                    <AppText>{post.label}</AppText>
+                    {findPostCell(
+                      post,
+                      data.posts,
+                      data._id,
+                      handleNavigate,
+                      data.isAthome,
+                      userConnected,
+                      userConnecteRole
+                    )}
+                  </li>
+                );
+              }
             )}
             {userConnecteRole !== "LICENSED" && (
               <li className="flex gap-4">
                 <AppButton
                   variant="primary"
                   onClick={() => {
-                    handleNavigate(
+                    if (userConnecteRole === "SUPER_ADMIN") {
+                      return;
+                    }
+
+                    return handleNavigate(
                       "confirm-delete-match",
                       `?match=${data._id}&limit=${limit}`
                     );
@@ -130,9 +133,12 @@ function MatchAccordionContent(props: MatchProps) {
                 </AppButton>
                 <AppButton
                   variant="outlined"
-                  onClick={() =>
-                    handleNavigate("create-match", `?match=${data._id}`)
-                  }
+                  onClick={() => {
+                    if (userConnecteRole === "SUPER_ADMIN") {
+                      return;
+                    }
+                    return handleNavigate("create-match", `?match=${data._id}`);
+                  }}
                 >
                   Editer le match
                 </AppButton>

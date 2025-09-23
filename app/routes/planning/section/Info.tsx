@@ -5,6 +5,7 @@ import AppButton from "~/components/general/AppButton/AppButton";
 import AppText from "~/components/general/AppText/AppText";
 import Icon from "~/components/icon";
 import { useUserStore } from "~/store/userStore";
+import ImportAndAdd from "../ImportAndAdd";
 
 type Props = {};
 
@@ -30,20 +31,7 @@ function Info({}: Props) {
       </div>
       <div className="flex gap-3 items-end">
         {userConnecteRole !== "LICENSED" && userConnected?.club ? (
-          <>
-            <AppButton onClick={() => navigate("import-match")}>
-              <Icon name="ImportIcon" />
-              <AppText size="sm" weight="medium" color="white">
-                Importer un fichier excel
-              </AppText>
-            </AppButton>
-            <AppButton type="button" onClick={() => navigate("create-match")}>
-              <PlusIcon size={16} />
-              <AppText size="sm" color="white" weight="medium">
-                Créer un match
-              </AppText>
-            </AppButton>
-          </>
+          <ImportAndAdd />
         ) : (
           <></>
         )}
