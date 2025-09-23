@@ -6,7 +6,7 @@ import type { Route } from "./+types/CreateMatch";
 import { CreateMatchValidationSchema } from "./createMatch-schema";
 import z from "zod";
 import { MatchService } from "~/services/MatchService";
-import { LoaderCircle, TriangleAlert } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import "../../styles.css";
 import ClubNameWarning from "~/components/common/ClubNameWarning";
 

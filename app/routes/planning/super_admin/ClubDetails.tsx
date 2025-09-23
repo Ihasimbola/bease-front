@@ -4,6 +4,7 @@ import type { MatchType } from "../section/match/type";
 import ImportAndAdd from "../ImportAndAdd";
 import {
   Outlet,
+  useLocation,
   useNavigate,
   useOutletContext,
   useSearchParams,
@@ -67,6 +68,7 @@ function ClubDetails({ loaderData }: Route.ComponentProps) {
   const navigate = useNavigate();
   const [searchParam, setSearchParam] = useSearchParams();
   const [total, setTotal] = useState(limitInitialValue);
+  const location = useLocation();
 
   // navigate for each cell in match table for preventing more renders hook
   // we must declare it from the parent
@@ -89,9 +91,6 @@ function ClubDetails({ loaderData }: Route.ComponentProps) {
     localStorage.setItem("skip", "0");
     localStorage.setItem("limit", total.toString());
   };
-  // useEffect(() => {
-
-  // }, [loaderData?.message]);
 
   return (
     <section>
@@ -101,13 +100,15 @@ function ClubDetails({ loaderData }: Route.ComponentProps) {
           <AppText>il n'y a pas encore de match dans ce club</AppText>
         </div>
       ) : (
-        <MatchDetail
-          matchData={matchData}
-          userConnecteRole={context?.role}
-          userConnected={userConnected}
-          handleNavigate={handleNavigate}
-          handleGetMore={handleGetMore}
-        />
+        !location.pathname.includes("create-match") && (
+          <MatchDetail
+            matchData={matchData}
+            userConnecteRole={context?.role}
+            userConnected={userConnected}
+            handleNavigate={handleNavigate}
+            handleGetMore={handleGetMore}
+          />
+        )
       )}
       <Outlet />
     </section>

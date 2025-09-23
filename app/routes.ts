@@ -17,8 +17,9 @@ export default [
         index('./routes/planning/super_admin/ClubList.tsx'),
         route('details/:id', "./routes/planning/super_admin/ClubDetails.tsx", [
           route("import-match", "./routes/planning/super_admin/ImportExcel.tsx"),
+          route('create-match', "./routes/planning/super_admin/CreateMatch.tsx"),
+          
         ]),
-
       ]),
 
       // routes club for super admin
