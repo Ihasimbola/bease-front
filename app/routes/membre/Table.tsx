@@ -7,6 +7,7 @@ import { Pen, Trash2 } from "lucide-react";
 import type { TableData } from "./type";
 import type { LicensedResponse } from "~/services/userService";
 import ImageProfile from "./ImageProfile";
+import { useOutletContext } from "react-router";
 
 interface Props {
   className?: string;
@@ -19,6 +20,8 @@ interface Props {
 const Table = (props: Props) => {
   const { className, onClickTrash, onClickEdit, tableHeader, tableData } =
     props;
+
+  const context = useOutletContext<{ role: string }>();
 
   return (
     <div
@@ -73,6 +76,7 @@ const Table = (props: Props) => {
                 size={16}
                 className="cursor-pointer justify-self-end"
                 onClick={() => {
+                  if (context.role === "SUPER_ADMIN") return;
                   if (onClickEdit) {
                     onClickEdit(data._id, data.category);
                   }
@@ -83,6 +87,8 @@ const Table = (props: Props) => {
                 color="red"
                 className="cursor-pointer justify-self-end"
                 onClick={() => {
+                  if (context.role === "SUPER_ADMIN") return;
+
                   if (onClickTrash) {
                     onClickTrash(data._id);
                   }

@@ -5,21 +5,26 @@ import AppText from "~/components/general/AppText/AppText";
 import { Input } from "~/components/ui/input";
 import Table from "./Table";
 import type { Route } from "./+types/Membre";
-import { Form, Outlet, useNavigate, useSubmit } from "react-router";
+import { Form, Outlet, redirect, useNavigate, useSubmit } from "react-router";
 import { UserService, type LicensedResponse } from "~/services/userService";
 import { tableHeader } from "./tableData";
 import type { TableData } from "./type";
 import { toast } from "sonner";
+import { chekcIfSuperAdmin } from "~/lib/utils";
 
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {
   const clubId = JSON.parse(localStorage.getItem("user")!)?.club;
   const url = new URL(request.url);
   const search = new URLSearchParams(url.search).get("search")?.toString();
 
+  // check if the user is super admin
+  const userStatus = await chekcIfSuperAdmin();
+
   if (!clubId) {
     return {
       membres: [],
       message: "Vous n' avez pas encore créé un club",
+      isSuperAdmin: userStatus.isSuperAdmin,
     };
   }
 
@@ -63,11 +68,13 @@ function Membre({ loaderData }: Route.ComponentProps) {
   const { data: membres, message } = loaderData;
 
   useLayoutEffect(() => {
-    if (message) {
+    if (loaderData?.isSuperAdmin) {
+      navigate("/membre/clubs");
+    } else if (message) {
       toast.error(message);
       navigate("/club");
     }
-  }, [loaderData]);
+  }, [loaderData?.message]);
 
   const handleOnDelete = (id: string | number) => {
     navigate("delete-member" + `/${id}`);

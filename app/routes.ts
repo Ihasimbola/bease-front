@@ -41,8 +41,17 @@ export default [
         route('delete-member/:id', './routes/membre/ConfirmationDialog.tsx'),
         route('edit-member/:id', './routes/membre/EditMemberDialog.tsx'),
       ]),
+
+      // routes membre for super admin
+      route('membre/clubs', "./routes/membre/super_admin/AllClubs.tsx", [
+        index('./routes/membre/super_admin/ClubList.tsx'),
+        route('details/:id', "./routes/membre/super_admin/AllMemberClub.tsx"),
+      ]),
+
       route('profile', "./routes/profile/Profile.tsx"),
     ]),
+
+    
   
 
   ...prefix("auth", [
