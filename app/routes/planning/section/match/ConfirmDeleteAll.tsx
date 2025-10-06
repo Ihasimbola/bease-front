@@ -1,42 +1,49 @@
-import { data, redirect, useNavigate } from "react-router";
+import { useFetcher, useNavigate } from "react-router";
 import Dialog from "~/components/common/dialog/Dialog";
 import AppButton from "~/components/general/AppButton/AppButton";
 import AppText from "~/components/general/AppText/AppText";
 import { useDialog } from "~/hooks/useDialog";
-import { useFetcherEffect } from "~/hooks/useFetcherEffect";
+import type { Route } from "./+types/ConfirmDeleteAll";
 import { MatchService } from "~/services/MatchService";
-import type { Route } from "../../match/+types/ConfirmDeleteMatch";
+import { useEffect } from "react";
+import { toast } from "sonner";
+import { redirect } from "react-router";
 
 type Props = {};
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
-  const url = new URL(request.url);
-  const matchId = new URLSearchParams(url.search).get("match");
-
-  if (!matchId) {
-    return redirect("/planning");
-  }
+  const matchesToDelete = localStorage.getItem("matchToDelete")
+    ? JSON.parse(localStorage.getItem("matchToDelete")!)
+    : [];
 
   try {
-    const res = await MatchService.deleteMatch(matchId!);
-    return data({
-      message: "",
-      data: res.data,
-      error: null,
-    });
-  } catch (error) {
-    return data({
-      message: "Uen erreur est survenue",
+    for (let i = 0; i < matchesToDelete.length; ++i) {
+      await MatchService.deleteMatch(matchesToDelete[i]);
+    }
+
+    // clear localstorage
+    localStorage.setItem("matchToDelete", JSON.stringify([]));
+    return (window.location.href = "/planning");
+  } catch (error: any) {
+    return {
       data: null,
+      message: error?.response?.data?.message,
       error,
-    });
+    };
   }
 }
 
-function ConfirmDeleteMatch({}: Props) {
+function ConfirmDeleteAll({ actionData }: Route.ComponentProps) {
   const { isOpen, setIsOpen } = useDialog();
-  const { fetcher } = useFetcherEffect();
   const navigate = useNavigate();
+  const fetcher = useFetcher();
+
+  useEffect(() => {
+    if (actionData?.error) {
+      toast.error(actionData?.message);
+      navigate(-1);
+    }
+  }, [actionData]);
 
   return (
     <Dialog setIsOpen={setIsOpen} close={isOpen}>
@@ -57,4 +64,4 @@ function ConfirmDeleteMatch({}: Props) {
   );
 }
 
-export default ConfirmDeleteMatch;
+export default ConfirmDeleteAll;

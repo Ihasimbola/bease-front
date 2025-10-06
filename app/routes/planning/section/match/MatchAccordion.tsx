@@ -4,12 +4,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "~/components/ui/accordion";
-import React from "react";
-import { matchTableHeader, type matchData } from "./matchData";
+import { useContext, useEffect } from "react";
+import { matchTableHeader } from "./matchData";
 import AppText from "~/components/general/AppText/AppText";
 import MatchAccordionContent from "./MatchAccordionContent";
 import type { MatchType } from "./type";
 import type { UserStore } from "~/store/userStore";
+import { SelectAllContext } from "~/hooks/useSelectedAllContext";
 
 interface Props {
   data: MatchType[];
@@ -20,6 +21,29 @@ interface Props {
 
 function MatchAccordion(props: Props) {
   const { data, handleNavigate, userConnecteRole, userConnected } = props;
+
+  // for select all match to delete
+  const selectAllMatchContext = useContext(SelectAllContext);
+
+  useEffect(() => {
+    const matches: any = data.map((match) => match.matches);
+    const matchToDelete = [];
+
+    for (let i = 0; i < matches.length; ++i) {
+      for (let j = 0; j < matches[i].length; ++j) {
+        matchToDelete.push(matches[i][j]);
+      }
+    }
+
+    if (selectAllMatchContext) {
+      localStorage.setItem(
+        "matchToDelete",
+        JSON.stringify(matchToDelete.map((match) => match._id))
+      );
+    } else {
+      localStorage.setItem("matchToDelete", JSON.stringify([]));
+    }
+  }, [selectAllMatchContext]);
 
   return (
     <Accordion

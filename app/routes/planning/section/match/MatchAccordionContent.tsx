@@ -1,12 +1,14 @@
-import React from "react";
+import { useContext, useEffect, useState } from "react";
 import { findPostCell, type Props as MatchProps } from "./Match";
 import AppText from "~/components/general/AppText/AppText";
-import { Checkbox } from "@radix-ui/react-checkbox";
 import Icon from "~/components/icon";
 import { postTableHeader } from "./matchData";
 import { cn } from "~/lib/utils";
 import AppButton from "~/components/general/AppButton/AppButton";
 import { Send } from "lucide-react";
+import { Checkbox } from "~/components/ui/checkbox";
+import { handleDeleteSelect } from "./handeDeleteSelect";
+import { SelectAllContext } from "~/hooks/useSelectedAllContext";
 
 function MatchAccordionContent(props: MatchProps) {
   const {
@@ -22,19 +24,83 @@ function MatchAccordionContent(props: MatchProps) {
   // get limit number of match from localstorage
   const limit = localStorage.getItem("limit") || "2";
 
+  const [allMatchSelectState, setAllMatchSelectState] = useState(
+    bodyData.map((match) => ({
+      id: match._id,
+      checked: false,
+    }))
+  );
+
+  const selectAllMatchContext = useContext(SelectAllContext);
+
+  useEffect(() => {
+    if (selectAllMatchContext) {
+      setAllMatchSelectState(
+        bodyData.map((match) => ({
+          id: match._id,
+          checked: true,
+        }))
+      );
+    } else {
+      setAllMatchSelectState(
+        bodyData.map((match) => ({
+          id: match._id,
+          checked: false,
+        }))
+      );
+    }
+  }, [selectAllMatchContext]);
+
+  const handleChangeSelect = (e: boolean, matchId: string) => {
+    setAllMatchSelectState((prev) => {
+      return prev.map((match, idx) => {
+        if (match.id === matchId) {
+          return {
+            id: match.id,
+            checked: e,
+          };
+        } else {
+          return {
+            id: match.id,
+            checked: prev[idx].checked,
+          };
+        }
+      });
+    });
+
+    // update value in localstorage
+    handleDeleteSelect(matchId, e);
+  };
+
   return (
     <div>
-      <Checkbox />
-      <AppText>Masquer les matchs exterieurs</AppText>
       <div className="mt-4 mb-1 flex justify-between items-center">
         <AppText weight="semibold">Matchs</AppText>
       </div>
       <div className="flex flex-col gap-6">
         {bodyData.map((data, idx) => (
           <ul key={`match-${idx}`} className={cn(["flex flex-col gap-1.5"])}>
-            <li className={cn(["p-2 bg-gray2"])}>
-              <AppText>{data.teamA}</AppText>
-              <AppText>{data.teamB}</AppText>
+            <li
+              className={cn(["flex justify-between items-center p-2 bg-gray2"])}
+            >
+              <div>
+                <AppText>{data.teamA}</AppText>
+                <AppText>{data.teamB}</AppText>
+              </div>
+              <div className="flex gap-2 items-center justify-end">
+                <Checkbox
+                  id={`delete-${data._id}`}
+                  onCheckedChange={(e) => {
+                    handleChangeSelect(Boolean(e), data._id);
+                  }}
+                  checked={allMatchSelectState[idx].checked}
+                />
+                <label htmlFor={`delete-${data._id}`}>
+                  <AppText weight="semibold" size="xs">
+                    Supprimer
+                  </AppText>
+                </label>
+              </div>
             </li>
             {headerData.map((head, idx) => {
               if (head.dataKey === "message" && userConnecteRole === "ADMIN") {

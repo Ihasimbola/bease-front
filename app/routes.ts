@@ -10,6 +10,7 @@ export default [
         route('confirm-delete-match', "./routes/planning/section/match/ConfirmDeleteMatch.tsx"),
         route('assign-invitation', "./routes/planning/section/match/SendAssingInvitationMail.tsx"),
         route('create-match', "./routes/planning/pages/create-match/CreateMatch.tsx"),
+        route('delete-selected', "./routes/planning/section/match/ConfirmDeleteAll.tsx"),
       ]),
 
       // routes planning for super admin

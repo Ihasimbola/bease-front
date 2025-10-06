@@ -39,21 +39,33 @@ export async function clientAction({ request, params }: Route.ActionArgs) {
   const name = formData.get("name");
   const data = {} as { name?: string; emblem?: string };
 
-  // procession the file emblem
-  const emblemFormData = new FormData();
-  if (formData.get("emblem") !== null) {
-    emblemFormData.append("emblem", formData.get("emblem")!);
-    const res = await FileService.upload("club/emblem", emblemFormData);
-    data.emblem = res.data._id;
-  }
+  try {
+    // procession the file emblem
+    const emblemFormData = new FormData();
+    if (formData.get("emblem") !== null) {
+      emblemFormData.append("emblem", formData.get("emblem")!);
+      const res = await FileService.upload("club/emblem", emblemFormData);
+      data.emblem = res.data._id;
+    }
 
-  if (name) {
-    data.name = name.toString();
-  }
+    if (name) {
+      data.name = name.toString();
+    }
 
-  const res = await ClubService.updateClub(clubId, data);
-  window.location.reload();
-  return res;
+    const res = await ClubService.updateClub(clubId, data);
+    window.location.reload();
+    return {
+      message: "",
+      error: null,
+      data: res.data,
+    };
+  } catch (error: any) {
+    return {
+      message: error.response.data.message,
+      error,
+      data: null,
+    };
+  }
 }
 
 function EditClub({ loaderData, actionData }: Route.ComponentProps) {
@@ -63,6 +75,12 @@ function EditClub({ loaderData, actionData }: Route.ComponentProps) {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [emblem, setEmblem] = useState<any>();
   const [changeEmblem, setChangeEmblem] = useState(false);
+
+  useEffect(() => {
+    if (actionData?.message) {
+      toast.error(actionData?.message);
+    }
+  }, [actionData]);
 
   const navigate = useNavigate();
 

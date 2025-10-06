@@ -1,15 +1,13 @@
-import { PlusIcon } from "lucide-react";
-import React from "react";
-import { useNavigate, useOutlet, useOutletContext } from "react-router";
-import AppButton from "~/components/general/AppButton/AppButton";
+import { useNavigate, useOutletContext } from "react-router";
 import AppText from "~/components/general/AppText/AppText";
-import Icon from "~/components/icon";
 import { useUserStore } from "~/store/userStore";
 import ImportAndAdd from "../ImportAndAdd";
 
-type Props = {};
+interface Props {
+  setSelectAllState: (value: boolean) => void;
+}
 
-function Info({}: Props) {
+function Info({ setSelectAllState }: Props) {
   const navigate = useNavigate();
   const userConnected = useUserStore((state) => state.user);
   const userConnecteRole: string | undefined = useOutletContext();
@@ -31,7 +29,7 @@ function Info({}: Props) {
       </div>
       <div className="flex gap-3 items-end">
         {userConnecteRole !== "LICENSED" && userConnected?.club ? (
-          <ImportAndAdd />
+          <ImportAndAdd setSelectAllState={setSelectAllState} />
         ) : (
           <></>
         )}
