@@ -1,4 +1,4 @@
-import { useNavigate, useOutletContext } from "react-router";
+import { useOutletContext } from "react-router";
 import AppText from "~/components/general/AppText/AppText";
 import { useUserStore } from "~/store/userStore";
 import ImportAndAdd from "../ImportAndAdd";
@@ -8,7 +8,6 @@ interface Props {
 }
 
 function Info({ setSelectAllState }: Props) {
-  const navigate = useNavigate();
   const userConnected = useUserStore((state) => state.user);
   const userConnecteRole: string | undefined = useOutletContext();
 

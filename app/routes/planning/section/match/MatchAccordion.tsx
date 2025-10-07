@@ -17,10 +17,17 @@ interface Props {
   handleNavigate: (path: string, query: string) => void;
   userConnected?: UserStore["user"];
   userConnecteRole?: string;
+  handleChangeSelect: (e: boolean, matchId: string) => void;
 }
 
 function MatchAccordion(props: Props) {
-  const { data, handleNavigate, userConnecteRole, userConnected } = props;
+  const {
+    data,
+    handleNavigate,
+    userConnecteRole,
+    userConnected,
+    handleChangeSelect,
+  } = props;
 
   // for select all match to delete
   const selectAllMatchContext = useContext(SelectAllContext);
@@ -76,6 +83,7 @@ function MatchAccordion(props: Props) {
               handleNavigate={handleNavigate}
               userConnecteRole={userConnecteRole}
               userConnected={userConnected}
+              handleChangeSelect={handleChangeSelect}
             />
           </AccordionContent>
         </AccordionItem>

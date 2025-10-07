@@ -19,7 +19,6 @@ export const handleDeleteSelect = (
       localStorage.setItem("matchToDelete", JSON.stringify(matchToDelete));
     }
   } else {
-    console.log(matchToDelete.indexOf(matchId));
     matchToDelete.splice(matchToDelete.indexOf(matchId), 1);
     localStorage.setItem("matchToDelete", JSON.stringify(matchToDelete));
   }

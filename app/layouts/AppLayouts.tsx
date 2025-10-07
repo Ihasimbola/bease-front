@@ -1,20 +1,8 @@
-import React, {
-  use,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
-import {
-  Navigate,
-  Outlet,
-  useLocation,
-  useNavigation,
-  useOutletContext,
-} from "react-router";
+import React, { useEffect, useState, type ReactNode } from "react";
+import { useNavigation } from "react-router";
 import Icon from "~/components/icon";
 import Pub from "~/components/layout/pub/Pub";
-import AuthProvider, { useAuth } from "~/libs/auth";
+import AuthProvider from "~/libs/auth";
 import Sidebar from "~/routes/sidebar/Sidebar";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { Toaster } from "~/components/ui/sonner";

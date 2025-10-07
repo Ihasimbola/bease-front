@@ -46,7 +46,6 @@ function ClubDetails({ loaderData }: Route.ComponentProps) {
   const club = loaderData?.data?.club;
   const categories = loaderData?.data?.categories;
   const admin = loaderData?.data?.admin;
-  console.log(categories);
 
   const clubAdminProfilImg = admin?.user?.profile
     ? `${apiBaseUrl}files/image/${admin?.user?.profile}`

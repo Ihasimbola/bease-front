@@ -1,5 +1,5 @@
 import { PlusIcon } from "lucide-react";
-import { useNavigate } from "react-router";
+import { useNavigate, useOutletContext } from "react-router";
 import AppButton from "~/components/general/AppButton/AppButton";
 import AppText from "~/components/general/AppText/AppText";
 import Icon from "~/components/icon";
@@ -12,10 +12,11 @@ interface Props {
 
 function ImportAndAdd({ setSelectAllState }: Props) {
   const navigate = useNavigate();
+  const context = useOutletContext();
 
   return (
     <>
-      <div className="flex flex-col items-center lg:justify-end gap-3 mt-5">
+      <div className="flex flex-col items-end lg:justify-end gap-3 mt-5">
         <div className="flex flex-col lg:flex-row gap-3">
           <AppButton onClick={() => navigate("import-match")}>
             <Icon name="ImportIcon" />
@@ -30,24 +31,26 @@ function ImportAndAdd({ setSelectAllState }: Props) {
             </AppText>
           </AppButton>
         </div>
-        <div className="flex flex-col gap-3 justify-end self-end">
-          <AppButton
-            variant="outlined"
-            type="button"
-            onClick={() => navigate("delete-selected")}
-          >
-            Supprimer les matchs selectionnées
-          </AppButton>
-          <div className="flex items-center gap-1 self-end">
-            <Checkbox
-              id="select-all"
-              onCheckedChange={(e) => setSelectAllState(Boolean(e))}
-            />
-            <label htmlFor="select-all">
-              <AppText weight="semibold">Tout selectionner</AppText>
-            </label>
+        {context === "ADMIN" && (
+          <div className="flex flex-col gap-3 justify-end self-end">
+            <AppButton
+              variant="outlined"
+              type="button"
+              onClick={() => navigate("delete-selected")}
+            >
+              Supprimer les matchs selectionnées
+            </AppButton>
+            <div className="flex items-center gap-1 self-end">
+              <Checkbox
+                id="select-all"
+                onCheckedChange={(e) => setSelectAllState(Boolean(e))}
+              />
+              <label htmlFor="select-all">
+                <AppText weight="semibold">Tout selectionner</AppText>
+              </label>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   );

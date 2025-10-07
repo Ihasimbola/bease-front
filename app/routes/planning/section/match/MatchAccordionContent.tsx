@@ -19,6 +19,7 @@ function MatchAccordionContent(props: MatchProps) {
     handleNavigate,
     userConnected,
     userConnecteRole,
+    handleChangeSelect,
   } = props;
 
   // get limit number of match from localstorage
@@ -50,27 +51,6 @@ function MatchAccordionContent(props: MatchProps) {
       );
     }
   }, [selectAllMatchContext]);
-
-  const handleChangeSelect = (e: boolean, matchId: string) => {
-    setAllMatchSelectState((prev) => {
-      return prev.map((match, idx) => {
-        if (match.id === matchId) {
-          return {
-            id: match.id,
-            checked: e,
-          };
-        } else {
-          return {
-            id: match.id,
-            checked: prev[idx].checked,
-          };
-        }
-      });
-    });
-
-    // update value in localstorage
-    handleDeleteSelect(matchId, e);
-  };
 
   return (
     <div>

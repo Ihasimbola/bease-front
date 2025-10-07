@@ -111,6 +111,7 @@ function MatchDetail(props: Props) {
               handleNavigate={handleNavigate}
               userConnecteRole={userConnecteRole}
               userConnected={userConnected}
+              handleChangeSelect={handleChangeSelect}
             />
           </section>
         )}
