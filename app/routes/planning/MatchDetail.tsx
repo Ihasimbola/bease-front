@@ -3,6 +3,9 @@ import type { MatchType } from "./section/match/type";
 import Match from "./section/match/Match";
 import MatchAccordion from "./section/match/MatchAccordion";
 import AppButton from "~/components/general/AppButton/AppButton";
+import { useContext, useEffect, useState } from "react";
+import { handleDeleteSelect } from "./section/match/handeDeleteSelect";
+import { SelectAllContext } from "~/hooks/useSelectedAllContext";
 
 interface Props {
   userConnecteRole: string | undefined;
@@ -12,6 +15,17 @@ interface Props {
   handleGetMore: () => void;
 }
 
+const createMatchToDeleteData = (matchs: MatchType[]) => {
+  const data = matchs.map((match) => match.matches);
+  const dataToDelete = [];
+  for (let i = 0; i < data.length; ++i) {
+    for (let j = 0; j < data[i].length; ++j) {
+      dataToDelete.push(data[i][j]);
+    }
+  }
+  return dataToDelete.map((match) => ({ id: match._id, checked: false }));
+};
+
 function MatchDetail(props: Props) {
   const {
     matchData,
@@ -20,6 +34,53 @@ function MatchDetail(props: Props) {
     handleNavigate,
     handleGetMore,
   } = props;
+
+  const [matchsToDelete, setMatchsToDelete] = useState<
+    { id: string; checked: boolean }[]
+  >(createMatchToDeleteData(matchData));
+
+  // select all matchs for deleting context
+  const selectAllMatchsContext = useContext(SelectAllContext);
+
+  const handleChangeSelect = (e: boolean, matchId: string) => {
+    setMatchsToDelete((prev) => {
+      return prev.map((match, idx) => {
+        if (match.id === matchId) {
+          return {
+            id: match.id,
+            checked: e,
+          };
+        } else {
+          return {
+            id: match.id,
+            checked: prev[idx].checked,
+          };
+        }
+      });
+    });
+
+    // update value in localstorage
+    handleDeleteSelect(matchId, e);
+  };
+
+  // toggle all state depends on select all context
+  useEffect(() => {
+    if (selectAllMatchsContext) {
+      setMatchsToDelete((prevState) => {
+        return prevState.map((match) => ({
+          id: match.id,
+          checked: true,
+        }));
+      });
+    } else {
+      setMatchsToDelete((prevState) => {
+        return prevState.map((match) => ({
+          id: match.id,
+          checked: false,
+        }));
+      });
+    }
+  }, [selectAllMatchsContext]);
 
   return (
     <>
@@ -32,6 +93,8 @@ function MatchDetail(props: Props) {
             headerData: matchTableHeader,
             bodyData: match.matches,
             postHeaderData: postTableHeader,
+            matchsToDelete: matchsToDelete,
+            handleChangeSelect: handleChangeSelect,
             tableTitle: new Date(match._id).toLocaleString("fr-FR", {
               day: "2-digit",
               month: "long",

@@ -5,7 +5,7 @@ import AppText from "~/components/general/AppText/AppText";
 import { useDialog } from "~/hooks/useDialog";
 import { useFetcherEffect } from "~/hooks/useFetcherEffect";
 import { MatchService } from "~/services/MatchService";
-import type { Route } from "../../match/+types/ConfirmDeleteMatch";
+import type { Route } from "./+types/ConfirmDeleteMatch";
 
 type Props = {};
 

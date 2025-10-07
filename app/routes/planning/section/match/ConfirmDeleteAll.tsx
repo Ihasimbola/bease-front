@@ -7,7 +7,6 @@ import type { Route } from "./+types/ConfirmDeleteAll";
 import { MatchService } from "~/services/MatchService";
 import { useEffect } from "react";
 import { toast } from "sonner";
-import { redirect } from "react-router";
 
 type Props = {};
 

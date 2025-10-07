@@ -7,6 +7,7 @@ import { Pen, Send, Trash2 } from "lucide-react";
 import { cn } from "~/lib/utils";
 import type { UserStore } from "~/store/userStore";
 import profile_placeholder from "~/assets/images/profile_placeholder.jpg";
+import { Checkbox } from "~/components/ui/checkbox";
 
 type Post = {
   licensedId: string;
@@ -25,6 +26,8 @@ export interface Props {
   handleNavigate: (path: string, query: string) => void;
   userConnected?: UserStore["user"];
   userConnecteRole?: string;
+  matchsToDelete?: { id: string; checked: boolean }[];
+  handleChangeSelect: (e: boolean, matchId: string) => void;
 }
 
 function Match(props: Props) {
@@ -35,14 +38,18 @@ function Match(props: Props) {
     handleNavigate,
     userConnected,
     userConnecteRole,
+    matchsToDelete,
+    handleChangeSelect,
   } = props;
   return matchTable(
     headerData,
     bodyData,
     tableTitle,
     handleNavigate,
+    handleChangeSelect,
     userConnected,
-    userConnecteRole
+    userConnecteRole,
+    matchsToDelete
   );
 }
 
@@ -51,8 +58,10 @@ function matchTable(
   bodyData: Props["bodyData"],
   tableTitle: string,
   handleNavigate: (path: string, query: string) => void,
+  handleChangeSelect: (e: boolean, matchId: string) => void,
   userConnected?: UserStore["user"],
-  userConnecteRole?: string
+  userConnecteRole?: string,
+  matchsToDelete: { id: string; checked: boolean }[] = []
 ) {
   // get limit number of match from localstorage
   const limit = localStorage.getItem("limit") || "2";
@@ -168,6 +177,23 @@ function matchTable(
                       );
                     }}
                   />
+                </td>
+              )}
+
+              {userConnecteRole === "ADMIN" && (
+                <td className="">
+                  <div className="mt-1">
+                    <Checkbox
+                      id={`delete-${data._id}`}
+                      onCheckedChange={(e) => {
+                        handleChangeSelect(Boolean(e), data._id);
+                      }}
+                      checked={
+                        matchsToDelete.find((match) => data._id === match.id)
+                          ?.checked
+                      }
+                    />
+                  </div>
                 </td>
               )}
             </tr>
