@@ -1,4 +1,5 @@
 import { PlusIcon } from "lucide-react";
+import { useContext } from "react";
 import { useNavigate, useOutletContext } from "react-router";
 import AppButton from "~/components/general/AppButton/AppButton";
 import AppText from "~/components/general/AppText/AppText";
@@ -13,6 +14,7 @@ interface Props {
 function ImportAndAdd({ setSelectAllState }: Props) {
   const navigate = useNavigate();
   const context = useOutletContext();
+  const selectAllContext = useContext(SelectAllContext);
 
   return (
     <>
@@ -44,6 +46,7 @@ function ImportAndAdd({ setSelectAllState }: Props) {
               <Checkbox
                 id="select-all"
                 onCheckedChange={(e) => setSelectAllState(Boolean(e))}
+                checked={selectAllContext}
               />
               <label htmlFor="select-all">
                 <AppText weight="semibold">Tout selectionner</AppText>

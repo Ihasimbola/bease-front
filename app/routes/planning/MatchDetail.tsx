@@ -3,7 +3,7 @@ import type { MatchType } from "./section/match/type";
 import Match from "./section/match/Match";
 import MatchAccordion from "./section/match/MatchAccordion";
 import AppButton from "~/components/general/AppButton/AppButton";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { handleDeleteSelect } from "./section/match/handeDeleteSelect";
 import { SelectAllContext } from "~/hooks/useSelectedAllContext";
 
@@ -13,18 +13,9 @@ interface Props {
   handleNavigate: (path: string, query: string) => void;
   matchData: MatchType[];
   handleGetMore: () => void;
+  matchsToDelete: { id: string; checked: boolean }[];
+  handleChangeSelect: (e: boolean, matchId: string) => void;
 }
-
-const createMatchToDeleteData = (matchs: MatchType[]) => {
-  const data = matchs.map((match) => match.matches);
-  const dataToDelete = [];
-  for (let i = 0; i < data.length; ++i) {
-    for (let j = 0; j < data[i].length; ++j) {
-      dataToDelete.push(data[i][j]);
-    }
-  }
-  return dataToDelete.map((match) => ({ id: match._id, checked: false }));
-};
 
 function MatchDetail(props: Props) {
   const {
@@ -33,54 +24,9 @@ function MatchDetail(props: Props) {
     userConnected,
     handleNavigate,
     handleGetMore,
+    matchsToDelete,
+    handleChangeSelect,
   } = props;
-
-  const [matchsToDelete, setMatchsToDelete] = useState<
-    { id: string; checked: boolean }[]
-  >(createMatchToDeleteData(matchData));
-
-  // select all matchs for deleting context
-  const selectAllMatchsContext = useContext(SelectAllContext);
-
-  const handleChangeSelect = (e: boolean, matchId: string) => {
-    setMatchsToDelete((prev) => {
-      return prev.map((match, idx) => {
-        if (match.id === matchId) {
-          return {
-            id: match.id,
-            checked: e,
-          };
-        } else {
-          return {
-            id: match.id,
-            checked: prev[idx].checked,
-          };
-        }
-      });
-    });
-
-    // update value in localstorage
-    handleDeleteSelect(matchId, e);
-  };
-
-  // toggle all state depends on select all context
-  useEffect(() => {
-    if (selectAllMatchsContext) {
-      setMatchsToDelete((prevState) => {
-        return prevState.map((match) => ({
-          id: match.id,
-          checked: true,
-        }));
-      });
-    } else {
-      setMatchsToDelete((prevState) => {
-        return prevState.map((match) => ({
-          id: match.id,
-          checked: false,
-        }));
-      });
-    }
-  }, [selectAllMatchsContext]);
 
   return (
     <>
@@ -112,6 +58,7 @@ function MatchDetail(props: Props) {
               userConnecteRole={userConnecteRole}
               userConnected={userConnected}
               handleChangeSelect={handleChangeSelect}
+              matchsToDelete={matchsToDelete}
             />
           </section>
         )}

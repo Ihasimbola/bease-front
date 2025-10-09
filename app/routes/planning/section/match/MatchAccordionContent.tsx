@@ -20,37 +20,11 @@ function MatchAccordionContent(props: MatchProps) {
     userConnected,
     userConnecteRole,
     handleChangeSelect,
+    matchsToDelete,
   } = props;
 
   // get limit number of match from localstorage
   const limit = localStorage.getItem("limit") || "2";
-
-  const [allMatchSelectState, setAllMatchSelectState] = useState(
-    bodyData.map((match) => ({
-      id: match._id,
-      checked: false,
-    }))
-  );
-
-  const selectAllMatchContext = useContext(SelectAllContext);
-
-  useEffect(() => {
-    if (selectAllMatchContext) {
-      setAllMatchSelectState(
-        bodyData.map((match) => ({
-          id: match._id,
-          checked: true,
-        }))
-      );
-    } else {
-      setAllMatchSelectState(
-        bodyData.map((match) => ({
-          id: match._id,
-          checked: false,
-        }))
-      );
-    }
-  }, [selectAllMatchContext]);
 
   return (
     <div>
@@ -73,7 +47,10 @@ function MatchAccordionContent(props: MatchProps) {
                   onCheckedChange={(e) => {
                     handleChangeSelect(Boolean(e), data._id);
                   }}
-                  checked={allMatchSelectState[idx].checked}
+                  checked={
+                    matchsToDelete?.find((match) => data._id === match.id)
+                      ?.checked
+                  }
                 />
                 <label htmlFor={`delete-${data._id}`}>
                   <AppText weight="semibold" size="xs">

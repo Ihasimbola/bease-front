@@ -18,6 +18,7 @@ interface Props {
   userConnected?: UserStore["user"];
   userConnecteRole?: string;
   handleChangeSelect: (e: boolean, matchId: string) => void;
+  matchsToDelete: { id: string; checked: boolean }[];
 }
 
 function MatchAccordion(props: Props) {
@@ -27,30 +28,11 @@ function MatchAccordion(props: Props) {
     userConnecteRole,
     userConnected,
     handleChangeSelect,
+    matchsToDelete,
   } = props;
 
   // for select all match to delete
   const selectAllMatchContext = useContext(SelectAllContext);
-
-  useEffect(() => {
-    const matches: any = data.map((match) => match.matches);
-    const matchToDelete = [];
-
-    for (let i = 0; i < matches.length; ++i) {
-      for (let j = 0; j < matches[i].length; ++j) {
-        matchToDelete.push(matches[i][j]);
-      }
-    }
-
-    if (selectAllMatchContext) {
-      localStorage.setItem(
-        "matchToDelete",
-        JSON.stringify(matchToDelete.map((match) => match._id))
-      );
-    } else {
-      localStorage.setItem("matchToDelete", JSON.stringify([]));
-    }
-  }, [selectAllMatchContext]);
 
   return (
     <Accordion
@@ -84,6 +66,7 @@ function MatchAccordion(props: Props) {
               userConnecteRole={userConnecteRole}
               userConnected={userConnected}
               handleChangeSelect={handleChangeSelect}
+              matchsToDelete={matchsToDelete}
             />
           </AccordionContent>
         </AccordionItem>
