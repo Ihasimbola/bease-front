@@ -87,7 +87,6 @@ function MatchFilters({
                       value={yearFilter}
                       onChange={(e) => handleChangeYearFilter(e.target.value)}
                       onKeyDown={(e) => {
-                        console.log(e);
                         // if user press enter key then submit
                         if (e.key === "Enter") {
                           handleToggleActiveFilter(
