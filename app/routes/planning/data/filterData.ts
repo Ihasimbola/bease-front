@@ -12,12 +12,19 @@ export const filters = [
     active: true
   },
   {
+    id: 2,
+    label: "Aujourd'hui",
+    mode: "today",
+    active: false
+  },
+  {
     id: 1,
     label: "Par mois",
     mode: "byMonth",
     active: false,
     args: new Date().getMonth() + 1
   },
+  
   
 ];
 

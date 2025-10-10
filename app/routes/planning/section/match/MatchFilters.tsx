@@ -26,6 +26,8 @@ interface Props {
   handleToggleActiveFilter: (id: string | number) => void;
   handleChangeSelectMonth: (id: number) => void;
   activeFilter?: string;
+  bubbleLimit?: string;
+  handleChangeBubbleLimit: (value: string) => void;
 }
 
 function MatchFilters({
@@ -35,6 +37,8 @@ function MatchFilters({
   handleChangeYearFilter,
   yearFilter,
   activeFilter,
+  bubbleLimit,
+  handleChangeBubbleLimit,
 }: Props) {
   return (
     <section className="mt-8">
@@ -48,6 +52,47 @@ function MatchFilters({
               id={filter.id}
               handleClick={handleToggleActiveFilter}
             />
+
+            {/****************** IF FILTER IS BUBBLE **************************/}
+            {filter.mode === "bubble" && (
+              <div className="flex items-center gap-2 mt-1">
+                {activeFilter === "bubble" && (
+                  <>
+                    <AppText size="xs" color="gray">
+                      Dans
+                    </AppText>
+                    <Input
+                      type="number"
+                      id={filter.id.toString()}
+                      className="w-[80px]"
+                      value={bubbleLimit}
+                      min={1}
+                      onChange={(e) => handleChangeBubbleLimit(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          handleToggleActiveFilter(e.currentTarget.id);
+                        }
+                      }}
+                    />
+                    <AppText size="xs" color="gray">
+                      Jours
+                    </AppText>
+                    <button
+                      className="bg-black cursor-pointer rounded-[8px] h-fit py-2 px-2"
+                      type="button"
+                      id={filter.id.toString()}
+                      onClick={(e) =>
+                        handleToggleActiveFilter(e.currentTarget.id)
+                      }
+                    >
+                      <Check size={18} className="stroke-white" />
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
+
+            {/***************** IF FILTER IS BY MONTH **************************/}
             {filter.mode === "byMonth" && (
               <div className="flex gap-2 mt-1">
                 {activeFilter === "byMonth" && (

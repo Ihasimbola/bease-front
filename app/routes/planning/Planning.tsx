@@ -100,7 +100,13 @@ function Planning({ loaderData }: Route.ComponentProps) {
   );
   const [monthSelect, setMonthSelect] = useState(new Date().getMonth() + 1);
   const [yearFilter, setYearFilter] = useState(new Date().getFullYear());
+  const [bubbleLimit, setBubbleLimit] = useState(Number(7).toString());
   const navigate = useNavigate();
+
+  // handle change bubble limi
+  function handleChangeBubbleLimit(limit: string) {
+    setBubbleLimit(limit);
+  }
 
   // handle change select month
   function handleChangeSelectMonth(monthIdx: number) {
@@ -201,10 +207,13 @@ function Planning({ loaderData }: Route.ComponentProps) {
         });
         return;
       } else if (mode === "bubble") {
-        delete currentQuery.args;
         setSearchParam({
-          ...currentQuery,
+          args: bubbleLimit,
           mode: mode,
+        });
+      } else if (mode === "today") {
+        setSearchParam({
+          mode: "today",
         });
       }
     }
@@ -310,6 +319,8 @@ function Planning({ loaderData }: Route.ComponentProps) {
                 yearFilter={yearFilter.toString()}
                 handleChangeYearFilter={handleChangeYearFilter}
                 activeFilter={filterItems.find((filter) => filter.active)?.mode}
+                bubbleLimit={bubbleLimit}
+                handleChangeBubbleLimit={handleChangeBubbleLimit}
               />
               <MatchDetail
                 matchData={matchDataFromLoader}
