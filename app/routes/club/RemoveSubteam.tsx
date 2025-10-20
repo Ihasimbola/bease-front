@@ -4,7 +4,6 @@ import AppText from "~/components/general/AppText/AppText";
 import AppButton from "~/components/general/AppButton/AppButton";
 import { useState } from "react";
 import { Form, redirect, useNavigate } from "react-router";
-import { SubteamService } from "~/services/SubteamService";
 import { CategoryService } from "~/services/CategoryService";
 
 export async function clientAction({

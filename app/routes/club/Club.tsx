@@ -132,6 +132,21 @@ function Club({ loaderData }: Route.ComponentProps) {
               )}
             </ul>
           </div>
+
+          <div className="mt-6 bg-white p-4 rounded-[20px] flex-1">
+            <AppText as="h3" weight="semibold">
+              Les autres appelation possible pour votre club
+            </AppText>
+            <ul className="flex flex-col gap-1 mt-2 ml-2 category-list">
+              {club.subnames.map((subname: string, idx: number) => (
+                <li key={`category-${idx}`} className="p-2 cursor-pointer">
+                  <AppText color="gray" size="xs">
+                    {subname}
+                  </AppText>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       )}
       {club && (

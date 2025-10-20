@@ -212,6 +212,45 @@ function EditClub({ loaderData, actionData }: Route.ComponentProps) {
             Ajouter une équipe
           </AppButton>
         </div>
+
+        <div className="mt-6 bg-white p-4 rounded-[20px] flex-1">
+          <AppText as="h3" weight="semibold">
+            Autre noms possible pour votre Club
+          </AppText>
+          <ul className="flex flex-col gap-1 mt-2 ml-2 category-list">
+            {club.subnames.map((subname: string, idx: number) => (
+              <li
+                key={`category-${idx}`}
+                className="p-2 cursor-pointer flex justify-between"
+              >
+                <AppText color="gray" size="xs">
+                  {subname}
+                </AppText>
+                {subname && (
+                  <div
+                    className=""
+                    onClick={() => {
+                      navigate("destroy-subname?subname=" + subname);
+                    }}
+                    id={subname}
+                  >
+                    <Trash2Icon
+                      className="stroke-red hover:brightness-110"
+                      size={20}
+                    />
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+          <AppButton
+            className=" mt-4"
+            onClick={() => navigate("create-subname")}
+          >
+            <PlusIcon color="white" />
+            Ajouter un nom
+          </AppButton>
+        </div>
       </div>
       <Outlet />
     </section>

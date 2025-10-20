@@ -42,4 +42,13 @@ export class ClubService extends Http {
       throw error;
     }
   }
+
+  static async updateSubnames(clubId: string, subnames: string[]) {
+    try {
+      const res = await this.patch(`club/${clubId}`, { subnames });
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

@@ -33,8 +33,10 @@ export default [
       route('club/edit/:id', "./routes/club/EditClub.tsx", [
         route('create-category', "./routes/club/CreateCategory.tsx"),
         route('create-subteam', "./routes/club/CreateSubteam.tsx"),
+        route('create-subname', "./routes/club/CreateSubname.tsx"),
         route('destroy-subteam', "./routes/club/RemoveSubteam.tsx"),
         route('destroy-category', "./routes/club/RemoveCategory.tsx"),
+        route('destroy-subname', "./routes/club/RemoveSubname.tsx"),
       ]),
       route('membre', "./routes/membre/Membre.tsx", [
         route('import-excel', "./routes/membre/ImportExcelDialog.tsx"),

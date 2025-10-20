@@ -3,13 +3,13 @@ export const filters = [
     id: 3,
     label: "Tout les matchs",
     mode: "all",
-    active: false
+    active: true
   },
   {
     id: 0,
     label: "Les plus proches",
     mode: "bubble",
-    active: true
+    active: false
   },
   {
     id: 2,
