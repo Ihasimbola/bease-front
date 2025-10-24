@@ -59,6 +59,11 @@ export const postTableHeader = [
     dataKey: "Buvette",
     iconName: "BuvetteIcon"
   },
+  {
+    label: "Responsable de salle",
+    dataKey: "Responsable de salle",
+    iconName: "ResponsableIcon"
+  },
 ]
 
 export const matchData = [
