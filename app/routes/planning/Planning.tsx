@@ -30,6 +30,7 @@ import { handleDeleteSelect } from "./section/match/handeDeleteSelect";
 export const limitInitialValue = 4;
 
 const createMatchToDeleteData = (matchs: MatchType[]) => {
+  console.log(matchs);
   const data = matchs.map((match) => match.matches);
   const dataToDelete = [];
   for (let i = 0; i < data.length; ++i) {
@@ -42,11 +43,12 @@ const createMatchToDeleteData = (matchs: MatchType[]) => {
 
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {
   const { isSuperAdmin } = await chekcIfSuperAdmin();
+  const url = new URL(request.url);
+  const searchParams = new URLSearchParams(url.search);
   if (isSuperAdmin) {
     return redirect("/planning/clubs");
   }
 
-  const url = new URL(request.url);
   const skip = url.searchParams.get("skip") || 0;
   const limit = url.searchParams.get("limit") || 0;
   const mode = url.searchParams.get("mode") || "";
@@ -64,12 +66,16 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
   }
 
   try {
+    // if a match is selected for delete or update or something else, then get this match
+    const matchId = searchParams.get("match");
+
     const res = await MatchService.getMatchByClub(
       +skip,
       +limit,
       "",
       mode,
-      args
+      args,
+      matchId || ""
     );
     return {
       message: "",

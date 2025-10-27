@@ -13,6 +13,11 @@ export const matchTableHeader = [
     iconName: "ChronoIcon"
   },
   {
+    label: "e-Marque V2",
+    dataKey: "eMarqueV2",
+    iconName: "ChronoIcon",
+  },
+  {
     label: "Division",
     dataKey: "division",
     iconName: "DivisionIcon"
@@ -63,7 +68,7 @@ export const postTableHeader = [
     label: "Responsable de salle",
     dataKey: "Responsable de salle",
     iconName: "ResponsableIcon"
-  },
+  }
 ]
 
 export const matchData = [

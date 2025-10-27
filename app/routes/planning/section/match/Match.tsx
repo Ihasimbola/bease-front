@@ -66,8 +66,6 @@ function matchTable(
   // get limit number of match from localstorage
   const limit = localStorage.getItem("limit") || "2";
 
-  console.log(bodyData);
-
   return (
     <div className="w-full bg-white p-6 rounded-2xl shadow-lg" key={tableTitle}>
       <div className="flex justify-between items-center">

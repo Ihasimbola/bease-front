@@ -11,7 +11,7 @@ type CreateMatchType = {
 }
 
 export class MatchService extends Http {
-  static async getMatchByClub(skipValue?: number, limitValue?: number, clubId?: string, mode?: string, args?: any) {
+  static async getMatchByClub(skipValue?: number, limitValue?: number, clubId?: string, mode?: string, args?: any, matchId?: string) {
     skipValue = skipValue || 0;
     try {
       if(clubId) {
@@ -22,11 +22,14 @@ export class MatchService extends Http {
       // create args query
       const argsQuery = args ? `&args=${args}` : "";
 
+      console.log(matchId)
+
       const res = await this.get(
         "match?skip=" + skipValue + 
         "&limit=" + limitValue + 
         "&mode=" + mode +
-        argsQuery
+        argsQuery + 
+        "&matchId=" + matchId
       );
       return res.data;
     } catch (error) {

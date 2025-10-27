@@ -59,6 +59,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
         place: formData.get("place")?.toString(),
         matchDate: date.toISOString(),
         startTime: formData.get("startTime")?.toString(),
+        eMarqueV2: formData.get("eMarque")?.toString() || "",
       });
 
       return redirect("/planning");
@@ -72,6 +73,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
       place: formData.get("place")?.toString(),
       matchDate: date.toISOString(),
       startTime: formData.get("startTime")?.toString(),
+      eMarqueV2: formData.get("eMarque")?.toString() || "",
       clubId,
     });
     return redirect("/planning");
@@ -258,17 +260,18 @@ function CreateMatch({ loaderData }: Route.ComponentProps) {
             )}
           </div>
 
-          {/* <div>
-            <label htmlFor="teamA">
-            <AppText weight="semibold">Equipe A</AppText>
-          </label>
-          <Input 
-            placeholder='BC KUNHEIM'
-            type="text"
-            name="teamA"
-            id="teamA"
-          />
-          </div> */}
+          <div className="flex-1">
+            <label htmlFor="eMarque">
+              <AppText weight="semibold">eMarque</AppText>
+            </label>
+            <Input
+              placeholder="BNRV8YAW"
+              type="text"
+              name="eMarque"
+              id="eMarque"
+              required={false}
+            />
+          </div>
         </div>
 
         <div className="sm:flex-row flex w-full gap-2">

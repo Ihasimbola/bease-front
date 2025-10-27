@@ -30,7 +30,7 @@ function MatchDetail(props: Props) {
 
   return (
     <>
-      <section className="hidden lg:flex w-full flex-col gap-10 mt-6">
+      <section className="hidden 2xl:flex w-full flex-col gap-10 mt-6">
         {matchData?.map((match, idx) =>
           Match({
             userConnecteRole,
@@ -51,7 +51,7 @@ function MatchDetail(props: Props) {
       </section>
       {!location.pathname.includes("create-match") &&
         !location.pathname.includes("edit-match") && (
-          <section className="mt-6 lg:hidden">
+          <section className="mt-6 2xl:hidden">
             <MatchAccordion
               data={matchData}
               handleNavigate={handleNavigate}
