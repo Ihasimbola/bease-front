@@ -16,12 +16,14 @@ export const formContainerClassName =
   "form-container flex flex-col w-[95%] lg:w-[65%] max-w-7xl items-center self-center justify-self-center px-4 py-5 lg:px-5 lg:py-10 rounded";
 
 export async function clientAction({ request }: Route.ActionArgs) {
+  console.log(request);
   try {
     let formData = await request.formData();
     const email = formData.get("email")?.toString()!;
     const password = formData.get("password")?.toString()!;
 
     const res = await UserService.login({ email, password });
+    console.log(res.adminDoc);
     localStorage.setItem("token", "Bearer " + res.token);
     localStorage.setItem("refreshToken", "Bearer " + res.refreshToken);
     localStorage.setItem("user", JSON.stringify(res.adminDoc));
@@ -58,7 +60,7 @@ function Login({ actionData }: Route.ComponentProps) {
   }, [fetcher?.data]);
 
   return (
-    <fetcher.Form className={cn([formContainerClassName])} method="post">
+    <fetcher.Form className={cn([formContainerClassName])} method="POST">
       <div className="mb-20">
         <Icon name="LogoBease" />
       </div>
@@ -129,7 +131,7 @@ function Login({ actionData }: Route.ComponentProps) {
           </AppText>
         </Link>
       </div>
-      <AppButton className="w-full mt-8">
+      <AppButton className="w-full mt-8" type="submit">
         {fetcher.state !== "idle" ? (
           <LoaderCircle
             className="loader-circle"
@@ -137,7 +139,7 @@ function Login({ actionData }: Route.ComponentProps) {
             stroke="stroke-white"
           />
         ) : (
-          "Login"
+          "Se connecter"
         )}
       </AppButton>
     </fetcher.Form>

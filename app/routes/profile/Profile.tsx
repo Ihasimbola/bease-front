@@ -69,6 +69,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
         phone: formData.get("phone")?.toString(),
         age: Number(formData.get("age")?.toString()),
         gender: formData.get("gender")?.toString(),
+        number: formData.get("number")?.toString(),
       });
     }
 
@@ -250,6 +251,24 @@ function Profile({ loaderData }: Route.ComponentProps) {
               </Select>
             </div>
           )}
+
+          <div className="flex flex-col gap-3">
+            <div>
+              <label htmlFor="number">
+                <AppText weight="semibold" size="sm">
+                  Numéro de licence
+                </AppText>
+              </label>
+              <Input
+                type="text"
+                name="number"
+                id="number"
+                defaultValue={user?.number || ""}
+                placeholder="VT820605"
+              />
+            </div>
+          </div>
+
           <input
             type="text"
             defaultValue={userConnecteRole as string}

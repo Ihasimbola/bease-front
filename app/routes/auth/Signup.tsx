@@ -36,6 +36,7 @@ import {
   SelectContent,
   SelectValue,
 } from "~/components/ui/select";
+import NumberIcon from "~/components/icon/NumberIcon";
 
 type Props = {};
 
@@ -97,6 +98,7 @@ export async function clientAction({ request }: Route.ActionArgs) {
         gender: user.gender,
         password: user.password,
         phone: user.phone,
+        number: user.number || "",
         isConfirmed: true,
         category: licensedcategory || "",
         club: club,
@@ -321,29 +323,52 @@ function Signup({ actionData }: Route.ComponentProps) {
               )}
             </div>
 
-            <div className="flex-1">
-              <AppText color="white" weight="semibold">
-                Genre
-              </AppText>
-              <Select name="gender">
-                <SelectTrigger className="bg-white">
-                  <SelectValue placeholder="Selectionner une categorie" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup className="bg-white">
-                    <SelectItem value="M">Masculin</SelectItem>
-                    <SelectItem value="F">Feminin</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              {errors?.gender && (
-                <AppText color="red" size="xs">
-                  {errors.gender[0]}
+            <div className="xl:flex flex-1">
+              <div className="flex-1">
+                <AppText color="white" weight="semibold">
+                  Genre
                 </AppText>
-              )}
+                <div className="mt-2">
+                  <Select name="gender">
+                    <SelectTrigger className="bg-white">
+                      <SelectValue placeholder="Selectionner une categorie" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup className="bg-white">
+                        <SelectItem value="M">Masculin</SelectItem>
+                        <SelectItem value="F">Feminin</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {errors?.gender && (
+                  <AppText color="red" size="xs">
+                    {errors.gender[0]}
+                  </AppText>
+                )}
+              </div>
             </div>
           </div>
         )}
+
+        <div className="self-start w-full">
+          <label htmlFor="number">
+            <AppText color="white" weight="semibold">
+              Numéro de licence
+            </AppText>
+          </label>
+          <div>
+            <div className="absolute mt-2 ml-2">
+              <NumberIcon />
+            </div>
+            <Input
+              className="text-black bg-white mt-1 pl-10 rounded-[20px] h-[40px]"
+              id="number"
+              type="text"
+              name="number"
+            />
+          </div>
+        </div>
 
         <div className="flex gap-5 justify-between w-full ">
           <div className="w-full">

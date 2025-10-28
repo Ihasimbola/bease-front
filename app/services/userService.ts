@@ -19,7 +19,9 @@ export type LicensedResponse = {
   category: {
     _id: string;
     name: string;
-  }
+  };
+  number: string;
+
 }
 
 export class UserService extends Http {

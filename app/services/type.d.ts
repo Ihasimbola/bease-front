@@ -13,6 +13,7 @@ export interface CreateLicensed extends CreateAdmin {
   isConfirmed: boolean;
   category: string;
   club: string;
+  number: string;
 }
 
 export interface CreateClub {

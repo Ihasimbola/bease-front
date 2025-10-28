@@ -14,6 +14,10 @@ export const tableHeader = [
     key: "age"
   },
   {
+    label: "Numéro de licence",
+    key: "number"
+  },
+  {
     label: "Catégorie",
     key: "category"
   },

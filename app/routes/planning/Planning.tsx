@@ -30,7 +30,6 @@ import { handleDeleteSelect } from "./section/match/handeDeleteSelect";
 export const limitInitialValue = 4;
 
 const createMatchToDeleteData = (matchs: MatchType[]) => {
-  console.log(matchs);
   const data = matchs.map((match) => match.matches);
   const dataToDelete = [];
   for (let i = 0; i < data.length; ++i) {

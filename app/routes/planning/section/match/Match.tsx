@@ -225,7 +225,7 @@ export function findPostCell(
   const limit = localStorage.getItem("limit") || "2";
 
   return post ? (
-    <div className="flex items-center gap-2 relative pt-2">
+    <div className="flex items-center gap-2 relative py-2">
       {post.profile ? (
         <img
           src={import.meta.env.VITE_API_URL + `files/image/${post.profile}`}

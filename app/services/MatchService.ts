@@ -22,7 +22,6 @@ export class MatchService extends Http {
       // create args query
       const argsQuery = args ? `&args=${args}` : "";
 
-      console.log(matchId)
 
       const res = await this.get(
         "match?skip=" + skipValue + 

@@ -43,6 +43,7 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
       isConfirmed: membre?.isConfirmed,
       gender: membre?.gender,
       _id: membre?._id,
+      number: membre?.number || "",
     }));
     return {
       data,
