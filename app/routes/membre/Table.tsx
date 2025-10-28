@@ -30,7 +30,7 @@ const Table = (props: Props) => {
         className,
       ])}
     >
-      <div className="border-b pb-2">
+      <div className="border-b pb-2 min-w-[900px]">
         <ul className=" head gap-2 min-w-[670px]">
           {tableHeader.map((head, idx) => (
             <li key={`header-${idx}`}>
@@ -40,7 +40,7 @@ const Table = (props: Props) => {
         </ul>
       </div>
 
-      <div className="flex flex-col gap-4 mt-2">
+      <div className="flex flex-col gap-4 mt-2 min-w-[900px]">
         {tableData.map((data, idx) => (
           <ul
             className="items-center list-item gap-2 min-w-[670px] rounded-[20px] bg-white p-4 shadow-sm hover:bg-gray-100"
