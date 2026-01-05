@@ -63,9 +63,7 @@ function ImportExcelDialog() {
       toast.success("Certains membres ont déjà un compte.");
       navigate(-1);
     } else if (fetcher.data?.error?.message) {
-      toast.error(
-        fetcher.data.error?.response?.data?.message || "Une erreur est survenue"
-      );
+      toast.error(fetcher.data.error?.message || "Une erreur est survenue");
       navigate(-1);
     } else if (fetcher.data?.data) {
       navigate(-1);
@@ -108,7 +106,7 @@ function ImportExcelDialog() {
               {`Assurez-vous bien que les champs suivants sont remplis:`}
             </AppText>
             <AppText size="sm" weight="semibold">
-              {`Nom, Prénom, Né(e) le, Sexe, Catégorie et email.`}
+              {`Nom, Prénom, Né(e) le, Sexe, Catégorie et Email.`}
             </AppText>
             <AppText size="xs">
               Si les colonnes ne correspondent pas, le fichier ne sera pas

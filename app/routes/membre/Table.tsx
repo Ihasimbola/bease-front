@@ -49,26 +49,36 @@ const Table = (props: Props) => {
           >
             {tableHeader.map((head, idx) => (
               <li className="" key={`licensed-info-${idx}`}>
-                {head.key === "isConfirmed" ? (
-                  <Badge
-                    color={
-                      data[head.key as keyof typeof data] ? "green" : "red"
-                    }
-                  >
-                    {data[head.key as keyof typeof data]
-                      ? "Confirmé"
-                      : "Non confirmé"}
-                  </Badge>
-                ) : (
-                  <div className="flex items-center gap-3">
-                    {head.key === "firstname" && (
-                      <ImageProfile profile={data.profile} />
-                    )}
-                    <AppText size="sm">
-                      {data[head.key as keyof typeof data]}
-                    </AppText>
-                  </div>
-                )}
+                {
+                  // if the current cell is status
+                  head.key === "isConfirmed" ? (
+                    <Badge
+                      color={
+                        data[head.key as keyof typeof data] ? "green" : "red"
+                      }
+                    >
+                      {data[head.key as keyof typeof data]
+                        ? "Confirmé"
+                        : "Non confirmé"}
+                    </Badge>
+                  ) : (
+                    <div className="flex items-center gap-3">
+                      {
+                        // show profile image along with firstname
+                        head.key === "firstname" && (
+                          <ImageProfile profile={data.profile} />
+                        )
+                      }
+
+                      <AppText size="sm">
+                        {head.key === "age" &&
+                        data[head.key as keyof typeof data] === 0
+                          ? "-"
+                          : data[head.key as keyof typeof data]}
+                      </AppText>
+                    </div>
+                  )
+                }
               </li>
             ))}
             <div className="flex gap-3 items-center">
