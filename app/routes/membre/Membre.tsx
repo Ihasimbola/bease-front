@@ -107,7 +107,7 @@ function Membre({ loaderData }: Route.ComponentProps) {
             <AppText weight="semibold">
               <Link
                 to="excel-model"
-                download="model.xlsx"
+                download="Empty.xlsx"
                 target="_blank"
                 className="underline text-blue-600"
               >
