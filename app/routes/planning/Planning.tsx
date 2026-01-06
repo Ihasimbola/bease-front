@@ -105,7 +105,7 @@ function Planning({ loaderData }: Route.ComponentProps) {
   );
   const [monthSelect, setMonthSelect] = useState(new Date().getMonth() + 1);
   const [yearFilter, setYearFilter] = useState(new Date().getFullYear());
-  const [bubbleLimit, setBubbleLimit] = useState(Number(7).toString());
+  const [bubbleLimit, setBubbleLimit] = useState(Number(15).toString());
   const navigate = useNavigate();
 
   // handle change bubble limi
@@ -159,11 +159,19 @@ function Planning({ loaderData }: Route.ComponentProps) {
   const handleGetMore = async () => {
     const currentQuery = getCurrentQuery();
 
-    setSearchParam({
-      ...currentQuery,
-      skip: "0",
-      limit: total.toString(),
-    });
+    // if filter mode is bubble, remove limit
+    if (currentQuery.mode === "bubble") {
+      setSearchParam({
+        ...currentQuery,
+        args: Number(currentQuery.args) + Number(bubbleLimit),
+      });
+    } else {
+      setSearchParam({
+        ...currentQuery,
+        skip: "0",
+        limit: total.toString(),
+      });
+    }
 
     setTotal((prevState) => prevState + 2); // add total for next request
     localStorage.setItem("skip", "0");

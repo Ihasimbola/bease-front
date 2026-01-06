@@ -12,12 +12,6 @@ export const filters = [
     active: false
   },
   {
-    id: 2,
-    label: "Aujourd'hui",
-    mode: "today",
-    active: false
-  },
-  {
     id: 1,
     label: "Par mois",
     mode: "byMonth",

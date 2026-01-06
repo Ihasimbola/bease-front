@@ -58,7 +58,7 @@ function MatchFilters({
               <div className="flex items-center gap-2 mt-1">
                 {activeFilter === "bubble" && (
                   <>
-                    <AppText size="xs" color="gray">
+                    {/* <AppText size="xs" color="gray">
                       Dans
                     </AppText>
                     <Input
@@ -86,7 +86,7 @@ function MatchFilters({
                       }
                     >
                       <Check size={18} className="stroke-white" />
-                    </button>
+                    </button> */}
                   </>
                 )}
               </div>

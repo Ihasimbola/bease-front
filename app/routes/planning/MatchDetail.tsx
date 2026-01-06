@@ -64,6 +64,7 @@ function MatchDetail(props: Props) {
         )}
       {matchData.length !== 0 &&
         !location.pathname.includes("create-match") &&
+        !location.search.includes("byMonth") &&
         !location.pathname.includes("edit-match") && (
           <div className="w-full mt-8">
             <AppButton
