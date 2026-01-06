@@ -18,4 +18,13 @@ export class FileService extends Http {
       throw error;
     }
   }
+
+  static async getExcelModel() {
+    try {
+      const res = await this.get('files/excel-model');
+      return res;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

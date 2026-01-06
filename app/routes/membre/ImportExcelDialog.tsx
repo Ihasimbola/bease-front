@@ -115,6 +115,13 @@ function ImportExcelDialog() {
             <AppText size="xs" weight="bold">
               La verification est sensible à la casse.
             </AppText>
+            <AppText weight="normal" size="sm">
+              Dans la colonne Né(e) le, utiliser le format
+              <AppText
+                as="span"
+                weight="bold"
+              >{` jj/mm/aaaa. Ex: 12/02/1996`}</AppText>
+            </AppText>
           </div>
         </div>
 

@@ -1,11 +1,18 @@
-import { PlusIcon, SearchIcon, Upload } from "lucide-react";
+import { PlusIcon, SearchIcon, TriangleAlert, Upload } from "lucide-react";
 import { useLayoutEffect } from "react";
 import AppButton from "~/components/general/AppButton/AppButton";
 import AppText from "~/components/general/AppText/AppText";
 import { Input } from "~/components/ui/input";
 import Table from "./Table";
 import type { Route } from "./+types/Membre";
-import { Form, Outlet, redirect, useNavigate, useSubmit } from "react-router";
+import {
+  Form,
+  Link,
+  Outlet,
+  redirect,
+  useNavigate,
+  useSubmit,
+} from "react-router";
 import { UserService, type LicensedResponse } from "~/services/userService";
 import { tableHeader } from "./tableData";
 import type { TableData } from "./type";
@@ -95,6 +102,20 @@ function Membre({ loaderData }: Route.ComponentProps) {
           <AppText size="xs" color="gray">
             Les informations concernants les membres de votre club
           </AppText>
+          <div className="flex gap-3 items-center p-3 bg-amber-100 mt-3 rounded">
+            <TriangleAlert color="orange" size={48} />
+            <AppText weight="semibold">
+              <Link
+                to="excel-model"
+                download="model.xlsx"
+                target="_blank"
+                className="underline text-blue-600"
+              >
+                Télécharager le fichier
+              </Link>{" "}
+              excel à remplir pour ajouter des membres.
+            </AppText>
+          </div>
         </div>
         <div className="flex gap-4">
           <AppButton

@@ -43,6 +43,8 @@ export default [
         route('add-member', "./routes/membre/AddMemberDialog.tsx"),
         route('delete-member/:id', './routes/membre/ConfirmationDialog.tsx'),
         route('edit-member/:id', './routes/membre/EditMemberDialog.tsx'),
+        route('excel-model', "./routes/excel_model/model.tsx"),
+
       ]),
 
       // routes membre for super admin
