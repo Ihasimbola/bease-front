@@ -95,7 +95,7 @@ function Membre({ loaderData }: Route.ComponentProps) {
   return (
     <section>
       <div className="lg:flex justify-between items-end">
-        <div className="mb-4 flex flex-col gap-1">
+        <div className="mb-4 lg:mb-0 flex flex-col gap-1 mr-3">
           <AppText as="h1" weight="bold" size="2xl">
             Les membres
           </AppText>

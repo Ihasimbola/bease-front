@@ -16,7 +16,6 @@ export const formContainerClassName =
   "form-container flex flex-col w-[95%] lg:w-[65%] max-w-7xl items-center self-center justify-self-center px-4 py-5 lg:px-5 lg:py-10 rounded";
 
 export async function clientAction({ request }: Route.ActionArgs) {
-  console.log(request);
   try {
     let formData = await request.formData();
     const email = formData.get("email")?.toString()!;
