@@ -92,6 +92,18 @@ function Membre({ loaderData }: Route.ComponentProps) {
     navigate("edit-member" + `/${id}?category=${category}`);
   };
 
+  const handleDownloadExcel = async () => {
+    const res = await fetch(import.meta.env.VITE_API_URL + "files/excel-model");
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Empty.xlsx";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <section>
       <div className="lg:flex justify-between items-end">
@@ -105,14 +117,12 @@ function Membre({ loaderData }: Route.ComponentProps) {
           <div className="flex gap-3 items-center p-3 bg-amber-100 mt-3 rounded">
             <TriangleAlert color="orange" size={48} />
             <AppText weight="semibold">
-              <Link
-                to="excel-model"
-                download="Empty.xlsx"
-                target="_blank"
-                className="underline text-blue-600"
+              <button
+                className="underline text-blue-600 hover:cursor-pointer"
+                onClick={handleDownloadExcel}
               >
                 Télécharager le fichier
-              </Link>{" "}
+              </button>{" "}
               excel à remplir pour ajouter des membres.
             </AppText>
           </div>
